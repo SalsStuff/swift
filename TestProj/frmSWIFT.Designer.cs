@@ -107,6 +107,7 @@
          this.lblBlock2IO = new System.Windows.Forms.Label();
          this.tabBlock_3 = new System.Windows.Forms.TabPage();
          this.tabBlock_4 = new System.Windows.Forms.TabPage();
+         this.dgView = new System.Windows.Forms.DataGridView();
          this.tabBlock_5 = new System.Windows.Forms.TabPage();
          this.txtSYSMorSeqNum = new System.Windows.Forms.TextBox();
          this.lblSYSMorSeqNum = new System.Windows.Forms.Label();
@@ -164,7 +165,8 @@
          this.lblTestTrain = new System.Windows.Forms.Label();
          this.txtChecksum = new System.Windows.Forms.TextBox();
          this.lblChecksum = new System.Windows.Forms.Label();
-         this.dgView = new System.Windows.Forms.DataGridView();
+         this.tabErrors = new System.Windows.Forms.TabPage();
+         this.txtErrors = new System.Windows.Forms.TextBox();
          this.menuStrip1.SuspendLayout();
          this.tabCtrl.SuspendLayout();
          this.tabMessage.SuspendLayout();
@@ -173,8 +175,9 @@
          this.pnlOutbound.SuspendLayout();
          this.pnlInbound.SuspendLayout();
          this.tabBlock_4.SuspendLayout();
-         this.tabBlock_5.SuspendLayout();
          ((System.ComponentModel.ISupportInitialize)(this.dgView)).BeginInit();
+         this.tabBlock_5.SuspendLayout();
+         this.tabErrors.SuspendLayout();
          this.SuspendLayout();
          // 
          // menuStrip1
@@ -218,6 +221,7 @@
          this.tabCtrl.Controls.Add(this.tabBlock_3);
          this.tabCtrl.Controls.Add(this.tabBlock_4);
          this.tabCtrl.Controls.Add(this.tabBlock_5);
+         this.tabCtrl.Controls.Add(this.tabErrors);
          this.tabCtrl.Location = new System.Drawing.Point(12, 27);
          this.tabCtrl.Name = "tabCtrl";
          this.tabCtrl.SelectedIndex = 0;
@@ -921,6 +925,14 @@
          this.tabBlock_4.Text = "Block 4";
          this.tabBlock_4.UseVisualStyleBackColor = true;
          // 
+         // dgView
+         // 
+         this.dgView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+         this.dgView.Location = new System.Drawing.Point(3, 3);
+         this.dgView.Name = "dgView";
+         this.dgView.Size = new System.Drawing.Size(546, 453);
+         this.dgView.TabIndex = 0;
+         // 
          // tabBlock_5
          // 
          this.tabBlock_5.AutoScroll = true;
@@ -1436,13 +1448,24 @@
          this.lblChecksum.TabIndex = 0;
          this.lblChecksum.Text = "Checksum";
          // 
-         // dgView
+         // tabErrors
          // 
-         this.dgView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-         this.dgView.Location = new System.Drawing.Point(3, 3);
-         this.dgView.Name = "dgView";
-         this.dgView.Size = new System.Drawing.Size(546, 453);
-         this.dgView.TabIndex = 0;
+         this.tabErrors.Controls.Add(this.txtErrors);
+         this.tabErrors.Location = new System.Drawing.Point(4, 22);
+         this.tabErrors.Name = "tabErrors";
+         this.tabErrors.Size = new System.Drawing.Size(552, 459);
+         this.tabErrors.TabIndex = 6;
+         this.tabErrors.Text = "Errors";
+         this.tabErrors.UseVisualStyleBackColor = true;
+         // 
+         // txtErrors
+         // 
+         this.txtErrors.Location = new System.Drawing.Point(3, 3);
+         this.txtErrors.Multiline = true;
+         this.txtErrors.Name = "txtErrors";
+         this.txtErrors.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+         this.txtErrors.Size = new System.Drawing.Size(546, 453);
+         this.txtErrors.TabIndex = 0;
          // 
          // frmSWIFT
          // 
@@ -1468,9 +1491,11 @@
          this.pnlInbound.ResumeLayout(false);
          this.pnlInbound.PerformLayout();
          this.tabBlock_4.ResumeLayout(false);
+         ((System.ComponentModel.ISupportInitialize)(this.dgView)).EndInit();
          this.tabBlock_5.ResumeLayout(false);
          this.tabBlock_5.PerformLayout();
-         ((System.ComponentModel.ISupportInitialize)(this.dgView)).EndInit();
+         this.tabErrors.ResumeLayout(false);
+         this.tabErrors.PerformLayout();
          this.ResumeLayout(false);
          this.PerformLayout();
 
@@ -1614,6 +1639,8 @@
       private System.Windows.Forms.TextBox txtSYS;
       private System.Windows.Forms.Label lblSYS;
       private System.Windows.Forms.DataGridView dgView;
+      private System.Windows.Forms.TabPage tabErrors;
+      private System.Windows.Forms.TextBox txtErrors;
    }
 }
 

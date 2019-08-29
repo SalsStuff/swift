@@ -69,6 +69,7 @@ namespace TestProj
          //fillBlock3Page();
          fillBlock4Page(BH.MessageType);
          fillBlock5Page();
+         fillErrorsPage();
       }
 
       private void parseBlock4(string message, string messageType)
@@ -211,6 +212,14 @@ namespace TestProj
 
       }
 
+      private void fillErrorsPage()
+      {
+         txtErrors.Text = "";
+         foreach (string err in BH.Errors)
+         {
+            txtErrors.Text += err + "\r\n";
+         }
+      }
       #endregion
 
    }
