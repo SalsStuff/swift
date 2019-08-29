@@ -1,0 +1,37 @@
+{1:F01BCITITMMAXXX0012000123}{2:I101ABNANL2AXXXXN}{3:{108:BCITITMMA950906}}{4:
+:20:Reference
+:28D:558/425
+:50F:/PartyIdentifier
+1/DY..O0)ZHPV
+2/n'eH YCh893b
+2/DUPE
+3/US/NENE
+:30:211105
+:21:TransactionRefer
+:21F:Reference
+:32B:USD8454372,1
+:50L:Party Id SEQ A1
+:52C:/Party ID Seq B1
+:59:/Sequence B 1 account
+1/Name B1 1
+2/Address B1 1
+2/Address B1 2
+3/US/Address B1 3
+:71A:BEN
+:21:TransactionRefer
+:21F:Reference
+:32B:USD8454372,1
+:50C:TAGCSQB2
+:52A:/Party ID Seq B2
+BICSEQB2
+:59:/Sequence B 2 account
+1/Name B2 1
+2/Address B2 1
+2/Address B2 2
+3/US/Address B2 3
+:70:Narrative
+Narrative
+Narrative
+:77B:Narrative
+:71A:BEN
+-}

@@ -1,0 +1,31 @@
+{1:F01BCITITMMAXXX0012000123}{2:I101ABNANL2AXXXXN}{3:{108:BCITITMMA950906}}{4:
+:20:Reference
+:28D:558/425
+:30:211105
+:21:TransactionRefer
+:21F:Reference
+:32B:USD8454372,1
+:50L:PartyIdentifier
+:50G:/PartyIdentifier B1
+JERALDX1
+:59A:/v,
+SXDBAVSEVP3
+:70:Narrative
+Narrative
+Narrative
+:77B:Narrative
+:71A:BEN
+:21:TransactionRefer
+:21F:Reference
+:32B:USD8454372,1
+:50L:PartyIdentifier
+:50G:/PartyIdentifier B2
+JERALDX2
+:59A:/v,
+JERALDX3
+:70:Narrative
+Narrative
+Narrative
+:77B:Narrative
+:71A:BEN
+-}

@@ -1,0 +1,28 @@
+{1:F01BCITITMMAXXX0012000123}{2:I202ABNANL2AXXXXN}{3:{119:COV}}{4:
+:20:SEQ A REF
+:21:SEQ A RelRef
+:32A:121203USD1000,00
+:53B:/D/SEQA
+ADDRESS SEQA1 
+:54D:/D/SEQA
+ADDRESS SEQA1 
+ADDRESS SEQA2 
+ADDRESS SEQA3 
+:58A:/SEQ AC
+YTAGSEQ1
+:72:/ACC/Narrative SEQ A
+//NarrativeStructured  SEQ A
+:50F:/PartyIdentifier SEQ B
+1/SEQB
+2/SEQB
+3/US/SEQB
+:59F:/Account SEQ B
+1/NameAddressDetails SEQB
+2/NameAddressDetails SEQB
+3/US/NameAddressDetailsSEQ B
+:70:/ACC/Narrative SEQ B 
+//Narrative SEQB
+//NarrativeSEQ B
+:72:/ACC/NarrativeStructuredFormat SEQB
+:33B:USD217,14
+-}

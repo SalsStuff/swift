@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XMLDetailObj>
+	<SwiftSecurityInstructionsDetail>
+		<Records>
+			<message_id>1</message_id>
+			<parser_version>1.0</parser_version>
+			<parser_method>Standard-SwiftParse540-547ToDetail</parser_method>
+			<msg_type_id>MT547</msg_type_id>
+			<msg_direction_id>0</msg_direction_id>
+			<msg_sender>BANJBEBBAXXX</msg_sender>
+			<msg_receiver>BCITITMMAXXX</msg_receiver>
+			<msg_mur>BCITITMMA950906</msg_mur>
+			<sa_t20_reference>Reference</sa_t20_reference>
+			<sa_t23g_function>RVSL</sa_t23g_function>
+			<sa_t23g_subfunction>COPY</sa_t23g_subfunction>
+			<sa1_t20_common_reference>Reference</sa1_t20_common_reference>
+			<sb_t98a_trade_date>26-Mar-2008</sb_t98a_trade_date>
+			<sb_t98a_settle_date>13-Feb-1930</sb_t98a_settle_date>
+			<sb_t35b_instrument_isin>KYQN2HIGR5W6</sb_t35b_instrument_isin>
+			<sb_t35b_instrument_country>None</sb_t35b_instrument_country>
+			<sb_t35b_instrument_ticker>None</sb_t35b_instrument_ticker>
+			<sb_t35b_instrument_desc>None</sb_t35b_instrument_desc>
+			<sb1_t12_instrument_class>None</sb1_t12_instrument_class>
+			<sc_t36b_amortized_value>63105.24</sc_t36b_amortized_value>
+			<sc_t36b_unit_number>3.66574</sc_t36b_unit_number>
+			<sc_t97a_account_number>AccountNumber</sc_t97a_account_number>
+			<se1_t95_sell_scheme_prop_code>V/ProprietaryCode</se1_t95_sell_scheme_prop_code>
+			<se1_t97_sell_account_number>AccountNumber</se1_t97_sell_account_number>
+			<se1_t97_sell_source_account_type></se1_t97_sell_source_account_type>
+			<se1_t95_recu_scheme_prop_code>LVT2V/ProprietaryCode</se1_t95_recu_scheme_prop_code>
+			<se3_t19_wtax_amount>2137776465.7</se3_t19_wtax_amount>
+			<se3_t19_wtax_amount_ccy>USD</se3_t19_wtax_amount_ccy>
+		</Records>
+	</SwiftSecurityInstructionsDetail>
+</XMLDetailObj>
