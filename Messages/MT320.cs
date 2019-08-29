@@ -52,6 +52,7 @@ namespace Messages
          new TagData<string, string, string, string>("34E", "Currenct and Interest Amount"         , "", "M"),
          new TagData<string, string, string, string>("37G", "Interest Rate"                        , "", "M"),
          new TagData<string, string, string, string>("38J", "Number of Days"                       , "", "O")
+         //new TagData<string, string, string, string>("39M", "Payment Clearing Center"              , "", "O")
       };
 
       List<TagData<string, string, string, string>> sectionC = new List<TagData<string, string, string, string>>
@@ -156,6 +157,7 @@ namespace Messages
          new TagData<string, string, string, string>("24D", "Dealing Method"                , "" ,"O"),
          new TagData<string, string, string, string>("26H", "Counterparty's Reference"      , "" ,"O"),
          new TagData<string, string, string, string>("29A", "Contract Information"          , "", "O"),
+         //new TagData<string, string, string, string>("34C", "Commission and Fees"           , "", "O"),
          new TagData<string, string, string, string>("71F", "Broker's Commission"           , "", "O"),
          new TagData<string, string, string, string>("72",  "Sender to Receiver Information", "", "O"),
          new TagData<string, string, string, string>("84A", "Dealing Branch Party A"        , "", "O"),

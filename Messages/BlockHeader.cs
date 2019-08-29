@@ -8,6 +8,7 @@ using System.IO;
 namespace Messages
 {
    // Validation Rules are from : https://www.paiementor.com/swift-mt-message-structure-blocks-1-to-5/
+   // Also here : https://www2.swift.com/knowledgecentre/products/Standards%20MT
    public class BlockHeader
    {
       #region DEFINES
@@ -64,6 +65,21 @@ namespace Messages
       private string m_MIRSeqNum = null;
       private string m_OutputDate_m = null;
       private string m_OutputTime_m = null;
+
+      // USER HEADER member variables
+      private string m_TAG103_ServiceID_m = null;
+      private string m_TAG113_BankingPriority_o = null;
+      private string m_TAG108_MUR_o = null;
+      private string m_TAG119_ValidationFlag_o = null;
+      private string m_TAG423_BalanceCheckPoint_o = null;
+      private string m_TAG106_MIR_o = null;
+      private string m_TAG424_RelatedReference_o = null;
+      private string m_TAG111_ServiceTypeID_o = null;
+      private string m_TAG121_UniqueTranReference_o = null;
+      private string m_TAG115_AddresseeInfo_o = null;
+      private string m_TAG165_PaymentRIR_o = null;
+      private string m_TAG433_SanctionsSIR_o = null;
+      private string m_TAG434_PaymentCIR_o = null;
 
       // TRAILER HEADER member variables
       private string m_Checksum_m = null;
@@ -887,10 +903,18 @@ namespace Messages
          string temp = Block_2;
          string sub = null;
          bool valid = true;
+         int offset = 0;
 
          // Check the length first.
          // If this is wrong don't bother checking anything else.
-         if (((Block_2.Length < MIN_BLOCK_2i_LEN) || (Block_2.Length > MAX_BLOCK_2i_LEN)) &&
+         // Block 2 is optional therefore it is a valid message if it is not present
+         if (Block_2 == null)
+         {
+            errors.Add("Block 2 -- Optional -- : NOT present");
+            valid = true;
+            return valid;
+         }
+         else if (((Block_2.Length < MIN_BLOCK_2i_LEN) || (Block_2.Length > MAX_BLOCK_2i_LEN)) &&
             ((Block_2.Length < MIN_BLOCK_2o_LEN) || (Block_2.Length > MAX_BLOCK_2o_LEN)) )
          {
             errors.Add("Invalid length for block 2 : " + Block_2.Length);
@@ -974,8 +998,14 @@ namespace Messages
             m_Priority_o = temp.Substring(0, 1);
             if ((m_Priority_o.Equals("S") == false) && (m_Priority_o.Equals("U") == false) && (m_Priority_o.Equals("N") == false))
             {
-               errors.Add("BLOCK 2: Invalid PRIORITY : " + m_Priority_o + " Expecting : S, U or N");
+               errors.Add("BLOCK 2: PRIORITY not set: ");
                valid = false;
+               offset = 0;
+               m_Priority_o = "";
+            }
+            else
+            {
+               offset = 1;
             }
 
             // Check DELIVERY MONITORING = 1x
@@ -985,14 +1015,18 @@ namespace Messages
             // 3 = Non - Delivery Warning and Delivery Notification
             // If the message has priority 'U', the user must request delivery monitoring option '1' or '3'.
             // If the message has priority 'N', the user can request delivery monitoring option '2' or, by leaving the option blank, no delivery monitoring.
-            temp = temp.Substring(1);
+            temp = temp.Substring(offset);
             m_DeliveryMonitoring_o = temp.Substring(0, 1);
             if(m_Priority_o.Equals("S") )
             {
                if( (m_DeliveryMonitoring_o.Equals("1") == false) && (m_DeliveryMonitoring_o.Equals("1") == false) && (m_DeliveryMonitoring_o.Equals("3") == false) && (m_DeliveryMonitoring_o.Equals("") == false) )
                {
-                  errors.Add("BLOCK 2: Invalid DELIVERY MONITORING - " + m_DeliveryMonitoring_o + " PRIORITY : " + m_Priority_o + " DELIVERY MONITORING MUST BE : 1, 2, 3 or blank");
+                  errors.Add("BLOCK 2: Invalid DELIVERY MONITORING - not set" + m_DeliveryMonitoring_o + " PRIORITY : " + m_Priority_o + " DELIVERY MONITORING MUST BE : 1, 2, 3 or blank");
                   valid = false;
+               }
+               else
+               {
+                  offset = 1;
                }
             }
             else if (m_Priority_o.Equals("U"))
@@ -1002,6 +1036,10 @@ namespace Messages
                   errors.Add("BLOCK 2: Invalid DELIVERY MONITORING - " + m_DeliveryMonitoring_o + " PRIORITY : " + m_Priority_o + " DELIVERY MONITORING MUST BE : 1 or 3");
                   valid = false;
                }
+               else
+               {
+                  offset = 1;
+               }
             }
             else if (m_Priority_o.Equals("N"))
             {
@@ -1010,6 +1048,15 @@ namespace Messages
                   errors.Add("BLOCK 2: Invalid DELIVERY MONITORING - " + m_DeliveryMonitoring_o + " PRIORITY : " + m_Priority_o + " DELIVERY MONITORING MUST BE : 2 or blank");
                   valid = false;
                }
+               else
+               {
+                  offset = 1;
+               }
+            }
+            else
+            {
+               offset = 0;
+               m_DeliveryMonitoring_o = "";
             }
 
             // Check OBSOLESCENCE PERIOD = 3n
@@ -1019,7 +1066,7 @@ namespace Messages
             // The values for the obsolescence period are: 
             // 003 (15 minutes) for 'U' priority, and 
             // 020 (100 minutes) for 'N' priority.
-            temp = temp.Substring(1);
+            temp = temp.Substring(offset);
             m_ObsolescencePeriod_o = temp.Substring(0, 3);
             if (m_Priority_o.Equals("U"))
             {
@@ -1111,14 +1158,20 @@ namespace Messages
             m_Priority_o = temp.Substring(0, 1);
             if ((m_Priority_o.Equals("S") == false) && (m_Priority_o.Equals("U") == false) && (m_Priority_o.Equals("N") == false))
             {
-               errors.Add("BLOCK 2: Invalid PRIORITY : " + m_Priority_o + " Expecting : S, U or N");
+               errors.Add("BLOCK 2: PRIORITY -- OPTIONAL -- : not present");
                valid = false;
+               offset = 0;
+               m_Priority_o = "";
+            }
+            else
+            {
+               offset = 1;
             }
 
             // Check END OF BLOCK INDICATOR = } 
             // This is a mandatory field.
             // The character } indicates the end of a block.
-            temp = temp.Substring(1);
+            temp = temp.Substring(offset);
             if (temp[0] != '}')
             {
                errors.Add("BLOCK 2: Message missing END OF BLOCK INDICATOR (})");
@@ -1141,12 +1194,35 @@ namespace Messages
          string sub = null;
          bool valid = true;
 
+         // Check the length first.
+         // If this is wrong don't bother checking anything else.
+         // Block 3 is optional therefore it is a valid message if it is not present
+         if (Block_3 == null)
+         {
+            errors.Add("Block 3 -- Optional -- : NOT present");
+            valid = true;
+            return valid;
+         }
+         else if ((Block_3.Length < MIN_BLOCK_3_LEN) || (Block_3.Length > MAX_BLOCK_3_LEN))
+         {
+            errors.Add("Invalid length for block 3 : " + Block_3.Length);
+            valid = false;
+            return valid;
+         }
 
          return valid;
       }
 
       private void validateBlock4()
       {
+         string temp = Block_4;
+
+         // Block 4 is optional therefore it is a valid message if it is not present
+         // Just check for presence here each message class will validate it's own message.
+         if (Block_4 == null)
+         {
+            errors.Add("Block 4 -- Optional -- : NOT present");
+         }
 
       }
 
@@ -1192,7 +1268,14 @@ namespace Messages
 
          // Check the length first.
          // If this is wrong don't bother checking anything else.
-         if ((Block_5.Length < MIN_BLOCK_5_LEN) || (Block_5.Length > MAX_BLOCK_5_LEN))
+         // Block 5 is optional therefore it is a valid message if it is not present
+         if(Block_5 == null)
+         {
+            errors.Add("Block 5 -- Optional -- : NOT present");
+            valid = true;
+            return valid;
+         }
+         else if ((Block_5.Length < MIN_BLOCK_5_LEN) || (Block_5.Length > MAX_BLOCK_5_LEN))
          {
             errors.Add("Invalid length for block 5 : " + Block_5.Length);
             valid = false;
