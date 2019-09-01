@@ -16,7 +16,7 @@ namespace TestProj
       {
          Application.EnableVisualStyles();
          Application.SetCompatibleTextRenderingDefault(false);
-         Application.Run(new frmSWIFT());
+         Application.Run(new FrmSWIFT());
       }
    }
 }
