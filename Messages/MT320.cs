@@ -1218,6 +1218,70 @@ namespace Messages
                     }
                     break;
                 case "B":
+                    switch (field.Tag)
+                    {
+                        case "14D":
+                            if (Is_T14D_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "15B":
+                            if (Is_T15B_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "17R":
+                            if (Is_T17R_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "30F":
+                            if (Is_T30F_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "30P":
+                            if (Is_T30P_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "30T":
+                            if (Is_T30T_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "30V":
+                            if (Is_T30V_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "30X":
+                            if (Is_T30X_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "32B":
+                            if (Is_T32B_Valid(field) == false)
+                                validTag = false;
+                            break;
+                            /*
+                        case "32H":
+                            if (Is_T32H_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "34E":
+                            if (Is_T34E_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "37G":
+                            if (Is_T37G_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "38J":
+                            if (Is_T38J_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "39M":
+                            if (Is_T39M_Valid(field) == false)
+                                validTag = false;
+                            break;
+                            */
+                        default:
+                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence A - can not validate.");
+                            break;
+                    }
                     break;
                 case "C":
                     break;
@@ -1266,7 +1330,7 @@ namespace Messages
                     if (field.Present == 0)
                     {
                         valid = false;
-                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
                     }
                     if (field.Value.Equals("") == false)
                     {
@@ -1317,8 +1381,9 @@ namespace Messages
                     if (field.Present == 0)
                     {
                         valid = false;
-                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
                     }
+                    field.Value = field.Value.Trim();
                     if(field.Value.Length > 16)
                     {
                         valid = false;
@@ -1381,7 +1446,8 @@ namespace Messages
                 {
                     if (field.Present == 1)
                     {
-                        if (field.Value.Length != 16)
+                        field.Value = field.Value.Trim();
+                        if (field.Value.Length > 16)
                         {
                             valid = false;
                             Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 16 characters.");
@@ -1454,9 +1520,10 @@ namespace Messages
                     if (field.Present == 0)
                     {
                         valid = false;
-                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
                     }
-                    if(util.IsAllUpper(field.Value) == false)
+                    field.Value = field.Value.Trim();
+                    if (util.IsAllUpper(field.Value) == false)
                     {
                         valid = false;
                         Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", must be alpha-numberic with using only capital letters");
@@ -1528,7 +1595,7 @@ namespace Messages
                             valid = false;
                             Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", must be alpha-numberic with using only capital letters");
                         }
-
+                        field.Value = field.Value.Trim();
                         if (field.Value.Length != 4)
                         {
                             valid = false;
@@ -1550,10 +1617,6 @@ namespace Messages
                     valid = false;
                     Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T94A_Valid");
                 }
-            }
-            else
-            {
-                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
             }
 
             return valid;
@@ -1609,8 +1672,9 @@ namespace Messages
                     if (field.Present == 0)
                     {
                         valid = false;
-                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
                     }
+                    field.Value = field.Value.Trim();
                     if (util.IsAllUpper(field.Value) == false)
                     {
                         valid = false;
@@ -1677,8 +1741,9 @@ namespace Messages
                     if (field.Present == 0)
                     {
                         valid = false;
-                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
                     }
+                    field.Value = field.Value.Trim();
                     if (util.IsAllUpper(field.Value) == false)
                     {
                         valid = false;
@@ -1728,6 +1793,7 @@ namespace Messages
                 {
                     if (field.Present == 1)
                     {
+                        field.Value = field.Value.Trim();
                         if (field.Value.Length != 16)
                         {
                             valid = false;
@@ -1740,10 +1806,6 @@ namespace Messages
                     valid = false;
                     Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T21N_Valid");
                 }
-            }
-            else
-            {
-                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
             }
 
             return valid;
@@ -1799,8 +1861,9 @@ namespace Messages
                     if (field.Present == 0)
                     {
                             valid = false;
-                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                            Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
                     }
+                    field.Value = field.Value.Trim();
                 }
                 else
                 {
@@ -1866,8 +1929,9 @@ namespace Messages
                     if (field.Present == 0)
                     {
                             valid = false;
-                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                            Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
                     }
+                    field.Value = field.Value.Trim();
                 }
                 else
                 {
@@ -1931,6 +1995,7 @@ namespace Messages
                     {
                         // Add checks
                     }
+                    field.Value = field.Value.Trim();
                 }
                 else
                 {
@@ -1938,11 +2003,7 @@ namespace Messages
                     Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T83_Valid");
                 }
             }
-            else
-            {
-                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
-            }
-
+            
             return valid;
         }
 
@@ -1982,7 +2043,8 @@ namespace Messages
                 {
                     if (field.Present == 1)
                     {
-                        if(field.Value.Length > 210)
+                        field.Value = field.Value.Trim();
+                        if (field.Value.Length > 210)
                         {
                             valid = false;
                             Anomalies.Add("ERROR - Tag " + field.Tag + " value to long");
@@ -1995,6 +2057,70 @@ namespace Messages
                     Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T77D_Valid");
                 }
             }
+            
+            return valid;
+        }
+        #endregion
+
+        #region SEQUENCE B TAG VALIDATIONS
+        /// <summary>
+        /// Is_T14D_Valid
+        /// Format
+        ///     Option D :  7x
+        /// Presence
+        ///     Mandatory in mandatory sequence B
+        /// Definition
+        ///     This field specifies the number of days which are taken into account for the calculation of the interest.
+        ///     This field specifies the Day Count Fraction as per ISDA definitions.
+        /// Codes
+        ///     One of the following codes must be used(Error code(s): T36) :
+        ///     30E/360             30E/360 or Eurobond Basis
+        ///     360/360             30/360, 360/360 or Bond Basis
+        ///     ACT/360             Actual/360 (28-31/360)
+        ///     ACT/365             Actual/365 or Actual/Actual(28-31/365-6)
+        ///     AFI/365             Actual/365 (fixed) (28 - 31 / 365)
+        ///     
+        /// Example
+        ///     February 2008:      
+        ///     ACT / 360           29 / 360.          
+        ///     ACT / 365           29 / 366.           
+        ///     AFI / 365           29 / 365.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T14D_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            // 14D is a mandatory field in a mandatory block. It must be present
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("14D") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                    }
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length != 7)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect field length : " + field.Value.Length);
+                    }
+                    if( (field.Value.Equals("30E/360") == false) && (field.Value.Equals("360/360") == false) && (field.Value.Equals("ACT/360") == false) &&
+                        (field.Value.Equals("ACT/365") == false) && (field.Value.Equals("AFI/365") == false) )
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T36 - Tag " + field.Tag + " - Valid values are: 30E/360, 360/360, ACT/360, ACT/365 or AFI/365");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T14D_Valid");
+                }
+            }
             else
             {
                 Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
@@ -2002,6 +2128,477 @@ namespace Messages
 
             return valid;
         }
+
+        /// <summary>
+        /// Is_T15B_Valid
+        /// Format
+        ///     This is an empty field
+        /// Presence
+        ///     Mandatory in mandatory sequence B
+        /// Definition    
+        ///     This field specifies the start of mandatory sequence B Transaction Details.
+        /// Usage Rules
+        ///     Only the field tag must be present, the field is empty.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T15B_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            // 15B is a mandatory field in a mandatory block. It must be present
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("15B") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                    }
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Equals("") == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Only the field tag must be present, the field must be empty. It contains : " + field.Value);
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T15B_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T17R_Valid
+        /// Format
+        ///     Option R:  1!a
+        /// Presence
+        ///     Mandatory(referenced in rule C4) in mandatory sequence B
+        /// Definition
+        ///     This field specifies whether party A is the borrower or the lender.
+        /// Codes
+        ///     Indicator must contain one of the following codes(Error code(s): T67) :
+        ///     B       Borrower: party A receives the principal amount and pays the interest.
+        ///     L       Lender: party A pays the principal amount and receives the interest.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T17R_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            // 17R is a mandatory field in a mandatory block. It must be present
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("17R") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                    }
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length != 1)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect field length : " + field.Value.Length);
+                    }
+                    if ((field.Value.Equals("B") == false) && (field.Value.Equals("L") == false))
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T67 - Tag " + field.Tag + " - Valid values are: B or L");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T17R_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T30F_Valid
+        /// Format
+        ///     Option F:  8!n
+        /// Presence
+        ///     Conditional(see rule C5, also referenced in rule C6) in mandatory sequence B
+        /// Definition
+        ///     This field specifies the last day of the first/next interest period.
+        /// Network Validated Rules
+        ///     Date must be a valid date expressed as YYYYMMDD(Error code(s): T50).
+        /// Usage Rules
+        ///     This field should only be used when there is at least one interest payment before maturity.
+        ///     In the first confirmation of a loan/deposit, this field contains the date of the first interest payment 
+        ///     while in a rollover confirmation, this field specifies the next interest payment date.
+        ///     The interest period is specified in field 38J.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T30F_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            Util util = new Util();
+
+            // 30F is NOT a mandatory field in a mandatory block.
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("30F") == true)
+                {
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length != 8)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect field length : " + field.Value.Length);
+                    }
+                    if ((util.IsDate(field.Value) == false))
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T50 - Tag " + field.Tag + " - is a date field. Must be in YYYYMMDD format");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T30F_Valid");
+                }
+            }
+            
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T30P_Valid
+        /// Format
+        ///     Option P:  8!n  (Date)
+        /// Presence
+        ///     Mandatory in mandatory sequence B
+        /// Definition
+        ///     This field specifies the latest agreed maturity date, that is, the date on which the principal is to be returned and the interest due.
+        /// Network Validated Rules
+        ///     Date must be a valid date expressed as YYYYMMDD(Error code(s): T50).
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T30P_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            Util util = new Util();
+
+            // 30P is a mandatory field in a mandatory block.
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("30P") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                    }
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length != 8)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect field length : " + field.Value.Length);
+                    }
+                    if ((util.IsDate(field.Value) == false))
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T50 - Tag " + field.Tag + " - is a date field. Must be in YYYYMMDD format");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T30P_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T30T_Valid
+        /// Format
+        ///     Option T:  8!n  (Date)
+        /// Presence
+        ///     Mandatory in mandatory sequence B
+        /// Definition
+        ///     This field specifies the date the original deal or the rollover was agreed between party A and party B.
+        /// Network Validated Rules
+        ///     Date must be a valid date expressed as YYYYMMDD(Error code(s): T50).
+        /// Usage Rules
+        ///     The trade date remains the same when a confirmation is amended(corrected/completed) unilaterally.
+        ///     When the terms of the deal are renegotiated on a bilateral basis, the trade date reflects the date of renegotiation in the amend message.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T30T_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            Util util = new Util();
+
+            // 30T is a mandatory field in a mandatory block.
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("30T") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                    }
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length != 8)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect field length : " + field.Value.Length);
+                    }
+                    if ((util.IsDate(field.Value) == false))
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T50 - Tag " + field.Tag + " - is a date field. Must be in YYYYMMDD format");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T30T_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T30V_Valid
+        /// Format
+        ///     Option V:  8!n  (Date)
+        /// Presence
+        ///     Mandatory in mandatory sequence B
+        /// Definition
+        ///     This field specifies:
+        ///         for a new confirmation(22B= CONF), the value date of the deposit;
+        ///         for a rollover(22B= ROLL), the value date of the rollover, that is, the maturity date of the rolled over deposit;
+        ///         for a maturity confirmation(22B= MATU), the value date of the original deposit for a non-rolled over deposit or the value date of the previous rollover.
+        /// Network Validated Rules
+        ///     Date must be a valid date expressed as YYYYMMDD(Error code(s): T50).
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T30V_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            Util util = new Util();
+
+            // 30T is a mandatory field in a mandatory block.
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("30V") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                    }
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length != 8)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect field length : " + field.Value.Length);
+                    }
+                    if ((util.IsDate(field.Value) == false))
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T50 - Tag " + field.Tag + " - is a date field. Must be in YYYYMMDD format");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T30V_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T30X_Valid
+        /// Format
+        ///     Option X	8!n    (Date)
+        /// Presence
+        ///     Conditional(see rule C3) in mandatory sequence B
+        /// Definition
+        ///     This field specifies the date the next interest is due.
+        /// Network Validated Rules
+        ///     Date must be a valid date expressed as YYYYMMDD(Error code(s): T50).
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T30X_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            Util util = new Util();
+
+            // 30X is NOT a mandatory field in a mandatory block.
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("30X") == true)
+                {
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length != 8)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect field length : " + field.Value.Length);
+                    }
+                    if ((util.IsDate(field.Value) == false))
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T50 - Tag " + field.Tag + " - is a date field. Must be in YYYYMMDD format");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T30X_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T32B_Valid
+        /// Format
+        ///     Option B	3!a15d     (Currency)(Amount)
+        /// Presence
+        ///     Mandatory(referenced in rule C9) in mandatory sequence B
+        /// Definition
+        ///     This field specifies the currency and contract amount, that is, the amount on which the interest specified in field 34E is calculated.
+        ///     For a new confirmation(22B= CONF), this amount has to be settled at value date.
+        /// Network Validated Rules
+        ///     Currency must be a valid ISO 4217 currency code (Error code(s): T52).
+        ///     The integer part of Amount must contain at least one digit.A decimal comma is mandatory and is included in the maximum length.
+        ///     The number of digits following the comma must not exceed the maximum number allowed for the specified currency(Error code(s): C03, T40, T43).
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T32B_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            Util util = new Util();
+
+            // 32B is a mandatory field in a mandatory block.
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("32B") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                    }
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length > 18)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect field length : " + field.Value.Length);
+                    }
+
+                    string ccy = field.Value.Substring(0, 3);
+                    if( util.IsValidCcy(ccy) == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T52 - Tag " + field.Tag + " - Invalid currency : " + ccy);
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T32B_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T32H_Valid
+        /// 
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T32H_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            Util util = new Util();
+
+            // 32H is NOT a mandatory field in a mandatory block.
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("32H") == true)
+                {
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length != 8)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect field length : " + field.Value.Length);
+                    }
+                    if ((util.IsDate(field.Value) == false))
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T50 - Tag " + field.Tag + " - is a date field. Must be in YYYYMMDD format");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T32H_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+
+        //private bool Is_T34E_Valid(TagData<string, string, string, string, int> field)
+        //private bool Is_T37G_Valid(TagData<string, string, string, string, int> field)
+        //private bool Is_T38J_Valid(TagData<string, string, string, string, int> field)
+        //private bool Is_T39M_Valid(TagData<string, string, string, string, int> field)
+
+
         #endregion
 
         #endregion
@@ -2174,7 +2771,7 @@ namespace Messages
             bool valid = true;
             string t22B = GetTagValue("A", "22B");
             string t32H = GetTagValue("B", "32H");
-            string t33X = GetTagValue("B", "33X");
+            string t30X = GetTagValue("B", "30X");
 
             if(t22B.Equals("CONF") == true)
             {
@@ -2183,7 +2780,7 @@ namespace Messages
                     valid = false;
                     Anomalies.Add("ERROR D56 : Validation Rule C3 failed : if tag 22B = CONF then tag 32H is not allowed");
                 }
-                if (t33X.Equals("") == true)
+                if (t30X.Equals("") == true)
                 {
                     valid = false;
                     Anomalies.Add("ERROR D56 : Validation Rule C3 failed : if tag 22B = CONF then tag 33X is mandatory");
@@ -2197,7 +2794,7 @@ namespace Messages
                     valid = false;
                     Anomalies.Add("ERROR D56 : Validation Rule C3 failed : if tag 22B = MATU then tag 32H is mandatory");
                 }
-                if (t33X.Equals("") == false)
+                if (t30X.Equals("") == false)
                 {
                     valid = false;
                     Anomalies.Add("ERROR D56 : Validation Rule C3 failed : if tag 22B = MATU then tag 33X is not allowed");
@@ -2211,7 +2808,7 @@ namespace Messages
                     valid = false;
                     Anomalies.Add("ERROR D56 : Validation Rule C3 failed : if tag 22B = MATU then tag 32H is mandatory");
                 }
-                if (t33X.Equals("") == true)
+                if (t30X.Equals("") == true)
                 {
                     valid = false;
                     Anomalies.Add("ERROR D56 : Validation Rule C3 failed : if tag 22B = MATU then tag 33X is mandatory");

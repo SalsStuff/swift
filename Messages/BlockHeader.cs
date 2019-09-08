@@ -19,8 +19,8 @@ namespace Messages
         private static readonly int MAX_BLOCK_2i_LEN = 27;
         private static readonly int MIN_BLOCK_2o_LEN = 29;
         private static readonly int MAX_BLOCK_2o_LEN = 53;
-        private static readonly int MIN_BLOCK_3_LEN = 29;
-        private static readonly int MAX_BLOCK_3_LEN = 31;
+        private static readonly int MIN_BLOCK_3_LEN = 6;
+        private static readonly int MAX_BLOCK_3_LEN = 325;
         private static readonly int MIN_BLOCK_5_LEN = 24;
         private static readonly int MAX_BLOCK_5_LEN = 192;
         private static readonly int MAX_BLOCK_5_SECTIONS = 7;
@@ -28,22 +28,6 @@ namespace Messages
         
         #region VARIABLES
         protected List<string> errors = new List<string>();
-
-        // USER HEADER member variables
-        private string m_TAG103_ServiceID_m = null;
-        private string m_TAG113_BankingPriority_o = null;
-        private string m_TAG108_MUR_o = null;
-        private string m_TAG119_ValidationFlag_o = null;
-        private string m_TAG423_BalanceCheckPoint_o = null;
-        private string m_TAG106_MIR_o = null;
-        private string m_TAG424_RelatedReference_o = null;
-        private string m_TAG111_ServiceTypeID_o = null;
-        private string m_TAG121_UniqueTranReference_o = null;
-        private string m_TAG115_AddresseeInfo_o = null;
-        private string m_TAG165_PaymentRIR_o = null;
-        private string m_TAG433_SanctionsSIR_o = null;
-        private string m_TAG434_PaymentCIR_o = null;
-        private string m_SYS_morSequenceNum = null;
         #endregion
     
         public BlockHeader()
@@ -110,7 +94,7 @@ namespace Messages
             SYSMorDate = null;
             SYSMorLTId = null;
             SYSMorSessionNum = null;
-            m_SYS_morSequenceNum = null;
+            SYS_morSequenceNum = null;
         }
     
         private void ParseBlocks(string msg)
@@ -264,6 +248,23 @@ namespace Messages
         public string OutputTime { get; private set; } = null;
         #endregion
 
+        #region USER HEADER GETS
+        public string TAG103_ServiceID { get; private set; } = null;
+        public string TAG113_BankingPriority { get; private set; } = null;
+        public string TAG108_MUR { get; private set; } = null;
+        public string TAG119_ValidationFlag { get; private set; } = null;
+        public string TAG423_BalanceCheckPoint { get; private set; } = null;
+        public string TAG106_MIR { get; private set; } = null;
+        public string TAG424_RelatedReference { get; private set; } = null;
+        public string TAG111_ServiceTypeID { get; private set; } = null;
+        public string TAG121_UniqueTranReference { get; private set; } = null;
+        public string TAG115_AddresseeInfo { get; private set; } = null;
+        public string TAG165_PaymentRIR { get; private set; } = null;
+        public string TAG433_SanctionsSIR { get; private set; } = null;
+        public string TAG434_PaymentCIR { get; private set; } = null;
+        public string SYS_morSequenceNum { get; private set; } = null;
+        #endregion
+
         #region TRAILER_HEADER_GETS
         public string Checksum { get; private set; } = null;
 
@@ -321,7 +322,7 @@ namespace Messages
 
         public string SYSMorSequenceNum
         {
-            get { return m_SYS_morSequenceNum; }
+            get { return SYS_morSequenceNum; }
         }
         #endregion
         #endregion
@@ -938,9 +939,9 @@ namespace Messages
         private bool ValidBlock3()
         {
             string temp = Block_3;
-            //string sub = null;
             bool valid = true;
-            
+            string[] sections = new string[MAX_BLOCK_5_SECTIONS];
+
             // Check the length first.
             // If this is wrong don't bother checking anything else.
             // Block 3 is optional therefore it is a valid message if it is not present
@@ -956,7 +957,70 @@ namespace Messages
                 valid = false;
                 return valid;
             }
-            
+
+            // Check START OF BLOCK INDICATOR = { 
+            // This is a mandatory field.
+            // The character { indicates the beginning of a block.
+            if (temp[0] != '{')
+            {
+                errors.Add("BLOCK 3: Message missing START OF BLOCK INDICATOR ({)");
+                valid = false;
+            }
+
+            temp = temp.Substring(1);
+            // Check BLOCK IDENTIFIER = 3c
+            // This is a mandatory field.
+            // 1 to 3 alphanumeric characters used to define block contents. 
+            // This block identiifer must be 1.
+            string sub = temp.Substring(0, temp.IndexOf(':'));
+            if (string.Equals(sub, "3") == false)
+            {
+                errors.Add("BLOCK 3: Invalid BLOCK IDENTIFIER : " + sub + " Expecting : 3");
+                valid = false;
+            }
+
+            // We found the colon in the last step now get rid of it
+            // This is a mandatory field.
+            temp = temp.Substring(2);
+
+            SeparateSections(temp, out sections);
+
+            // Check the CHK - Checksum - CHK:12!h
+            // Checksum calculated for all message types
+            // This is a mandatory field.
+            foreach (string sect in sections)
+            {
+                if (sect == null)
+                    continue;
+
+                if (sect.Contains("103:") == true)
+                    TAG103_ServiceID = sect.Substring(5, sect.Length - 6);
+                else if (sect.Contains("113:") == true)
+                    TAG113_BankingPriority = sect.Substring(5, sect.Length - 6);
+                else if (sect.Contains("108:") == true)
+                    TAG108_MUR = sect.Substring(5, sect.Length - 6);
+                else if (sect.Contains("119:") == true)
+                    TAG119_ValidationFlag = sect.Substring(5, sect.Length-6);
+                else if (sect.Contains("432:") == true)
+                    TAG433_SanctionsSIR = sect.Substring(5, sect.Length - 6);
+                else if (sect.Contains("106:") == true)
+                    TAG433_SanctionsSIR = sect.Substring(5, sect.Length - 6);
+                else if (sect.Contains("424:") == true)
+                    TAG424_RelatedReference = sect.Substring(5, sect.Length - 6);
+                else if (sect.Contains("111:") == true)
+                    TAG111_ServiceTypeID = sect.Substring(5, sect.Length - 6);
+                else if (sect.Contains("121:") == true)
+                    TAG121_UniqueTranReference = sect.Substring(5, sect.Length - 6);
+                else if (sect.Contains("115:") == true)
+                    TAG115_AddresseeInfo = sect.Substring(5, sect.Length - 6);
+                else if (sect.Contains("165:") == true)
+                    TAG165_PaymentRIR = sect.Substring(5, sect.Length - 6);
+                else if (sect.Contains("433:") == true)
+                    TAG433_SanctionsSIR = sect.Substring(5, sect.Length - 6);
+                else if (sect.Contains("434:") == true)
+                    TAG434_PaymentCIR = sect.Substring(5, sect.Length - 6);
+            }
+
             return valid;
         }
     
@@ -1103,7 +1167,7 @@ namespace Messages
                     SYSMorDate = sect.Substring(9, 6);
                     SYSMorLTId = sect.Substring(15, 12);
                     SYSMorSessionNum = sect.Substring(27, 4);
-                    m_SYS_morSequenceNum = sect.Substring(31, 6);
+                    SYS_morSequenceNum = sect.Substring(31, 6);
                 }
             }
             

@@ -169,6 +169,32 @@
             this.txtErrors = new System.Windows.Forms.TextBox();
             this.tabScope = new System.Windows.Forms.TabPage();
             this.txtScope = new System.Windows.Forms.TextBox();
+            this.lblTAG103 = new System.Windows.Forms.Label();
+            this.txtTAG103 = new System.Windows.Forms.TextBox();
+            this.txtTAG113 = new System.Windows.Forms.TextBox();
+            this.lblTAG113 = new System.Windows.Forms.Label();
+            this.txtTAG108 = new System.Windows.Forms.TextBox();
+            this.lblTAG108 = new System.Windows.Forms.Label();
+            this.txtTAG119 = new System.Windows.Forms.TextBox();
+            this.lblTAG119 = new System.Windows.Forms.Label();
+            this.txtTAG423 = new System.Windows.Forms.TextBox();
+            this.lblTAG423 = new System.Windows.Forms.Label();
+            this.txtTAG106 = new System.Windows.Forms.TextBox();
+            this.lblTAG106 = new System.Windows.Forms.Label();
+            this.txtTAG424 = new System.Windows.Forms.TextBox();
+            this.lblTAG424 = new System.Windows.Forms.Label();
+            this.txtTAG111 = new System.Windows.Forms.TextBox();
+            this.lblTAG111 = new System.Windows.Forms.Label();
+            this.txtTAG121 = new System.Windows.Forms.TextBox();
+            this.lblTAG121 = new System.Windows.Forms.Label();
+            this.txtTAG115 = new System.Windows.Forms.TextBox();
+            this.lblTAG115 = new System.Windows.Forms.Label();
+            this.txtTAG165 = new System.Windows.Forms.TextBox();
+            this.lblTAG165 = new System.Windows.Forms.Label();
+            this.txtTAG433 = new System.Windows.Forms.TextBox();
+            this.lblTAG433 = new System.Windows.Forms.Label();
+            this.txtTAG434 = new System.Windows.Forms.TextBox();
+            this.lblTAG434 = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.tabCtrl.SuspendLayout();
             this.tabMessage.SuspendLayout();
@@ -176,6 +202,7 @@
             this.tabBlock_2.SuspendLayout();
             this.pnlOutbound.SuspendLayout();
             this.pnlInbound.SuspendLayout();
+            this.tabBlock_3.SuspendLayout();
             this.tabBlock_4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgView)).BeginInit();
             this.tabBlock_5.SuspendLayout();
@@ -912,6 +939,32 @@
             // 
             // tabBlock_3
             // 
+            this.tabBlock_3.Controls.Add(this.txtTAG434);
+            this.tabBlock_3.Controls.Add(this.lblTAG434);
+            this.tabBlock_3.Controls.Add(this.txtTAG433);
+            this.tabBlock_3.Controls.Add(this.lblTAG433);
+            this.tabBlock_3.Controls.Add(this.txtTAG165);
+            this.tabBlock_3.Controls.Add(this.lblTAG165);
+            this.tabBlock_3.Controls.Add(this.txtTAG115);
+            this.tabBlock_3.Controls.Add(this.lblTAG115);
+            this.tabBlock_3.Controls.Add(this.txtTAG121);
+            this.tabBlock_3.Controls.Add(this.lblTAG121);
+            this.tabBlock_3.Controls.Add(this.txtTAG111);
+            this.tabBlock_3.Controls.Add(this.lblTAG111);
+            this.tabBlock_3.Controls.Add(this.txtTAG424);
+            this.tabBlock_3.Controls.Add(this.lblTAG424);
+            this.tabBlock_3.Controls.Add(this.txtTAG106);
+            this.tabBlock_3.Controls.Add(this.lblTAG106);
+            this.tabBlock_3.Controls.Add(this.txtTAG423);
+            this.tabBlock_3.Controls.Add(this.lblTAG423);
+            this.tabBlock_3.Controls.Add(this.txtTAG119);
+            this.tabBlock_3.Controls.Add(this.lblTAG119);
+            this.tabBlock_3.Controls.Add(this.txtTAG108);
+            this.tabBlock_3.Controls.Add(this.lblTAG108);
+            this.tabBlock_3.Controls.Add(this.txtTAG113);
+            this.tabBlock_3.Controls.Add(this.lblTAG113);
+            this.tabBlock_3.Controls.Add(this.txtTAG103);
+            this.tabBlock_3.Controls.Add(this.lblTAG103);
             this.tabBlock_3.Location = new System.Drawing.Point(4, 22);
             this.tabBlock_3.Name = "tabBlock_3";
             this.tabBlock_3.Size = new System.Drawing.Size(552, 459);
@@ -1490,7 +1543,228 @@
             this.txtScope.Size = new System.Drawing.Size(546, 453);
             this.txtScope.TabIndex = 0;
             // 
-            // frmSWIFT
+            // lblTAG103
+            // 
+            this.lblTAG103.AutoSize = true;
+            this.lblTAG103.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTAG103.Location = new System.Drawing.Point(3, 20);
+            this.lblTAG103.Name = "lblTAG103";
+            this.lblTAG103.Size = new System.Drawing.Size(159, 13);
+            this.lblTAG103.TabIndex = 0;
+            this.lblTAG103.Text = "Tag103 - Service Identifier";
+            // 
+            // txtTAG103
+            // 
+            this.txtTAG103.Location = new System.Drawing.Point(351, 16);
+            this.txtTAG103.Name = "txtTAG103";
+            this.txtTAG103.Size = new System.Drawing.Size(187, 20);
+            this.txtTAG103.TabIndex = 1;
+            // 
+            // txtTAG113
+            // 
+            this.txtTAG113.Location = new System.Drawing.Point(351, 42);
+            this.txtTAG113.Name = "txtTAG113";
+            this.txtTAG113.Size = new System.Drawing.Size(187, 20);
+            this.txtTAG113.TabIndex = 3;
+            // 
+            // lblTAG113
+            // 
+            this.lblTAG113.AutoSize = true;
+            this.lblTAG113.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTAG113.Location = new System.Drawing.Point(3, 46);
+            this.lblTAG113.Name = "lblTAG113";
+            this.lblTAG113.Size = new System.Drawing.Size(126, 13);
+            this.lblTAG113.TabIndex = 2;
+            this.lblTAG113.Text = "Tag113 - Banking Priority";
+            // 
+            // txtTAG108
+            // 
+            this.txtTAG108.Location = new System.Drawing.Point(351, 68);
+            this.txtTAG108.Name = "txtTAG108";
+            this.txtTAG108.Size = new System.Drawing.Size(187, 20);
+            this.txtTAG108.TabIndex = 5;
+            // 
+            // lblTAG108
+            // 
+            this.lblTAG108.AutoSize = true;
+            this.lblTAG108.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTAG108.Location = new System.Drawing.Point(3, 72);
+            this.lblTAG108.Name = "lblTAG108";
+            this.lblTAG108.Size = new System.Drawing.Size(208, 13);
+            this.lblTAG108.TabIndex = 4;
+            this.lblTAG108.Text = "Tag108 - Message User Reference (MUR)";
+            // 
+            // txtTAG119
+            // 
+            this.txtTAG119.Location = new System.Drawing.Point(351, 94);
+            this.txtTAG119.Name = "txtTAG119";
+            this.txtTAG119.Size = new System.Drawing.Size(187, 20);
+            this.txtTAG119.TabIndex = 7;
+            // 
+            // lblTAG119
+            // 
+            this.lblTAG119.AutoSize = true;
+            this.lblTAG119.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTAG119.Location = new System.Drawing.Point(3, 98);
+            this.lblTAG119.Name = "lblTAG119";
+            this.lblTAG119.Size = new System.Drawing.Size(122, 13);
+            this.lblTAG119.TabIndex = 6;
+            this.lblTAG119.Text = "Tag119 - Validation Flag";
+            // 
+            // txtTAG423
+            // 
+            this.txtTAG423.Location = new System.Drawing.Point(351, 120);
+            this.txtTAG423.Name = "txtTAG423";
+            this.txtTAG423.Size = new System.Drawing.Size(187, 20);
+            this.txtTAG423.TabIndex = 9;
+            // 
+            // lblTAG423
+            // 
+            this.lblTAG423.AutoSize = true;
+            this.lblTAG423.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTAG423.Location = new System.Drawing.Point(3, 124);
+            this.lblTAG423.Name = "lblTAG423";
+            this.lblTAG423.Size = new System.Drawing.Size(273, 13);
+            this.lblTAG423.TabIndex = 8;
+            this.lblTAG423.Text = "Tag423 - Balance checkpoint date and time (MIRS only)";
+            // 
+            // txtTAG106
+            // 
+            this.txtTAG106.Location = new System.Drawing.Point(351, 146);
+            this.txtTAG106.Name = "txtTAG106";
+            this.txtTAG106.Size = new System.Drawing.Size(187, 20);
+            this.txtTAG106.TabIndex = 11;
+            // 
+            // lblTAG106
+            // 
+            this.lblTAG106.AutoSize = true;
+            this.lblTAG106.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTAG106.Location = new System.Drawing.Point(6, 150);
+            this.lblTAG106.Name = "lblTAG106";
+            this.lblTAG106.Size = new System.Drawing.Size(257, 13);
+            this.lblTAG106.TabIndex = 10;
+            this.lblTAG106.Text = "Tag106 - Message Input Reference MIR (MIRS only)";
+            // 
+            // txtTAG424
+            // 
+            this.txtTAG424.Location = new System.Drawing.Point(351, 172);
+            this.txtTAG424.Name = "txtTAG424";
+            this.txtTAG424.Size = new System.Drawing.Size(187, 20);
+            this.txtTAG424.TabIndex = 13;
+            // 
+            // lblTAG424
+            // 
+            this.lblTAG424.AutoSize = true;
+            this.lblTAG424.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTAG424.Location = new System.Drawing.Point(6, 176);
+            this.lblTAG424.Name = "lblTAG424";
+            this.lblTAG424.Size = new System.Drawing.Size(196, 13);
+            this.lblTAG424.TabIndex = 12;
+            this.lblTAG424.Text = "Tag424 - Related reference (MIRS only)";
+            // 
+            // txtTAG111
+            // 
+            this.txtTAG111.Location = new System.Drawing.Point(351, 198);
+            this.txtTAG111.Name = "txtTAG111";
+            this.txtTAG111.Size = new System.Drawing.Size(187, 20);
+            this.txtTAG111.TabIndex = 15;
+            // 
+            // lblTAG111
+            // 
+            this.lblTAG111.AutoSize = true;
+            this.lblTAG111.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTAG111.Location = new System.Drawing.Point(6, 202);
+            this.lblTAG111.Name = "lblTAG111";
+            this.lblTAG111.Size = new System.Drawing.Size(154, 13);
+            this.lblTAG111.TabIndex = 14;
+            this.lblTAG111.Text = "Tag111 - Service type identifier";
+            // 
+            // txtTAG121
+            // 
+            this.txtTAG121.Location = new System.Drawing.Point(351, 224);
+            this.txtTAG121.Name = "txtTAG121";
+            this.txtTAG121.Size = new System.Drawing.Size(187, 20);
+            this.txtTAG121.TabIndex = 17;
+            // 
+            // lblTAG121
+            // 
+            this.lblTAG121.AutoSize = true;
+            this.lblTAG121.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTAG121.Location = new System.Drawing.Point(6, 228);
+            this.lblTAG121.Name = "lblTAG121";
+            this.lblTAG121.Size = new System.Drawing.Size(244, 13);
+            this.lblTAG121.TabIndex = 16;
+            this.lblTAG121.Text = "Tag121 - Unique end-to-end transaction reference";
+            // 
+            // txtTAG115
+            // 
+            this.txtTAG115.Location = new System.Drawing.Point(351, 250);
+            this.txtTAG115.Name = "txtTAG115";
+            this.txtTAG115.Size = new System.Drawing.Size(187, 20);
+            this.txtTAG115.TabIndex = 19;
+            // 
+            // lblTAG115
+            // 
+            this.lblTAG115.AutoSize = true;
+            this.lblTAG115.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTAG115.Location = new System.Drawing.Point(6, 254);
+            this.lblTAG115.Name = "lblTAG115";
+            this.lblTAG115.Size = new System.Drawing.Size(230, 13);
+            this.lblTAG115.TabIndex = 18;
+            this.lblTAG115.Text = "Tag115 - Addressee Information (FINCopy only)";
+            // 
+            // txtTAG165
+            // 
+            this.txtTAG165.Location = new System.Drawing.Point(351, 276);
+            this.txtTAG165.Name = "txtTAG165";
+            this.txtTAG165.Size = new System.Drawing.Size(187, 20);
+            this.txtTAG165.TabIndex = 21;
+            // 
+            // lblTAG165
+            // 
+            this.lblTAG165.AutoSize = true;
+            this.lblTAG165.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTAG165.Location = new System.Drawing.Point(6, 280);
+            this.lblTAG165.Name = "lblTAG165";
+            this.lblTAG165.Size = new System.Drawing.Size(345, 13);
+            this.lblTAG165.TabIndex = 20;
+            this.lblTAG165.Text = "Tag165 - Payment release information receiver (FINInform services only)";
+            // 
+            // txtTAG433
+            // 
+            this.txtTAG433.Location = new System.Drawing.Point(351, 302);
+            this.txtTAG433.Name = "txtTAG433";
+            this.txtTAG433.Size = new System.Drawing.Size(187, 20);
+            this.txtTAG433.TabIndex = 23;
+            // 
+            // lblTAG433
+            // 
+            this.lblTAG433.AutoSize = true;
+            this.lblTAG433.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTAG433.Location = new System.Drawing.Point(6, 306);
+            this.lblTAG433.Name = "lblTAG433";
+            this.lblTAG433.Size = new System.Drawing.Size(277, 13);
+            this.lblTAG433.TabIndex = 22;
+            this.lblTAG433.Text = "Tag433 - Sanctions screening information for the receiver";
+            // 
+            // txtTAG434
+            // 
+            this.txtTAG434.Location = new System.Drawing.Point(351, 328);
+            this.txtTAG434.Name = "txtTAG434";
+            this.txtTAG434.Size = new System.Drawing.Size(187, 20);
+            this.txtTAG434.TabIndex = 25;
+            // 
+            // lblTAG434
+            // 
+            this.lblTAG434.AutoSize = true;
+            this.lblTAG434.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblTAG434.Location = new System.Drawing.Point(6, 332);
+            this.lblTAG434.Name = "lblTAG434";
+            this.lblTAG434.Size = new System.Drawing.Size(244, 13);
+            this.lblTAG434.TabIndex = 24;
+            this.lblTAG434.Text = "Tag434 - Payment controls information for receiver";
+            // 
+            // FrmSWIFT
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -1498,7 +1772,7 @@
             this.Controls.Add(this.tabCtrl);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "frmSWIFT";
+            this.Name = "FrmSWIFT";
             this.Text = "Form1";
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -1513,6 +1787,8 @@
             this.pnlOutbound.PerformLayout();
             this.pnlInbound.ResumeLayout(false);
             this.pnlInbound.PerformLayout();
+            this.tabBlock_3.ResumeLayout(false);
+            this.tabBlock_3.PerformLayout();
             this.tabBlock_4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgView)).EndInit();
             this.tabBlock_5.ResumeLayout(false);
@@ -1668,6 +1944,32 @@
       private System.Windows.Forms.TextBox txtErrors;
         private System.Windows.Forms.TabPage tabScope;
         private System.Windows.Forms.TextBox txtScope;
+        private System.Windows.Forms.Label lblTAG103;
+        private System.Windows.Forms.TextBox txtTAG103;
+        private System.Windows.Forms.TextBox txtTAG113;
+        private System.Windows.Forms.Label lblTAG113;
+        private System.Windows.Forms.TextBox txtTAG108;
+        private System.Windows.Forms.Label lblTAG108;
+        private System.Windows.Forms.TextBox txtTAG119;
+        private System.Windows.Forms.Label lblTAG119;
+        private System.Windows.Forms.TextBox txtTAG106;
+        private System.Windows.Forms.Label lblTAG106;
+        private System.Windows.Forms.TextBox txtTAG423;
+        private System.Windows.Forms.Label lblTAG423;
+        private System.Windows.Forms.TextBox txtTAG424;
+        private System.Windows.Forms.Label lblTAG424;
+        private System.Windows.Forms.TextBox txtTAG111;
+        private System.Windows.Forms.Label lblTAG111;
+        private System.Windows.Forms.TextBox txtTAG433;
+        private System.Windows.Forms.Label lblTAG433;
+        private System.Windows.Forms.TextBox txtTAG165;
+        private System.Windows.Forms.Label lblTAG165;
+        private System.Windows.Forms.TextBox txtTAG115;
+        private System.Windows.Forms.Label lblTAG115;
+        private System.Windows.Forms.TextBox txtTAG121;
+        private System.Windows.Forms.Label lblTAG121;
+        private System.Windows.Forms.TextBox txtTAG434;
+        private System.Windows.Forms.Label lblTAG434;
     }
 }
 

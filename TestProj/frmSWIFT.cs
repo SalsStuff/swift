@@ -60,7 +60,7 @@ namespace TestProj
             fillMessagePage();
             fillBlock1Page();
             fillBlock2Page();
-            //fillBlock3Page();
+            fillBlock3Page();
             fillBlock4Page(BH.MessageType);
             fillBlock5Page();
             fillErrorsPage();
@@ -142,7 +142,24 @@ namespace TestProj
                 txtOutPriority.Text = BH.Priority;
             }
         }
-    
+
+        private void fillBlock3Page()
+        {
+            txtTAG103.Text = BH.TAG103_ServiceID;
+            txtTAG113.Text = BH.TAG113_BankingPriority;
+            txtTAG108.Text = BH.TAG108_MUR;
+            txtTAG119.Text = BH.TAG119_ValidationFlag;
+            txtTAG423.Text = BH.TAG423_BalanceCheckPoint;
+            txtTAG106.Text = BH.TAG106_MIR;
+            txtTAG424.Text = BH.TAG424_RelatedReference;
+            txtTAG111.Text = BH.TAG111_ServiceTypeID;
+            txtTAG121.Text = BH.TAG121_UniqueTranReference;
+            txtTAG115.Text = BH.TAG115_AddresseeInfo;
+            txtTAG165.Text = BH.TAG165_PaymentRIR;
+            txtTAG433.Text = BH.TAG433_SanctionsSIR;
+            txtTAG434.Text = BH.TAG434_PaymentCIR;
+        }
+
         private void fillBlock4Page(string messageType)
         {
             switch (messageType)
@@ -154,37 +171,7 @@ namespace TestProj
                     break;
             }
         }
-    
-        private void display_320_Data()
-        {
-            int sections = ((MT320)MsgContainer).numOfSequences;
-            MT320 fields = ((MT320)MsgContainer);
-            List<TagData<string, string, string, string, int>> fieldData = new List<TagData<string, string, string, string, int>>();
-            DataTable dt = new DataTable();
-            
-            dt.Columns.Add("Tag Name", typeof(string));
-            dt.Columns.Add("Tag ID", typeof(string));
-            dt.Columns.Add("Tag Value", typeof(string));
-            dt.Columns.Add("Madatory", typeof(string));
-            if( DEGUG_ON == true )
-                dt.Columns.Add("Present", typeof(int));
-            
-            for (int s = 0; s < sections; s++)
-            {
-                fieldData = fields[s];
-                foreach(TagData<string, string, string, string, int>t in fieldData)
-                {
-                    if (DEGUG_ON == true)
-                        dt.Rows.Add(new object[] { t.Name, t.Tag, t.Value, t.Mandatory, t.Present });
-                    else
-                        dt.Rows.Add(new object[] { t.Name, t.Tag, t.Value, t.Mandatory });
-                }
-            }
-            dgView.DataSource = dt;
-            
-            txtScope.Text = ((MT320)MsgContainer).Scope;
-        }
-    
+
         private void fillBlock5Page()
         {
             txtChecksum.Text = BH.Checksum;
@@ -215,6 +202,36 @@ namespace TestProj
             txtSYSMorLTId.Text = BH.SYSMorLTId;
             txtSYSMorSessNum.Text = BH.SYSMorSessionNum;
             txtSYSMorSeqNum.Text = BH.SYSMorSequenceNum;
+        }
+
+        private void display_320_Data()
+        {
+            int sections = ((MT320)MsgContainer).numOfSequences;
+            MT320 fields = ((MT320)MsgContainer);
+            List<TagData<string, string, string, string, int>> fieldData = new List<TagData<string, string, string, string, int>>();
+            DataTable dt = new DataTable();
+            
+            dt.Columns.Add("Tag Name", typeof(string));
+            dt.Columns.Add("Tag ID", typeof(string));
+            dt.Columns.Add("Tag Value", typeof(string));
+            dt.Columns.Add("Madatory", typeof(string));
+            if( DEGUG_ON == true )
+                dt.Columns.Add("Present", typeof(int));
+            
+            for (int s = 0; s < sections; s++)
+            {
+                fieldData = fields[s];
+                foreach(TagData<string, string, string, string, int>t in fieldData)
+                {
+                    if (DEGUG_ON == true)
+                        dt.Rows.Add(new object[] { t.Name, t.Tag, t.Value, t.Mandatory, t.Present });
+                    else
+                        dt.Rows.Add(new object[] { t.Name, t.Tag, t.Value, t.Mandatory });
+                }
+            }
+            dgView.DataSource = dt;
+            
+            txtScope.Text = ((MT320)MsgContainer).Scope;
         }
     
         private void fillErrorsPage()
