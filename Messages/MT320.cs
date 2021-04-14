@@ -195,7 +195,7 @@ namespace Messages
             // Tag, Name, Value, Mandatory
             new TagData<string, string, string, string, int>("15I", "New Sequence"            , "" ,"M", 0),
             new TagData<string, string, string, string, int>("18A", "Number of Repetitions"   , "" ,"M", 0),
-            //new TagData<string, string, string, string, int>("30F", "Payment Date"            , "" ,"M", 0),  //   - Repeating fields
+            //new TagData<string, string, string, string, int>("30F", "Payment Date"            , "" ,"M", 0),  //   - Repeating fields 
             //new TagData<string, string, string, string, int>("32H", "Currency, Payment Amount", "" ,"M", 0),  //   /
             new TagData<string, string, string, string, int>("53A", "Delivery Agent"          , "", "O", 0),
             new TagData<string, string, string, string, int>("53D", "Delivery Agent"          , "", "O", 0),
