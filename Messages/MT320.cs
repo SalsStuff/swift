@@ -172,7 +172,7 @@ namespace Messages
             new TagData<string, string, string, string, int>("24D", "Dealing Method"                , "" ,"O", 0),
             new TagData<string, string, string, string, int>("26H", "Counterparty's Reference"      , "" ,"O", 0),
             new TagData<string, string, string, string, int>("29A", "Contract Information"          , "", "O", 0),
-            new TagData<string, string, string, string, int>("34C", "Commission and Fees"           , "", "O", 0),  // repeating
+            //new TagData<string, string, string, string, int>("34C", "Commission and Fees"           , "", "O", 0),  // repeating
             new TagData<string, string, string, string, int>("71F", "Broker's Commission"           , "", "O", 0),
             new TagData<string, string, string, string, int>("72",  "Sender to Receiver Information", "", "O", 0),
             new TagData<string, string, string, string, int>("84A", "Dealing Branch Party A"        , "", "O", 0),
@@ -195,8 +195,8 @@ namespace Messages
             // Tag, Name, Value, Mandatory
             new TagData<string, string, string, string, int>("15I", "New Sequence"            , "" ,"M", 0),
             new TagData<string, string, string, string, int>("18A", "Number of Repetitions"   , "" ,"M", 0),
-            new TagData<string, string, string, string, int>("30F", "Payment Date"            , "" ,"M", 0),  //   - Repeating fields
-            new TagData<string, string, string, string, int>("32H", "Currency, Payment Amount", "" ,"M", 0),  //   /
+            //new TagData<string, string, string, string, int>("30F", "Payment Date"            , "" ,"M", 0),  //   - Repeating fields
+            //new TagData<string, string, string, string, int>("32H", "Currency, Payment Amount", "" ,"M", 0),  //   /
             new TagData<string, string, string, string, int>("53A", "Delivery Agent"          , "", "O", 0),
             new TagData<string, string, string, string, int>("53D", "Delivery Agent"          , "", "O", 0),
             new TagData<string, string, string, string, int>("53J", "Delivery Agent"          , "", "O", 0),
@@ -521,7 +521,7 @@ namespace Messages
                         {
                             tagName = t.Name;
                             break;
-                        }
+                        } 
                     }
                     break;
                 case "I":
@@ -739,6 +739,10 @@ namespace Messages
                         {
                             t.Value = value;
                             break;
+                        } else if(tag.Equals("34C") == true)
+                        {
+                            sequenceH.Add(new TagData<string, string, string, string, int>("34C", "Commission and Fees", value, "O", 0));
+                            break;
                         }
                     }
                     break;
@@ -749,7 +753,16 @@ namespace Messages
                         {
                             t.Value = value;
                             break;
+                        } else if (tag.Equals("30F") == true)
+                        {
+                            sequenceI.Add(new TagData<string, string, string, string, int>("30F", "Payment Date", value, "M", 0));
+                            break;
+                        } else if (tag.Equals("32H") == true)
+                        {
+                            sequenceI.Add(new TagData<string, string, string, string, int>("32H", "Currency, Payment Amount", value, "M", 0));
+                            break;
                         }
+
                     }
                     break;
                 default:
