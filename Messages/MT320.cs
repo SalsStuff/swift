@@ -172,7 +172,7 @@ namespace Messages
             new TagData<string, string, string, string, int>("24D", "Dealing Method"                , "" ,"O", 0),
             new TagData<string, string, string, string, int>("26H", "Counterparty's Reference"      , "" ,"O", 0),
             new TagData<string, string, string, string, int>("29A", "Contract Information"          , "", "O", 0),
-            //new TagData<string, string, string, string, int>("34C", "Commission and Fees"           , "", "O", 0),  // repeating
+            new TagData<string, string, string, string, int>("34C", "Commission and Fees"           , "", "O", 0),  // repeating
             new TagData<string, string, string, string, int>("71F", "Broker's Commission"           , "", "O", 0),
             new TagData<string, string, string, string, int>("72",  "Sender to Receiver Information", "", "O", 0),
             new TagData<string, string, string, string, int>("84A", "Dealing Branch Party A"        , "", "O", 0),
@@ -195,8 +195,8 @@ namespace Messages
             // Tag, Name, Value, Mandatory
             new TagData<string, string, string, string, int>("15I", "New Sequence"            , "" ,"M", 0),
             new TagData<string, string, string, string, int>("18A", "Number of Repetitions"   , "" ,"M", 0),
-            //new TagData<string, string, string, string, int>("30F", "Payment Date"            , "" ,"M", 0),  //   - Repeating fields 
-            //new TagData<string, string, string, string, int>("32H", "Currency, Payment Amount", "" ,"M", 0),  //   /
+            new TagData<string, string, string, string, int>("30F", "Payment Date"            , "" ,"M", 0),  //   - Repeating fields 
+            new TagData<string, string, string, string, int>("32H", "Currency, Payment Amount", "" ,"M", 0),  //   /
             new TagData<string, string, string, string, int>("53A", "Delivery Agent"          , "", "O", 0),
             new TagData<string, string, string, string, int>("53D", "Delivery Agent"          , "", "O", 0),
             new TagData<string, string, string, string, int>("53J", "Delivery Agent"          , "", "O", 0),
@@ -337,7 +337,9 @@ namespace Messages
             string test = input.Substring(0, 1);
             if (test.Equals(":") == true)
                 input = input.Substring(1);
-            
+
+            // Remove the End of Block flag
+            input = input.Substring(0, input.Length - 2);
             // Split the tags and values up
             string[] result = input.Split(':');
             result = result.Where((s, i) => i % 2 == 0)
@@ -660,6 +662,7 @@ namespace Messages
         /// <param name="value"></param>
         public void SetTagValue(string sequence, string tag, string value)
         {
+            int idx = 0;
             switch (sequence)
             {
                 case "A":
@@ -735,13 +738,14 @@ namespace Messages
                 case "H":
                     foreach (TagData<string, string, string, string, int> t in sequenceH)
                     {
-                        if (tag.Equals(t.Tag) == true)
+                        if (tag.Equals("34C") == true && t.Tag.Equals("34C") && !t.Value.Equals(""))
+                        {
+                            idx = sequenceH.FindLastIndex((delegate (TagData<string, string, string, string, int> t1) { return t1.Tag == "34C"; }));
+                            sequenceH.Insert(idx+1, new TagData<string, string, string, string, int>("34C", "Commission and Fees", value, "O", 1));
+                            break;
+                        } else if (tag.Equals(t.Tag) == true)
                         {
                             t.Value = value;
-                            break;
-                        } else if(tag.Equals("34C") == true)
-                        {
-                            sequenceH.Add(new TagData<string, string, string, string, int>("34C", "Commission and Fees", value, "O", 0));
                             break;
                         }
                     }
@@ -749,20 +753,21 @@ namespace Messages
                 case "I":
                     foreach (TagData<string, string, string, string, int> t in sequenceI)
                     {
-                        if (tag.Equals(t.Tag) == true)
+                        if (tag.Equals("30F") == true && t.Tag.Equals("30F") && !t.Value.Equals(""))
+                        {
+                            idx = sequenceI.FindLastIndex((delegate (TagData<string, string, string, string, int> t1) { return t1.Tag == "32H"; }));
+                            sequenceI.Insert(idx + 1, new TagData<string, string, string, string, int>("30F", "Commission and Fees", value, "O", 1));
+                            break;
+                        } else if (tag.Equals("32H") == true && t.Tag.Equals("32H") && !t.Value.Equals(""))
+                        {
+                            idx = sequenceI.FindLastIndex((delegate (TagData<string, string, string, string, int> t1) { return t1.Tag == "30F"; }));
+                            sequenceI.Insert(idx + 1, new TagData<string, string, string, string, int>("32H", "Commission and Fees", value, "O", 1));
+                            break;
+                        } else if (tag.Equals(t.Tag) == true)
                         {
                             t.Value = value;
                             break;
-                        } else if (tag.Equals("30F") == true)
-                        {
-                            sequenceI.Add(new TagData<string, string, string, string, int>("30F", "Payment Date", value, "M", 0));
-                            break;
-                        } else if (tag.Equals("32H") == true)
-                        {
-                            sequenceI.Add(new TagData<string, string, string, string, int>("32H", "Currency, Payment Amount", value, "M", 0));
-                            break;
-                        }
-
+                        } 
                     }
                     break;
                 default:

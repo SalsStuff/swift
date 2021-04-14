@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -15,8 +16,10 @@ namespace TestProj
     {
         BlockHeader BH = new BlockHeader();
         Object MsgContainer;
-        readonly bool DEGUG_ON = false;
+        readonly bool DEBUG_ON = false;
         
+        private SqlConnection cnn = null;
+
         public FrmSWIFT() => InitializeComponent();
    
         private void mnuFileExit_Click(object sender, EventArgs e) => Application.Exit();
@@ -49,7 +52,25 @@ namespace TestProj
                 getData(fileName);
             }
         }
-    
+
+        private void mnuFileOpenDB_Click(object sender, EventArgs e)
+        {
+            string connetionString;
+            string DB = "SWIFT";
+            
+            connetionString = @"Data Source=DESKTOP-SRU018M;Initial Catalog=SWIFT;USER ID=user1;Password=U1234";
+            cnn = new SqlConnection(connetionString);
+            try
+            {
+                cnn.Open();
+                btnSaveData.Enabled = true;
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
         #region DISPLAY_FUNCTIONS
         private void getData(string fileName)
         {
@@ -215,22 +236,32 @@ namespace TestProj
             dt.Columns.Add("Tag ID", typeof(string));
             dt.Columns.Add("Tag Value", typeof(string));
             dt.Columns.Add("Madatory", typeof(string));
-            if( DEGUG_ON == true )
-                dt.Columns.Add("Present", typeof(int));
+            dt.Columns.Add("Present", typeof(int));
             
             for (int s = 0; s < sections; s++)
             {
                 fieldData = fields[s];
                 foreach(TagData<string, string, string, string, int>t in fieldData)
                 {
-                    if (DEGUG_ON == true)
-                        dt.Rows.Add(new object[] { t.Name, t.Tag, t.Value, t.Mandatory, t.Present });
-                    else
-                        dt.Rows.Add(new object[] { t.Name, t.Tag, t.Value, t.Mandatory });
+                    dt.Rows.Add(new object[] { t.Name, t.Tag, t.Value, t.Mandatory, t.Present });
                 }
             }
             dgView.DataSource = dt;
-            
+            foreach(DataGridViewRow row in dgView.Rows)
+            {
+                if (row.Cells["Present"].Value == null)
+                {
+                    continue;
+                }
+                if (row.Cells["Tag ID"].Value.ToString().Contains("15"))
+                {
+                    row.DefaultCellStyle.BackColor = Color.Yellow;
+                } else if (row.Cells["Present"].Value.Equals(0))
+                {
+                    row.DefaultCellStyle.BackColor = Color.Gray;
+                }
+            }
+            dgView.Columns["Present"].Visible = DEBUG_ON;
             txtScope.Text = ((MT320)MsgContainer).Scope;
         }
     
@@ -248,5 +279,13 @@ namespace TestProj
             }
         }
         #endregion
+
+        private void FrmSWIFT_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (cnn != null)
+                cnn.Close();
+
+            MessageBox.Show("Closing");
+        }
     }
 }
