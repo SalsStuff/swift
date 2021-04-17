@@ -65,7 +65,22 @@ namespace Messages
             MIRSeqNum = null;
             OutputDate = null;
             OutputTime = null;
-            
+
+            // USER HEADER member variables
+            TAG103_ServiceID = null;
+            TAG113_BankingPriority = null;
+            TAG108_MUR = null;
+            TAG119_ValidationFlag = null;
+            TAG423_BalanceCheckPoint = null;
+            TAG106_MIR = null;
+            TAG424_RelatedReference = null;
+            TAG111_ServiceTypeID = null;
+            TAG121_UniqueTranReference = null;
+            TAG115_AddresseeInfo = null;
+            TAG165_PaymentRIR = null;
+            TAG433_SanctionsSIR = null;
+            TAG434_PaymentCIR = null;
+
             // TRAILER HEADER member variables
             Checksum = null;
             TNGMessage = null;
@@ -94,7 +109,7 @@ namespace Messages
             SYSMorDate = null;
             SYSMorLTId = null;
             SYSMorSessionNum = null;
-            SYS_morSequenceNum = null;
+            SYSMorSequenceNum = null;
         }
     
         private void ParseBlocks(string msg)
@@ -241,7 +256,7 @@ namespace Messages
 
         public string MIRSessNum { get; private set; } = null;
 
-        private string MIRSeqNum { get; set; } = null;
+        public string MIRSeqNum { get; private set; } = null;
 
         public string OutputDate { get; private set; } = null;
 
@@ -262,7 +277,6 @@ namespace Messages
         public string TAG165_PaymentRIR { get; private set; } = null;
         public string TAG433_SanctionsSIR { get; private set; } = null;
         public string TAG434_PaymentCIR { get; private set; } = null;
-        public string SYS_morSequenceNum { get; private set; } = null;
         #endregion
 
         #region TRAILER_HEADER_GETS
@@ -320,10 +334,7 @@ namespace Messages
 
         public string SYSMorSessionNum { get; private set; } = null;
 
-        public string SYSMorSequenceNum
-        {
-            get { return SYS_morSequenceNum; }
-        }
+        public string SYSMorSequenceNum { get; private set; } = null;
         #endregion
         #endregion
     
@@ -1167,7 +1178,7 @@ namespace Messages
                     SYSMorDate = sect.Substring(9, 6);
                     SYSMorLTId = sect.Substring(15, 12);
                     SYSMorSessionNum = sect.Substring(27, 4);
-                    SYS_morSequenceNum = sect.Substring(31, 6);
+                    SYSMorSequenceNum = sect.Substring(31, 6);
                 }
             }
             

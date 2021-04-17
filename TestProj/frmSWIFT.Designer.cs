@@ -235,21 +235,21 @@
             // mnuFileOpenDB
             // 
             this.mnuFileOpenDB.Name = "mnuFileOpenDB";
-            this.mnuFileOpenDB.Size = new System.Drawing.Size(180, 22);
+            this.mnuFileOpenDB.Size = new System.Drawing.Size(154, 22);
             this.mnuFileOpenDB.Text = "Open &Database";
             this.mnuFileOpenDB.Click += new System.EventHandler(this.mnuFileOpenDB_Click);
             // 
             // mnuFileOpen
             // 
             this.mnuFileOpen.Name = "mnuFileOpen";
-            this.mnuFileOpen.Size = new System.Drawing.Size(180, 22);
+            this.mnuFileOpen.Size = new System.Drawing.Size(154, 22);
             this.mnuFileOpen.Text = "&Open Message";
             this.mnuFileOpen.Click += new System.EventHandler(this.mnuFileOpen_Click);
             // 
             // mnuFileExit
             // 
             this.mnuFileExit.Name = "mnuFileExit";
-            this.mnuFileExit.Size = new System.Drawing.Size(180, 22);
+            this.mnuFileExit.Size = new System.Drawing.Size(154, 22);
             this.mnuFileExit.Text = "E&xit";
             this.mnuFileExit.Click += new System.EventHandler(this.mnuFileExit_Click);
             // 
@@ -1783,6 +1783,7 @@
             this.btnSaveData.TabIndex = 12;
             this.btnSaveData.Text = "Save Data";
             this.btnSaveData.UseVisualStyleBackColor = true;
+            this.btnSaveData.Click += new System.EventHandler(this.btnSaveData_Click);
             // 
             // FrmSWIFT
             // 

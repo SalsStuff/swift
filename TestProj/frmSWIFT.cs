@@ -9,16 +9,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Messages;
+using Database;
 
 namespace TestProj
 {
     public partial class FrmSWIFT : Form
     {
         BlockHeader BH = new BlockHeader();
+        DBUtils dbu = new DBUtils();
         Object MsgContainer;
         readonly bool DEBUG_ON = false;
         
-        private SqlConnection cnn = null;
+        //private SqlConnection cnn = null;
 
         public FrmSWIFT() => InitializeComponent();
    
@@ -55,14 +57,14 @@ namespace TestProj
 
         private void mnuFileOpenDB_Click(object sender, EventArgs e)
         {
-            string connetionString;
-            string DB = "SWIFT";
+            //string connetionString;
             
-            connetionString = @"Data Source=DESKTOP-SRU018M;Initial Catalog=SWIFT;USER ID=user1;Password=U1234";
-            cnn = new SqlConnection(connetionString);
+            //connetionString = @"Data Source=DESKTOP-SRU018M;Initial Catalog=SWIFT;USER ID=user1;Password=U1234";
+            //cnn = new SqlConnection(connetionString);
             try
             {
-                cnn.Open();
+                //cnn.Open();
+                dbu.DBOpen();
                 btnSaveData.Enabled = true;
             }
             catch(Exception ex)
@@ -282,10 +284,28 @@ namespace TestProj
 
         private void FrmSWIFT_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (cnn != null)
-                cnn.Close();
+            dbu.DBClose();
+        }
 
-            MessageBox.Show("Closing");
+        private void btnSaveData_Click(object sender, EventArgs e)
+        {
+            string mtype = BH.MessageType;
+
+            try
+            {
+                switch (mtype)
+                {
+                    case "320":
+                        ((MT320)MsgContainer).saveRecord(BH);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

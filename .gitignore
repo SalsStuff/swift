@@ -1,7 +1,11 @@
 /Messages/obj
 /Messages/Bin/Debug
 /Messages/Bin/Release
+/Messages/.vs/Messages/v16
 /TestProj/obj
 /TestProj/Bin/Debug
 /TestProj/Bin/Release
-/Messages/.vs/Messages/v16
+/Database/obj
+/Database/Bin/Debug
+/Database/Bin/Release
+

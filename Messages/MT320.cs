@@ -5,12 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.IO;
+using Database;
 
 namespace Messages
 {
     // https://www2.swift.com/knowledgecentre/publications/us3ma_20190719/1.0?topic=mt320.htm
-    public class MT320
+    public class MT320 : MTMessage
     {
+        DBUtils dbu = new DBUtils();
+        
         #region SEQUENCE_VARIABLES
         // Sequence A - Mandatory
         // Sequence A General Information contains general information about the fixed loan/deposit as well as about the confirmation itself.
@@ -246,7 +249,7 @@ namespace Messages
         /// This is the SWIFT definition of the message
         /// It can be found at https://www2.swift.com/knowledgecentre/publications/us3ma_20190719/1.0?topic=mt320-scope.htm
         /// </summary>
-        private void DefineScope()
+        protected override void DefineScope()
         {
             Scope = "MT 320 Scope:\r\n" + 
                     "This message is exchanged to confirm a fixed term loan/ deposit contract.\r\n" +
@@ -275,7 +278,7 @@ namespace Messages
         /// <summary>
         /// Reset the class variables 
         /// </summary>
-        private void ResetVariables()
+        protected override void ResetVariables()
         {
             foreach (TagData<string, string, string, string, int> t in sequenceA)
             {
@@ -351,20 +354,59 @@ namespace Messages
             IsMessageValid();
         }
 
+        private List<TagData<string, string, string, string, int>> getSequence(string seqId)
+        {
+            List<TagData<string, string, string, string, int>> sequence = null;
+
+            switch (seqId)
+            {
+                case "A":
+                    sequence = sequenceA;
+                    break;
+                case "B":
+                    sequence = sequenceB;
+                    break;
+                case "C":
+                    sequence = sequenceC;
+                    break;
+                case "D":
+                    sequence = sequenceD;
+                    break;
+                case "E":
+                    sequence = sequenceE;
+                    break;
+                case "F":
+                    sequence = sequenceF;
+                    break;
+                case "G":
+                    sequence = sequenceG;
+                    break;
+                case "H":
+                    sequence = sequenceH;
+                    break;
+                case "I":
+                    sequence = sequenceI;
+                    break;
+                default:
+                    break;
+            }
+            return sequence;
+        }
+
         /// <summary>
         /// Fill in the class variables with the SWIFT message data
         /// </summary>
         /// <param name="tags"></param>
         private void FillDataTags(string[] tags)
         {
-            string useSequence = "";
+            List<TagData<string, string, string, string, int>> useSequence = null;
             
             foreach (string key in tags)
             {
                 string[] keyPair = key.Split(',');
                 if (keyPair[0].Contains("15") == true)
                 {
-                    useSequence = keyPair[0].Substring(2);
+                    useSequence = getSequence(keyPair[0].Substring(2));
                     SetTagPresent(useSequence, keyPair[0], 1);
                 }
                 else
@@ -413,11 +455,6 @@ namespace Messages
         public int numOfSequences { get; } = 9;
 
         /// <summary>
-        /// Get method to return the SWIFT definition of message scope
-        /// </summary>
-        public string Scope { get; private set; } = "";
-
-        /// <summary>
         /// Get method to read back any errors or warnings set during the parsing of the message
         /// </summary>
         public List<string> Anomalies { get; } = new List<string>();
@@ -434,688 +471,6 @@ namespace Messages
         /// </summary>
         public bool AlwaysValidateTag { get; set; } = false;
 
-        /// <summary>
-        /// Get method the return the readable name of a SWIFT tag number
-        /// </summary>
-        /// <param name="sequence"></param>
-        /// <param name="tag"></param>
-        /// <returns></returns>
-        public string GetTagName(string sequence, string tag)
-        {
-            string tagName = null;
-        
-            switch(sequence)
-            {
-                case "A":
-                    foreach(TagData<string, string, string, string, int> t in sequenceA)
-                    {
-                        if(tag.Equals(t.Tag) ==  true)
-                        {
-                            tagName = t.Name;
-                            break;
-                        }
-                    }
-                    break;
-                case "B":
-                    foreach (TagData<string, string, string, string, int> t in sequenceB)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            tagName = t.Name;
-                            break;
-                        }
-                    }
-                    break;
-                case "C":
-                    foreach (TagData<string, string, string, string, int> t in sequenceC)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            tagName = t.Name;
-                            break;
-                        }
-                    }
-                    break;
-                case "D":
-                    foreach (TagData<string, string, string, string, int> t in sequenceD)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            tagName = t.Name;
-                            break;
-                        }
-                    }
-                    break;
-                case "E":
-                    foreach (TagData<string, string, string, string, int> t in sequenceE)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            tagName = t.Name;
-                            break;
-                        }
-                    }
-                    break;
-                case "F":
-                    foreach (TagData<string, string, string, string, int> t in sequenceF)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            tagName = t.Name;
-                            break;
-                        }
-                    }
-                    break;
-                case "G":
-                    foreach (TagData<string, string, string, string, int> t in sequenceG)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            tagName = t.Name;
-                            break;
-                        }
-                    }
-                    break;
-                case "H":
-                    foreach (TagData<string, string, string, string, int> t in sequenceH)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            tagName = t.Name;
-                            break;
-                        } 
-                    }
-                    break;
-                case "I":
-                    foreach (TagData<string, string, string, string, int> t in sequenceI)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            tagName = t.Name;
-                            break;
-                        }
-                    }
-                    break;
-                default:
-                    tagName = null;
-                    break;
-            }
-        
-            return tagName;
-        }
-
-        /// <summary>
-        /// Get method to return the value of a tag
-        /// </summary>
-        /// <param name="sequence"></param>
-        /// <param name="tag"></param>
-        /// <returns></returns>
-        public string GetTagValue(string sequence, string tag)
-        {
-            string tagValue = null;
-            
-            switch (sequence)
-            {
-                case "A":
-                    foreach (TagData<string, string, string, string, int> t in sequenceA)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            tagValue = t.Value;
-                            break;
-                        }
-                    }
-                    break;
-                case "B":
-                    foreach (TagData<string, string, string, string, int> t in sequenceB)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            tagValue = t.Value;
-                            break;
-                        }
-                    }
-                    break;
-                case "C":
-                    foreach (TagData<string, string, string, string, int> t in sequenceC)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            tagValue = t.Value;
-                            break;
-                        }
-                    }
-                    break;
-                case "D":
-                    foreach (TagData<string, string, string, string, int> t in sequenceD)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            tagValue = t.Value;
-                            break;
-                        }
-                    }
-                    break;
-                case "E":
-                    foreach (TagData<string, string, string, string, int> t in sequenceE)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            tagValue = t.Value;
-                            break;
-                        }
-                    }
-                    break;
-                case "F":
-                    foreach (TagData<string, string, string, string, int> t in sequenceF)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            tagValue = t.Value;
-                            break;
-                        }
-                    }
-                    break;
-                case "G":
-                    foreach (TagData<string, string, string, string, int> t in sequenceG)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            tagValue = t.Value;
-                            break;
-                        }
-                    }
-                    break;
-                case "H":
-                    foreach (TagData<string, string, string, string, int> t in sequenceH)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            tagValue = t.Value;
-                            break;
-                        }
-                    }
-                    break;
-                case "I":
-                    foreach (TagData<string, string, string, string, int> t in sequenceI)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            tagValue = t.Value;
-                            break;
-                        }
-                    }
-                    break;
-                default:
-                    tagValue = null;
-                    break;
-            }
-            
-            return tagValue;
-        }
-
-        /// <summary>
-        /// Set method to set a tag value
-        /// </summary>
-        /// <param name="sequence"></param>
-        /// <param name="tag"></param>
-        /// <param name="value"></param>
-        public void SetTagValue(string sequence, string tag, string value)
-        {
-            int idx = 0;
-            switch (sequence)
-            {
-                case "A":
-                    foreach (TagData<string, string, string, string, int> t in sequenceA)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            t.Value = value;
-                            break;
-                        }
-                    }
-                    break;
-                case "B":
-                    foreach (TagData<string, string, string, string, int> t in sequenceB)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            t.Value = value;
-                            break;
-                        }
-                    }
-                    break;
-                case "C":
-                    foreach (TagData<string, string, string, string, int> t in sequenceC)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            t.Value = value;
-                            break;
-                        }
-                    }
-                    break;
-                case "D":
-                    foreach (TagData<string, string, string, string, int> t in sequenceD)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            t.Value = value;
-                            break;
-                        }
-                    }
-                    break;
-                case "E":
-                    foreach (TagData<string, string, string, string, int> t in sequenceE)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            t.Value = value;
-                            break;
-                        }
-                    }
-                    break;
-                case "F":
-                    foreach (TagData<string, string, string, string, int> t in sequenceF)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            t.Value = value;
-                            break;
-                        }
-                    }
-                    break;
-                case "G":
-                    foreach (TagData<string, string, string, string, int> t in sequenceG)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            t.Value = value;
-                            break;
-                        }
-                    }
-                    break;
-                case "H":
-                    foreach (TagData<string, string, string, string, int> t in sequenceH)
-                    {
-                        if (tag.Equals("34C") == true && t.Tag.Equals("34C") && !t.Value.Equals(""))
-                        {
-                            idx = sequenceH.FindLastIndex((delegate (TagData<string, string, string, string, int> t1) { return t1.Tag == "34C"; }));
-                            sequenceH.Insert(idx+1, new TagData<string, string, string, string, int>("34C", "Commission and Fees", value, "O", 1));
-                            break;
-                        } else if (tag.Equals(t.Tag) == true)
-                        {
-                            t.Value = value;
-                            break;
-                        }
-                    }
-                    break;
-                case "I":
-                    foreach (TagData<string, string, string, string, int> t in sequenceI)
-                    {
-                        if (tag.Equals("30F") == true && t.Tag.Equals("30F") && !t.Value.Equals(""))
-                        {
-                            idx = sequenceI.FindLastIndex((delegate (TagData<string, string, string, string, int> t1) { return t1.Tag == "32H"; }));
-                            sequenceI.Insert(idx + 1, new TagData<string, string, string, string, int>("30F", "Commission and Fees", value, "O", 1));
-                            break;
-                        } else if (tag.Equals("32H") == true && t.Tag.Equals("32H") && !t.Value.Equals(""))
-                        {
-                            idx = sequenceI.FindLastIndex((delegate (TagData<string, string, string, string, int> t1) { return t1.Tag == "30F"; }));
-                            sequenceI.Insert(idx + 1, new TagData<string, string, string, string, int>("32H", "Commission and Fees", value, "O", 1));
-                            break;
-                        } else if (tag.Equals(t.Tag) == true)
-                        {
-                            t.Value = value;
-                            break;
-                        } 
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Set method to set the present flag of a tag
-        /// </summary>
-        /// <param name="sequence"></param>
-        /// <param name="tag"></param>
-        /// <param name="present"></param>
-        private void SetTagPresent(string sequence, string tag, int present)
-        {
-            switch (sequence)
-            {
-                case "A":
-                    foreach (TagData<string, string, string, string, int> t in sequenceA)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            t.Present = present;
-                            break;
-                        }
-                    }
-                    break;
-                case "B":
-                    foreach (TagData<string, string, string, string, int> t in sequenceB)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            t.Present = present;
-                            break;
-                        }
-                    }
-                    break;
-                case "C":
-                    foreach (TagData<string, string, string, string, int> t in sequenceC)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            t.Present = present;
-                            break;
-                        }
-                    }
-                    break;
-                case "D":
-                    foreach (TagData<string, string, string, string, int> t in sequenceD)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            t.Present = present;
-                            break;
-                        }
-                    }
-                    break;
-                case "E":
-                    foreach (TagData<string, string, string, string, int> t in sequenceE)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            t.Present = present;
-                            break;
-                        }
-                    }
-                    break;
-                case "F":
-                    foreach (TagData<string, string, string, string, int> t in sequenceF)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            t.Present = present;
-                            break;
-                        }
-                    }
-                    break;
-                case "G":
-                    foreach (TagData<string, string, string, string, int> t in sequenceG)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            t.Present = present;
-                            break;
-                        }
-                    }
-                    break;
-                case "H":
-                    foreach (TagData<string, string, string, string, int> t in sequenceH)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            t.Present = present;
-                            break;
-                        }
-                    }
-                    break;
-                case "I":
-                    foreach (TagData<string, string, string, string, int> t in sequenceI)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            t.Present = present;
-                            break;
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Get method to determine if a tag is mandatory
-        /// </summary>
-        /// <param name="sequence"></param>
-        /// <param name="tag"></param>
-        /// <returns></returns>
-        public bool IsTagMandatory(string sequence, string tag)
-        {
-            bool isMandatory = false;
-            
-            switch (sequence)
-            {
-                case "A":
-                    foreach (TagData<string, string, string, string, int> t in sequenceA)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            if (string.Equals(t.Mandatory, "M") == true)
-                            {
-                                isMandatory = true;
-                                break;
-                            }
-                        }
-                    }
-                    break;
-                case "B":
-                    foreach (TagData<string, string, string, string, int> t in sequenceB)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            if (string.Equals(t.Mandatory, "M") == true)
-                            {
-                                isMandatory = true;
-                                break;
-                            }
-                        }
-                    }
-                    break;
-                case "C":
-                    foreach (TagData<string, string, string, string, int> t in sequenceC)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            if (string.Equals(t.Mandatory, "M") == true)
-                            {
-                                isMandatory = true;
-                                break;
-                            }
-                        }
-                    }
-                    break;
-                case "D":
-                    foreach (TagData<string, string, string, string, int> t in sequenceD)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            if (string.Equals(t.Mandatory, "M") == true)
-                            {
-                                isMandatory = true;
-                                break;
-                            }
-                        }
-                    }
-                    break;
-                case "E":
-                    foreach (TagData<string, string, string, string, int> t in sequenceE)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            if (string.Equals(t.Mandatory, "M") == true)
-                            {
-                                isMandatory = true;
-                                break;
-                            }
-                        }
-                    }
-                    break;
-                case "F":
-                    foreach (TagData<string, string, string, string, int> t in sequenceF)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            if (string.Equals(t.Mandatory, "M") == true)
-                            {
-                                isMandatory = true;
-                                break;
-                            }
-                        }
-                    }
-                    break;
-                case "G":
-                    foreach (TagData<string, string, string, string, int> t in sequenceG)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            if (string.Equals(t.Mandatory, "M") == true)
-                            {
-                                isMandatory = true;
-                                break;
-                            }
-                        }
-                    }
-                    break;
-                case "H":
-                    foreach (TagData<string, string, string, string, int> t in sequenceH)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            if (string.Equals(t.Mandatory, "M") == true)
-                            {
-                                isMandatory = true;
-                                break;
-                            }
-                        }
-                    }
-                    break;
-                case "I":
-                    foreach (TagData<string, string, string, string, int> t in sequenceI)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            if (string.Equals(t.Mandatory, "M") == true)
-                            {
-                                isMandatory = true;
-                                break;
-                            }
-                        }
-                    }
-                    break;
-                default:
-                    isMandatory = false;
-                    break;
-            }
-
-            return isMandatory;
-        }
-
-        /// <summary>
-        /// Get method to determine if a tag is mandatory, optional, conditional or unknown
-        /// </summary>
-        /// <param name="sequence"></param>
-        /// <param name="tag"></param>
-        /// <returns></returns>
-        public string GetTagStatus(string sequence, string tag)
-        {
-           string status = "U";
-
-            switch (sequence)
-            {
-                case "A":
-                    foreach (TagData<string, string, string, string, int> t in sequenceA)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            status = t.Mandatory;
-                        }
-                    }
-                    break;
-                case "B":
-                    foreach (TagData<string, string, string, string, int> t in sequenceB)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            status = t.Mandatory;
-                        }
-                    }
-                    break;
-                case "C":
-                    foreach (TagData<string, string, string, string, int> t in sequenceC)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            status = t.Mandatory;
-                        }
-                    }
-                    break;
-                case "D":
-                    foreach (TagData<string, string, string, string, int> t in sequenceD)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            status = t.Mandatory;
-                        }
-                    }
-                    break;
-                case "E":
-                    foreach (TagData<string, string, string, string, int> t in sequenceE)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            status = t.Mandatory;
-                        }
-                    }
-                    break;
-                case "F":
-                    foreach (TagData<string, string, string, string, int> t in sequenceF)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            status = t.Mandatory;
-                        }
-                    }
-                    break;
-                case "G":
-                    foreach (TagData<string, string, string, string, int> t in sequenceG)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            status = t.Mandatory;
-                        }
-                    }
-                    break;
-                case "H":
-                    foreach (TagData<string, string, string, string, int> t in sequenceH)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            status = t.Mandatory;
-                        }
-                    }
-                    break;
-                case "I":
-                    foreach (TagData<string, string, string, string, int> t in sequenceI)
-                    {
-                        if (tag.Equals(t.Tag) == true)
-                        {
-                            status = t.Mandatory;
-                        }
-                    }
-                    break;
-                default:
-                    break;
-            }
-
-            return status;
-        }
 
         public string GeDetailtXML()
         {
@@ -2574,7 +1929,29 @@ namespace Messages
 
         /// <summary>
         /// Is_T32H_Valid
-        /// 
+        /// Format
+        ///     Option H    [N]3!a15d       (Sign)(Currency) (Amount)
+        /// Presence
+        ///     Conditional(see rule C3, also referenced in rules C4 and C9) in mandatory sequence B
+        /// Definition
+        ///     For a rollover confirmation(22B= ROLL), this field specifies the difference between the previous and 
+        ///     the new principal amount, with interest included when interest is settled through the same cash flow.
+        ///     For a maturity confirmation (22B= MATU), this field specifies the amount with optional interest to be 
+        ///     paid by the borrower at maturity date.
+        /// Network Validated Rules
+        ///     Currency must be a valid ISO 4217 currency code (Error code(s): T52).
+        ///     The integer part of Amount must contain at least one digit.A decimal comma is mandatory and is included 
+        ///     in the maximum length.The number of digits following the comma must not exceed the maximum number 
+        ///     allowed for the specified currency(Error code(s): C03, T40, T43).
+        ///     If Amount is zero, Sign must not be present(Error code(s): T14).
+        /// Usage Rules
+        ///     If Amount is positive(Sign is not present), the amount is to be paid by party A; if Amount is negative(Sign is present), 
+        ///     the amount is to be received by party A.
+        ///     For a rollover with no change in principal, Amount is zero and Currency is the currency of the loan/deposit.
+        ///     For a rollover, when interest is settled separately or compounded, it is not indicated in the rollover confirmation.
+        ///     For a maturity confirmation, if both the principal and the interest are paid to the same financial institution (sequences 
+        ///     E and F are not present) field 32H contains the sum of the principal and the interest to be settled.
+        ///     If interest is paid to another financial institution(sequence E or F is present), field 32H contains only the principal to be repaid.
         /// </summary>
         /// <param name="field"></param>
         /// <returns></returns>
@@ -2582,6 +1959,7 @@ namespace Messages
         {
             bool valid = true;
             Util util = new Util();
+            string ccy = null;
 
             // 32H is NOT a mandatory field in a mandatory block.
             if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
@@ -2589,15 +1967,10 @@ namespace Messages
                 if (field.Tag.Equals("32H") == true)
                 {
                     field.Value = field.Value.Trim();
-                    if (field.Value.Length != 8)
+                    if (field.Value.Length > 19)
                     {
                         valid = false;
                         Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect field length : " + field.Value.Length);
-                    }
-                    if ((util.IsDate(field.Value) == false))
-                    {
-                        valid = false;
-                        Anomalies.Add("ERROR T50 - Tag " + field.Tag + " - is a date field. Must be in YYYYMMDD format");
                     }
                 }
                 else
@@ -2605,13 +1978,74 @@ namespace Messages
                     valid = false;
                     Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T32H_Valid");
                 }
+
+                if (field.Value.Substring(0, 1).Equals("-") == true)
+                    ccy = field.Value.Substring(1, 3);
+                else
+                    ccy = field.Value.Substring(0, 3);
+
+                if (util.IsValidCcy(ccy) == false)
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR T52 - Tag " + field.Tag + " - Invalid currency : " + ccy);
+                }
             }
 
             return valid;
         }
 
+        /// <summary>
+        /// Is_T34E_Valid
+        /// Format
+        /// Option E        [N]3!a15d       (Sign)(Currency) (Amount)
+        /// Presence
+        ///     Mandatory(referenced in rule C9) in mandatory sequence B
+        /// Definition
+        ///     This field specifies:
+        ///         for a new confirmation(22B= CONF), the first interest amount;
+        ///         for a rollover confirmation(22B= ROLL), the next interest amount;
+        ///         for a maturity confirmation(22B= MATU), the final interest amount to be settled at maturity.
+        /// Network Validated Rules
+        ///     Currency must be a valid ISO 4217 currency code(Error code(s): T52).
+        ///     The integer part of Amount must contain at least one digit.A decimal comma is mandatory and is included in the maximum length.
+        ///     The number of digits following the comma must not exceed the maximum number allowed for the specified currency
+        ///     (Error code(s): C03, T40, T43).
+        ///     If Amount is zero, Sign must not be present(Error code(s): T14).
+        /// Usage Rules
+        ///     If the interest amount has to be paid by Party A, Sign must not be present; if the interest amount has to be received by Party A, 
+        ///     Amount is negative and Sign must be present.
+        ///     For a maturity confirmation, this amount is settled separately only when the principal and the interests are paid to a different 
+        ///     financial institution (sequence E or F is present).
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T34E_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            Util util = new Util();
 
-        //private bool Is_T34E_Valid(TagData<string, string, string, string, int> field)
+            // 32H is NOT a mandatory field in a mandatory block.
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("34E") == true)
+                {
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length > 19)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect field length : " + field.Value.Length);
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T34E_Valid");
+                }
+            }
+
+            return valid;
+        }
+
         //private bool Is_T37G_Valid(TagData<string, string, string, string, int> field)
         //private bool Is_T38J_Valid(TagData<string, string, string, string, int> field)
         //private bool Is_T39M_Valid(TagData<string, string, string, string, int> field)
@@ -2635,16 +2069,7 @@ namespace Messages
 
             foreach (string sid in seqs)
             {
-                if (sid.Equals("A") == true) seq = sequenceA;
-                else if (sid.Equals("B") == true) seq = sequenceB;
-                else if (sid.Equals("C") == true) seq = sequenceC;
-                else if (sid.Equals("D") == true) seq = sequenceD;
-                else if (sid.Equals("E") == true) seq = sequenceE;
-                else if (sid.Equals("F") == true) seq = sequenceF;
-                else if (sid.Equals("G") == true) seq = sequenceG;
-                else if (sid.Equals("H") == true) seq = sequenceH;
-                else if (sid.Equals("I") == true) seq = sequenceI;
-                else seq = sequenceA;
+                seq = getSequence(sid);
 
                 if (IsNewSequencePresent(seq) == true)
                 {
@@ -2714,9 +2139,9 @@ namespace Messages
         private bool Valid_VR_C1()
         {
             bool valid = true;
-            string t21 = GetTagValue("A", "21");
-            string t22A = GetTagValue("A", "22A");
-            string t22B = GetTagValue("A", "22B");
+            string t21 = GetTagValue(sequenceA, "21");
+            string t22A = GetTagValue(sequenceA, "22A");
+            string t22B = GetTagValue(sequenceA, "22B");
 
             if (t22B.Equals("CONF") == true)
             {
@@ -2757,8 +2182,8 @@ namespace Messages
         private bool Valid_VR_C2()
         {
             bool valid = true;
-            string t94A = GetTagValue("A", "94A");
-            string t21N = GetTagValue("A", "21N");
+            string t94A = GetTagValue(sequenceA, "94A");
+            string t21N = GetTagValue(sequenceA, "21N");
 
             if (t94A.Equals("AGNT") == true)
             {
@@ -2787,9 +2212,9 @@ namespace Messages
         private bool Valid_VR_C3()
         {
             bool valid = true;
-            string t22B = GetTagValue("A", "22B");
-            string t32H = GetTagValue("B", "32H");
-            string t30X = GetTagValue("B", "30X");
+            string t22B = GetTagValue(sequenceA, "22B");
+            string t32H = GetTagValue(sequenceB, "32H");
+            string t30X = GetTagValue(sequenceB, "30X");
 
             if(t22B.Equals("CONF") == true)
             {
@@ -2855,9 +2280,9 @@ namespace Messages
         private bool Valid_VR_C4()
         {
             bool valid = true;
-            string t22B = GetTagValue("A", "22B");
-            string t17R = GetTagValue("B", "17R");
-            string t32H = GetTagValue("B", "32H");
+            string t22B = GetTagValue(sequenceA, "22B");
+            string t17R = GetTagValue(sequenceB, "17R");
+            string t32H = GetTagValue(sequenceB, "32H");
 
             if(t22B.Equals("MATU") == true)
             {
@@ -2883,34 +2308,157 @@ namespace Messages
             }
             return valid;
         }
+
+        /// <summary>
+        /// Validation Rule C5
+        /// In sequence A, if field 22B contains MATU, then field 30F in sequence B is not allowed, otherwise field 30F is optional (Error code(s): D69):
+        /// ===================================================================================================================================================================================
+        ///    Sequence A                   Sequence B        
+        ///  if field 22B is ...         then field 30F is ...
+        /// ----------------------------------------------------------------------------------------------------------------- 
+        ///     MATU                            Not Allowed
+        ///     Not equal to MATU               Optional
+        /// -----------------------------------------------------------------------------------------------------------------
+        /// </summary>
+        /// <returns></returns>
         private bool Valid_VR_C5()
         {
             bool valid = true;
-
-
+            string t22B = GetTagValue(sequenceA, "22B");
+            string t30F = GetTagValue(sequenceB, "30F");
+            
+            if (t22B.Equals("MATU") == true)
+            {
+                if (!t30F.Equals("") == false)
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR D69 : Validation Rule C5 failed : if tag 22B = MATU then tag 30F is not allowed");
+                }
+            }
+            
             return valid;
         }
+
+        /// <summary>
+        /// Validation Rule C6
+        /// In sequence B, if field 30F is present then field 38J is mandatory, otherwise field 38J is not allowed (Error code(s): D60):
+        /// ===================================================================================================================================================================================
+        ///    Sequence B                      Sequence B        
+        ///  if field 30F is ...            then field 38J is ...
+        /// ----------------------------------------------------------------------------------------------------------------- 
+        ///     Present                         Mandatory
+        ///     Not Present                     Not Allowed
+        /// -----------------------------------------------------------------------------------------------------------------
+        /// </summary>
+        /// <returns></returns>
         private bool Valid_VR_C6()
         {
             bool valid = true;
+            string t30F = GetTagValue(sequenceB, "30F");
+            string t38J = GetTagValue(sequenceB, "38J");
 
+            if (!t30F.Equals("") == true)
+            {
+                if (t38J.Equals("") == true)
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR D60 : Validation Rule C6 failed : if tag 30F is present then field 38J is mandatory, otherwise field 38J is not allowed");
+                }
+            }
+            else
+            {
+                if (!t38J.Equals("") == true)
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR D60 : Validation Rule C6 failed : if tag 30F is present then field 38J is mandatory, otherwise field 38J is not allowed");
+                }
+            }
 
             return valid;
         }
+
+        /// <summary>
+        /// Validation Rule C7
+        /// In sequences C, D, E (if present), F (if present) and I (if present), if field 56a is not present, then field 86a in the same 
+        /// sequence C, D, E, F or I is not allowed, otherwise field 86a is optional (Error code(s): E35):
+        /// ===================================================================================================================================================================================
+        ///    Sequence C                      Sequence C               Sequence D              Sequence E          Sequence F          Sequence I
+        ///  if field 56a is ...            then field 86a is ...     then field 86a is ... then field 86a is ... then field 86a is ... then field 86a is ...               
+        /// ---------------------------------------------------------------------------------------------------------------------------------------------------
+        ///     Not Present                    Not Allowed              Not Allowed             Not Allowed         Not Allowed             Not Allowed
+        ///     Present                         Optional                 Optional                Optional            Optional                Optional
+        /// ---------------------------------------------------------------------------------------------------------------------------------------------------
+        /// </summary>
+        /// <returns></returns>
         private bool Valid_VR_C7()
         {
             bool valid = true;
+            string t56A = GetTagValue(sequenceC, "56A");
+            string t56D = GetTagValue(sequenceC, "56D");
+            string t56J = GetTagValue(sequenceC, "56J");
+            string t86A = GetTagValue(sequenceC, "86A");
+            string t86D = GetTagValue(sequenceC, "86D");
+            string t86J = GetTagValue(sequenceC, "86J");
 
+            if (t56A.Equals("") == true && t86A.Equals("") == false)
+                valid = false;
+            if (t56D.Equals("") == true && t86D.Equals("") == false)
+                valid = false;
+            if (t56J.Equals("") == true && t86J.Equals("") == false)
+                valid = false;
+
+            if (valid == false) 
+                Anomalies.Add("ERROR E35 : In sequences C, D, E, F and I (if present), if field 56a is not present, then field 86a in the same sequence C, D, E, F or I is not allowed, otherwise field 86a is optional");
 
             return valid;
         }
+
+        /// <summary>
+        /// Validation Rule C8
+        /// The presence of sequence H and the presence of fields 88a and 71F in sequence H, depends on the value of field 94A in sequence A as follows (Error code(s): D74):
+        /// ===================================================================================================================================================================================
+        ///     Sequence A          Then sequence H is ...         Sequence H                 Sequence H
+        /// if field 94A is ...                                 and field 88a is ...        and field 71F is ...
+        /// ---------------------------------------------------------------------------------------------------------------------------------------------------
+        ///     Not present             Optional                    Optional                    Not allowed
+        ///         AGNT                Optional                    Optional                    Not allowed
+        ///         BILA                Optional                    Optional                    Not allowed
+        ///         BROK                Mandatory                   Mandatory                   Optional
+        /// ---------------------------------------------------------------------------------------------------------------------------------------------------        
+        /// </summary>
+        /// <returns></returns>
         private bool Valid_VR_C8()
         {
             bool valid = true;
+            string t94A = GetTagValue(sequenceA, "94A");
+            string t15H = GetTagValue(sequenceH, "15H");
+            string t88A = GetTagValue(sequenceH, "88A");
+            string t88D = GetTagValue(sequenceH, "88D");
+            string t88J = GetTagValue(sequenceH, "88J");
+            string t71F = GetTagValue(sequenceH, "71F");
 
+            if (t94A.Equals("") == true && t71F.Equals("") == false)
+                valid = false;
+            if (t94A.Equals("AGNT") == true && t71F.Equals("") == false)
+                valid = false;
+            if (t94A.Equals("BILA") == true && t71F.Equals("") == false)
+                valid = false;
+            if (t94A.Equals("BROK") == true && t15H.Equals("") == true)
+                valid = false;
+            if (t94A.Equals("BROK") == true && (t88A.Equals("") == true || t88D.Equals("") == true || t88J.Equals("") == true))
+                valid = false;
+
+            if( valid == false)
+                Anomalies.Add("ERROR D74 : The presence of sequence H and the presence of fields 88a and 71F in sequence H, depends on the value of field 94A in sequence A");
 
             return valid;
         }
+
+        /// <summary>
+        /// Validation Rule C9
+        /// The currency code in the amount fields 32B, 32H and 34E in sequence B, and field 71F in sequence H must be the same (Error code(s): C02).
+        /// </summary>
+        /// <returns></returns>
         private bool Valid_VR_C9()
         {
             bool valid = true;
@@ -2918,10 +2466,20 @@ namespace Messages
 
             return valid;
         }
+
+        /// <summary>
+        /// Validation Rule C10
+        /// In sequence H, if field 15H is present, then at least one of the other fields of sequence H must be present (Error code(s): C98).
+        /// </summary>
+        /// <returns></returns>
         private bool Valid_VR_C10()
         {
             bool valid = true;
-
+            string t15H = GetTagValue(sequenceH, "15H");
+            string t88A = GetTagValue(sequenceH, "88A");
+            string t88D = GetTagValue(sequenceH, "88D");
+            string t88J = GetTagValue(sequenceH, "88J");
+            string t71F = GetTagValue(sequenceH, "71F");
 
             return valid;
         }
@@ -2934,8 +2492,152 @@ namespace Messages
         }
         #endregion
 
-    }
+        public void saveRecord(BlockHeader headers)
+        {
+            string sqlCmd = null;
+            long ref_id = -1;
 
+            if (headers != null)
+            {
+                try
+                {
+                    sqlCmd = "Select max(reference_id) from dbo.MT320_Block1";
+                    ref_id = dbu.getNewReferenceId(sqlCmd, -1);
+
+                    dbu.DBBegin(ref_id.ToString());
+                    saveBlock1(ref_id, headers);
+                    saveBlock2(ref_id, headers);
+                    saveBlock3(ref_id, headers);
+                    //saveBlock4(ref_id, null/*headers*/);
+                    saveBlock5(ref_id, headers);
+                    dbu.DBCommit(ref_id.ToString());
+                }
+                catch (Exception ex)
+                {
+                    dbu.DBRollback(ref_id.ToString());
+                    throw ex;
+                }
+            }
+        }
+
+        private void saveBlock1(long refid, BlockHeader hdr)
+        {
+            string sqlCmd = null;
+
+            if (hdr == null)
+                return;
+
+            try
+            {
+                sqlCmd = "INSERT INTO dbo.MT320_Block1 (reference_id, application_id, service_id, lt_address, bic_code, logical_terminal_code, bic_branch_code, session_number, sequence_number) ";
+                sqlCmd += "VALUES('" + refid + "', '" + hdr.ApplicationID + "', '" + hdr.ServiceID + "', '" + hdr.LTAddress + "', '" + hdr.BICCode + "', '" + hdr.LogicalTerminalCode + "', '" + hdr.BICBranchCode + "', '" + hdr.SessionNumber + "', '" + hdr.SequenceNumber + "')";
+
+                dbu.saveMTRecord(sqlCmd);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Failed to insert MT320 Block1 record.\n" + ex.Message);
+            }
+        }
+
+        private void saveBlock2(long refid, BlockHeader hdr)
+        {
+            string sqlCmd = null;
+
+            if (hdr == null)
+                return;
+
+            try
+            {
+                sqlCmd = "INSERT INTO dbo.MT320_Block2 (reference_id, input_output_id, message_type, destination_address, priority, delivery_monitoring, ";
+                sqlCmd += "obsolescence_period, input_time, mir, mir_sender_date, mir_lt_address, mir_bic_code,  mir_lt_code, mir_bic_branch_code, ";
+                sqlCmd += "mir_session_number, mir_sequence_number, output_date, output_time) ";
+                sqlCmd += "VALUES('" + refid + "', '" + hdr.InputOutputID + "', '" + hdr.MessageType + "', '" + hdr.DestinationAddress + "', '";
+                sqlCmd += hdr.Priority + "', '" + hdr.DeliveryMonitoring + "', '" + hdr.ObsolescencePeriod + "', '" + hdr.InputTime + "', '";
+                sqlCmd += hdr.MIR + "', '" + hdr.MIRSenderDate + "', '" + hdr.MIRLTAddress + "', '" + hdr.MIRBICCode + "',  '" + hdr.MIRLTCode + "', '";
+                sqlCmd += hdr.BICBranchCode + "', '" + hdr.MIRSessNum + "', '" + hdr.MIRSeqNum + "', '" + hdr.OutputDate + "', '" + hdr.OutputTime + "')";
+
+                dbu.saveMTRecord(sqlCmd);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to insert MT320 Block2 record.\n" + ex.Message);
+            }
+        }
+
+        private void saveBlock3(long refid, BlockHeader hdr)
+        {
+            string sqlCmd = null;
+
+            if (hdr == null)
+                return;
+
+            try
+            {
+                sqlCmd = "INSERT INTO dbo.MT320_Block3 (reference_id, tag103_service_id, tag113_banking_priority, tag108_mur, tag119_validation_flag, ";
+                sqlCmd += "tag423_balance_check_point, tag106_mir, tag424_related_reference, tag111_service_type_id, tag121_unique_tran_reference, ";
+                sqlCmd += "tag115_adressee_info, tag165_payment_rir, tag433_sanctions_sir, tag434_payment_cir) ";
+                sqlCmd += "VALUES('" + refid + "', '" + hdr.TAG103_ServiceID + "', '" + hdr.TAG113_BankingPriority + "', '" + hdr.TAG108_MUR + "', '";
+                sqlCmd += hdr.TAG119_ValidationFlag + "', '" + hdr.TAG423_BalanceCheckPoint + "', '" + hdr.TAG106_MIR + "', '" + hdr.TAG424_RelatedReference + "', '";
+                sqlCmd += hdr.TAG111_ServiceTypeID + "', '" + hdr.TAG121_UniqueTranReference + "', '" + hdr.TAG115_AddresseeInfo + "', '" + hdr.TAG165_PaymentRIR + "', '";
+                sqlCmd += hdr.TAG433_SanctionsSIR + "', '" + hdr.TAG434_PaymentCIR + "')";
+
+                dbu.saveMTRecord(sqlCmd);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to insert MT320 Block3 record.\n" + ex.Message);
+            }
+        }
+
+        private void saveBlock4(long refid, BlockHeader hdr)
+        {
+            string sqlCmd = null;
+
+            if (hdr == null)
+                return;
+
+            try
+            {
+                sqlCmd = "INSERT INTO dbo.MT320_Block4 (reference_id, ) ";
+                sqlCmd += "VALUES('" + refid + "', '" + "')";
+
+                dbu.saveMTRecord(sqlCmd);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to insert MT320 Block4 record.\n" + ex.Message);
+            }
+        }
+
+        private void saveBlock5(long refid, BlockHeader hdr)
+        {
+            string sqlCmd = null;
+
+            if (hdr == null)
+                return;
+
+            try
+            {
+                sqlCmd = "INSERT INTO dbo.MT320_Block5 (reference_id, checksum, tng_message, pde, pde_time, pde_mir, pde_mir_date, pde_mir_lt_id, ";
+                sqlCmd += "pde_mir_session_number, pde_mir_sequence_number, dlm, mrf, mrf_date, mrf_time, mrf_mir, pdm, pdm_time,  pdm_mor, ";
+                sqlCmd += "pdm_mor_date, pdm_mor_lt_id, pdm_mor_session_number, pdm_mor_sequence_number, sys, sys_time, sys_mor, sys_mor_date, ";
+                sqlCmd += "sys_mor_lt_id, sys_mor_session_number, sys_mor_sequence_number)";
+                sqlCmd += "VALUES('" + refid + "', '" + hdr.Checksum + "', '" + hdr.TNGMessage + "', '" + hdr.PDE + "', '" + hdr.PDETime + "', '";
+                sqlCmd += hdr.PDEMir + "', '" + hdr.PDEMirDate + "', '" + hdr.PDEMirLTId + "', '" + hdr.PDEMirSessionNum + "', '" + hdr.PDEMirSequenceNum + "', '";
+                sqlCmd += hdr.DLM + "', '" + hdr.MRF + "', '" + hdr.MRFDate + "', '" + hdr.MRFTime + "', '" + hdr.MRFMir + "', '" + hdr.PDM + "', '";
+                sqlCmd += hdr.PDMTime + "', '" + hdr.PDMMor + "', '" + hdr.PDMMorDate + "', '" + hdr.PDMMorLTId + "', '" + hdr.PDMMorSessionNum + "', '";
+                sqlCmd += hdr.PDMMorSequenceNum + "', '" + hdr.SYS + "', '" + hdr.SYSTime + "', '" + hdr.SYSMor + "', '" + hdr.SYSMorDate + "', '";
+                sqlCmd += hdr.SYSMorLTId + "', '" + hdr.SYSMorSessionNum + "', '" + hdr.SYSMorSequenceNum + "')";
+
+                dbu.saveMTRecord(sqlCmd);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failed to insert MT320 Block5 record.\n" + ex.Message);
+            }
+        }
+    }
 }
 
 

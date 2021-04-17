@@ -42,9 +42,16 @@
   <ItemGroup>
     <Compile Include="BlockHeader.cs" />
     <Compile Include="MT320.cs" />
+    <Compile Include="MTMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TagData.cs" />
     <Compile Include="Util.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Database\Database.csproj">
+      <Project>{500e8b0f-d4bf-431b-b370-d7d6320527a0}</Project>
+      <Name>Database</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
