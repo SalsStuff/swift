@@ -17,6 +17,7 @@ namespace TestProj
     {
         BlockHeader BH = new BlockHeader();
         DBUtils dbu = new DBUtils();
+        Util mUtil = new Util();
         Object MsgContainer;
         readonly bool DEBUG_ON = false;
         
@@ -306,6 +307,14 @@ namespace TestProj
             {
                 MessageBox.Show(ex.Message);
             }
+        }
+
+        private void btnTest_Click(object sender, EventArgs e)
+        {
+            DataTable rr = null;
+
+            rr = mUtil.getCurrencyNameFromCurrency("USD", null);
+
         }
     }
 }

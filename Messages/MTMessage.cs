@@ -13,6 +13,7 @@ namespace Messages
         /// </summary>
         public string Scope { get; protected set; } = "";
 
+        public Object DB_Conn { get; set; } = null;
 
         /// <summary>
         /// Get method the return the readable name of a SWIFT tag number
@@ -94,6 +95,40 @@ namespace Messages
             }
         }
 
+        protected bool isTagPresentInSequence(List<TagData<string, string, string, string, int>> sequence, string tag)
+        {
+            bool present = false;
+
+            foreach (TagData<string, string, string, string, int> t in sequence)
+            {
+                if (tag.Equals(t.Tag) == true)
+                {
+                    present = Convert.ToBoolean(t.Present);
+                    break;
+                }
+            }
+
+            return present;
+        }
+
+        protected bool IsNewSequencePresent(List<TagData<string, string, string, string, int>> seq)
+        {
+            bool presentSequence = true;
+
+            foreach (TagData<string, string, string, string, int> t in seq)
+            {
+                if (t.Tag.Contains("15") == true)
+                {
+                    if (t.Present == 0)
+                        presentSequence = false;
+                    break;
+                }
+            }
+
+            return presentSequence;
+        }
+
+
         /// <summary>
         /// Get method to determine if a tag is mandatory
         /// </summary>
@@ -150,5 +185,14 @@ namespace Messages
 
         }
 
+        protected bool CheckStringsForEquality(params string[] strings)
+        {
+            string target = strings.FirstOrDefault(s => !string.IsNullOrEmpty(s));
+
+            if (target == null)
+                return false;
+
+            return strings.All(s => string.IsNullOrEmpty(s) || s == target);
+        }
     }
 }

@@ -197,6 +197,7 @@
             this.tabScope = new System.Windows.Forms.TabPage();
             this.txtScope = new System.Windows.Forms.TextBox();
             this.btnSaveData = new System.Windows.Forms.Button();
+            this.btnTest = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.tabCtrl.SuspendLayout();
             this.tabMessage.SuspendLayout();
@@ -1785,11 +1786,22 @@
             this.btnSaveData.UseVisualStyleBackColor = true;
             this.btnSaveData.Click += new System.EventHandler(this.btnSaveData_Click);
             // 
+            // btnTest
+            // 
+            this.btnTest.Location = new System.Drawing.Point(330, 529);
+            this.btnTest.Name = "btnTest";
+            this.btnTest.Size = new System.Drawing.Size(75, 23);
+            this.btnTest.TabIndex = 13;
+            this.btnTest.Text = "test";
+            this.btnTest.UseVisualStyleBackColor = true;
+            this.btnTest.Click += new System.EventHandler(this.btnTest_Click);
+            // 
             // FrmSWIFT
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(586, 572);
+            this.Controls.Add(this.btnTest);
             this.Controls.Add(this.btnSaveData);
             this.Controls.Add(this.tabCtrl);
             this.Controls.Add(this.menuStrip1);
@@ -1995,6 +2007,7 @@
         private System.Windows.Forms.Label lblTAG434;
         private System.Windows.Forms.ToolStripMenuItem mnuFileOpenDB;
         private System.Windows.Forms.Button btnSaveData;
+        private System.Windows.Forms.Button btnTest;
     }
 }
 

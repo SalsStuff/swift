@@ -629,7 +629,6 @@ namespace Messages
                             if (Is_T32B_Valid(field) == false)
                                 validTag = false;
                             break;
-                            /*
                         case "32H":
                             if (Is_T32H_Valid(field) == false)
                                 validTag = false;
@@ -642,6 +641,7 @@ namespace Messages
                             if (Is_T37G_Valid(field) == false)
                                 validTag = false;
                             break;
+                            /*
                         case "38J":
                             if (Is_T38J_Valid(field) == false)
                                 validTag = false;
@@ -847,10 +847,6 @@ namespace Messages
                     valid = false;
                     Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T21_Valid");
                 }
-            }
-            else
-            {
-                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
             }
 
             return valid;
@@ -2046,9 +2042,144 @@ namespace Messages
             return valid;
         }
 
-        //private bool Is_T37G_Valid(TagData<string, string, string, string, int> field)
-        //private bool Is_T38J_Valid(TagData<string, string, string, string, int> field)
+        /// <summary>
+        /// Format
+        ///     Option G                [N]12d      (Sign) (Rate)
+        /// Presence
+        ///     Mandatory in mandatory sequence B
+        ///
+        /// Definition
+        ///     This field specifies the interest rate.
+        ///
+        /// Network Validated Rules
+        ///     The integer part of Rate must contain at least one digit.
+        ///     A decimal comma is mandatory and is included in the maximum length (Error code(s): T40, T43).
+        /// 
+        ///     Sign must not be used when Rate is equal to '0' (Error code(s): T14).
+        ///
+        /// Usage Rules
+        ///     Sign must not be present for a positive rate.
+        ///     Sign must be present for a negative rate.
+        ///     A negative rate is used in the extremely rare cases where the agreed rate is negative, 
+        ///         the sign of the rate is independent from the direction of the deal(Loan or Deposit).
+        ///     The interest rate must be specified in any confirmation even when there is no change in the rate.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T37G_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            Util util = new Util();
+            double num = 0.0;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("37G") == true)
+                {
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length > 13)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T40 - Tag " + field.Tag + " - Incorrect field length : " + field.Value.Length);
+                    }
+                    else if( field.Value.Length == 13)
+                    {
+                        if(field.Value.Substring(0,1).Equals("N") == false)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + " - Sign must be present for a negative rate. ");
+                        }
+                        else if(Double.TryParse(field.Value.Substring(1, field.Value.Length), out num) == false )
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + " - rate is not a double. ");
+                        }
+                    }
+                    else if (Double.TryParse(field.Value.Substring(0, field.Value.Length), out num) == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - rate is not a double. ");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T37G_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Format
+        ///     Option J	    1!a3!n      (Indicator)(Number)
+        /// Presence
+        ///     Conditional(see rule C6) in mandatory sequence B
+        ///
+        /// Definition
+        ///     This field specifies the number of days or months between interest payments starting from the date specified in field 30F.
+        ///
+        /// Codes
+        ///     Indicator must contain one of the following codes(Error code(s): T61) :
+        ///     D       Days
+        ///     M       Months
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T38J_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            Util util = new Util();
+            //double num = 0.0;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("38J") == true)
+                {
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length != 4)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T40 - Tag " + field.Tag + " - Incorrect field length : " + field.Value.Length);
+                    }
+                    else if (!field.Value.Substring(0,1).Equals("D") || !field.Value.Substring(0, 1).Equals("M"))
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T61 - Tag " + field.Tag + " - Indicator must be a D or M. ");
+                    }
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        ///	Format
+        ///		Option M	2!a		(Country Code)
+        ///	Presence
+        ///		Optional in mandatory sequence B
+        ///
+        ///	Definition
+        ///		Specifies the place of clearing for offshore currency trades.
+        ///
+        ///	Network Validated Rules
+        ///		Country Code must be a valid ISO country code (Error code(s): T73).
+        ///
+        ///	Usage Rules
+        ///		This field is used to designate the clearing centre for offshore currency trades. 
+        ///		It must not be used for trades that settle onshore.
+        ///
+        ///	Example
+        ///		For an offshore CNY trade that clears in Hong Kong (also known as CNH):
+        ///		:39M:HK
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
         //private bool Is_T39M_Valid(TagData<string, string, string, string, int> field)
+        //{
+
+        //}
 
 
         #endregion
@@ -2105,23 +2236,6 @@ namespace Messages
             }
 
             return allTagsValid;
-        }
-
-        private bool IsNewSequencePresent(List<TagData<string, string, string, string, int>> seq)
-        {
-            bool presentSequence = true;
-
-            foreach (TagData<string, string, string, string, int> t in seq)
-            {
-                if (t.Tag.Contains("15") == true)
-                {
-                    if (t.Present == 0)
-                        presentSequence = false;
-                    break;
-                }
-            }
-
-            return presentSequence;
         }
 
         /// <summary>
@@ -2283,13 +2397,28 @@ namespace Messages
             string t22B = GetTagValue(sequenceA, "22B");
             string t17R = GetTagValue(sequenceB, "17R");
             string t32H = GetTagValue(sequenceB, "32H");
+            double num = 0.0;
 
             if(t22B.Equals("MATU") == true)
             {
-                if (t17R.Equals("L") == false)
+                if (t17R.Equals("L") == true)
                 {
-                    valid = false;
-                    Anomalies.Add("ERROR D57 : Validation Rule C4 failed : if tag 22B != MATU then tag 17R is not applicable");
+                    Double.TryParse(t32H.Substring(0, t32H.Length), out num);
+                    if (num > 0.0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR D57 : Validation Rule C4 failed : if tag 22B == MATU and tag 17R == L then tag 32H must be <= 0.0 ");
+                    }
+                }
+
+                if (t17R.Equals("B") == true)
+                {
+                    Double.TryParse(t32H.Substring(0, t32H.Length), out num);
+                    if (num < 0.0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR D57 : Validation Rule C4 failed : if tag 22B == MATU and tag 17R == B then tag 32H must be >= 0.0 ");
+                    }
                 }
             }
             else
@@ -2462,7 +2591,37 @@ namespace Messages
         private bool Valid_VR_C9()
         {
             bool valid = true;
+            string t32B_ccy = GetTagValue(sequenceB, "32B").Substring(0, 3);
+            string t34E_ccy = GetTagValue(sequenceB, "34E").Substring(0, 1);
+            string t32H_ccy = GetTagValue(sequenceB, "32H"); 
+            string t71F_ccy = GetTagValue(sequenceH, "71F");
 
+            if (!t32H_ccy.Equals(""))
+            {
+                if (t32H_ccy.Equals("N"))
+                    t32H_ccy = GetTagValue(sequenceB, "32H").Substring(1, 4);
+                else
+                    t32H_ccy = GetTagValue(sequenceB, "32H").Substring(0, 3);
+            }
+
+            if (!t71F_ccy.Equals(""))
+            {
+                if (t71F_ccy.Equals("N"))
+                    t71F_ccy = GetTagValue(sequenceH, "71F").Substring(1, 4);
+                else
+                    t71F_ccy = GetTagValue(sequenceH, "71F").Substring(0, 3);
+            }
+
+            if (t34E_ccy.Equals("N"))
+                t34E_ccy = GetTagValue(sequenceB, "34E").Substring(1, 3);
+            else
+                t34E_ccy = GetTagValue(sequenceB, "34E").Substring(0, 3);
+
+            if (CheckStringsForEquality(t32B_ccy, t32H_ccy, t34E_ccy, t71F_ccy) == false)
+            {
+                valid = false;
+                Anomalies.Add("ERROR C02 - The currency code in the amount fields 32B, 32H and 34E in sequence B, and field 71F in sequence H must be the same");
+            }
 
             return valid;
         }
@@ -2474,24 +2633,104 @@ namespace Messages
         /// <returns></returns>
         private bool Valid_VR_C10()
         {
-            bool valid = true;
-            string t15H = GetTagValue(sequenceH, "15H");
-            string t88A = GetTagValue(sequenceH, "88A");
-            string t88D = GetTagValue(sequenceH, "88D");
-            string t88J = GetTagValue(sequenceH, "88J");
-            string t71F = GetTagValue(sequenceH, "71F");
+            bool valid = false;
+
+            if(isTagPresentInSequence(sequenceH, "15H") == true)
+            {
+                foreach (TagData<string, string, string, string, int> t in sequenceH)
+                {
+                    if (!t.Tag.Equals("15H") && isTagPresentInSequence(sequenceH, t.Tag) == true)
+                    {
+                        valid = true;
+                        break;
+                    }
+                }
+            }
+
+            if(valid == false)
+                Anomalies.Add("ERROR C98 - In sequence H, if field 15H is present, then at least one of the other fields of sequence H must be present");
 
             return valid;
         }
+
+        /// <summary>
+        /// Validation Rule C11
+        /// In all optional sequences, the fields with status M must be present if the sequence is present, and are otherwise not allowed (Error code(s): C32)
+        /// </summary>
+        /// <returns></returns>
         private bool Valid_VR_C11()
         {
-            bool valid = true;
+            bool validE = false;
+            bool validF = false;
+            bool validG = false;
+            bool validH = false;
+            bool validI = false;
 
+            if (isTagPresentInSequence(sequenceE, "15E") == true)
+            {
+                foreach (TagData<string, string, string, string, int> t in sequenceE)
+                {
+                    if (isTagPresentInSequence(sequenceE, t.Value) == true)
+                    {
+                        validE = true;
+                        break;
+                    }
+                }
+            }
 
-            return valid;
+            if (isTagPresentInSequence(sequenceF, "15F") == true)
+            {
+                foreach (TagData<string, string, string, string, int> t in sequenceF)
+                {
+                    if (isTagPresentInSequence(sequenceF, t.Value) == true)
+                    {
+                        validF = true;
+                        break;
+                    }
+                }
+            }
+
+            if (isTagPresentInSequence(sequenceG, "15G") == true)
+            {
+                foreach (TagData<string, string, string, string, int> t in sequenceG)
+                {
+                    if (isTagPresentInSequence(sequenceG, t.Value) == true)
+                    {
+                        validG = true;
+                        break;
+                    }
+                }
+            }
+
+            if (isTagPresentInSequence(sequenceH, "15H") == true)
+            {
+                foreach (TagData<string, string, string, string, int> t in sequenceH)
+                {
+                    if (isTagPresentInSequence(sequenceH, t.Value) == true)
+                    {
+                        validH = true;
+                        break;
+                    }
+                }
+            }
+
+            if (isTagPresentInSequence(sequenceI, "15I") == true)
+            {
+                foreach (TagData<string, string, string, string, int> t in sequenceI)
+                {
+                    if (isTagPresentInSequence(sequenceI, t.Value) == true)
+                    {
+                        validI = true;
+                        break;
+                    }
+                }
+            }
+
+            return validE && validF && validG && validH && validI;
         }
         #endregion
 
+        #region SAVE DATA
         public void saveRecord(BlockHeader headers)
         {
             string sqlCmd = null;
@@ -2637,6 +2876,7 @@ namespace Messages
                 throw new Exception("Failed to insert MT320 Block5 record.\n" + ex.Message);
             }
         }
+        #endregion
     }
 }
 

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
+using Database;
 
 namespace Messages
 {
-    public class Util
+    public class Util : DBUtils
     {
         public Util()
         {
@@ -62,197 +64,226 @@ namespace Messages
         /// <param name="ccy"></param>
         /// <returns></returns>
         public bool IsValidCcy(string ccy)
+       
         {
-            bool valid = false;
+            sqlCmdStr = "SELECT * FROM currency where currency_code = '" + ccy + "'";
 
-            switch(ccy)
+            return DBExecute_Bool();
+        }
+
+        public DataTable getCurrencyNameFromCurrency(string currency_code, string entity)
+        {
+            bool useAnd = false;
+
+            if (currency_code == null && entity == null)
+                return null;
+
+            sqlCmdStr = "SELECT currency_name FROM currency WHERE ";
+            if(currency_code != null)
             {
-                case "AED":
-                case "AFN":
-                case "ALL":
-                case "AMD":
-                case "ANG":
-                case "AOA":
-                case "ARS":
-                case "AUD":
-                case "AWG":
-                case "AZN":
-                case "BAM":
-                case "BBD":
-                case "BDT":
-                case "BGN":
-                case "BHD":
-                case "BIF":
-                case "BMD":
-                case "BND":
-                case "BOB":
-                case "BOV":
-                case "BRL":
-                case "BSD":
-                case "BTN":
-                case "BWP":
-                case "BYR":
-                case "BZD":
-                case "CAD":
-                case "CDF":
-                case "CHE":
-                case "CHF":
-                case "CHW":
-                case "CLF":
-                case "CLP":
-                case "CNY":
-                case "COP":
-                case "COU":
-                case "CRC":
-                case "CUC":
-                case "CUP":
-                case "CVE":
-                case "CZK":
-                case "DJF":
-                case "DKK":
-                case "DOP":
-                case "DZD":
-                case "EGP":
-                case "ERN":
-                case "ETB":
-                case "EUR":
-                case "FJD":
-                case "FKP":
-                case "GBP":
-                case "GEL":
-                case "GHS":
-                case "GIP":
-                case "GMD":
-                case "GNF":
-                case "GTQ":
-                case "GYD":
-                case "HKD":
-                case "HNL":
-                case "HRK":
-                case "HTG":
-                case "HUF":
-                case "IDR":
-                case "ILS":
-                case "INR":
-                case "IQD":
-                case "IRR":
-                case "ISK":
-                case "JMD":
-                case "JOD":
-                case "KES":
-                case "KGS":
-                case "KHR":
-                case "KMF":
-                case "KPW":
-                case "KRW":
-                case "KWD":
-                case "KYD":
-                case "KZT":
-                case "LAK":
-                case "LBP":
-                case "LKR":
-                case "LRD":
-                case "LSL":
-                case "LYD":
-                case "MAD":
-                case "MDL":
-                case "MGA":
-                case "MKD":
-                case "MMK":
-                case "MNT":
-                case "MOP":
-                case "MRO":
-                case "MUR":
-                case "MVR":
-                case "MWK":
-                case "MXN":
-                case "MXV":
-                case "MYR":
-                case "MZN":
-                case "NAD":
-                case "NGN":
-                case "NIO":
-                case "NOK":
-                case "NPR":
-                case "NZD":
-                case "OMR":
-                case "PAB":
-                case "PEN":
-                case "PGK":
-                case "PHP":
-                case "PKR":
-                case "PLN":
-                case "PY":
-                case "PYG":
-                case "QAR":
-                case "RON":
-                case "RSD":
-                case "RUB":
-                case "RWF":
-                case "SAR":
-                case "SBD":
-                case "SCR":
-                case "SDG":
-                case "SEK":
-                case "SGD":
-                case "SHP":
-                case "SLL":
-                case "SOS":
-                case "SRD":
-                case "SSP":
-                case "STD":
-                case "SVC":
-                case "SYP":
-                case "SZL":
-                case "THB":
-                case "TJS":
-                case "TMT":
-                case "TND":
-                case "TOP":
-                case "TRY":
-                case "TTD":
-                case "TWD":
-                case "TZS":
-                case "UAH":
-                case "UGX":
-                case "USD":
-                case "USN":
-                case "UYI":
-                case "UYU":
-                case "UZS":
-                case "VEF":
-                case "VND":
-                case "VUV":
-                case "WST":
-                case "XAF":
-                case "XAG":
-                case "XAU":
-                case "XBA":
-                case "XBB":
-                case "XBC":
-                case "XBD":
-                case "XCD":
-                case "XDR":
-                case "XOF":
-                case "XPD":
-                case "XPF":
-                case "XPT":
-                case "XSU":
-                case "XTS":
-                case "XUA":
-                case "XXX":
-                case "YER":
-                case "ZAR":
-                case "ZMW":
-                case "ZWL":
-                    valid = true;
-                    break;
-                default:
-                    valid = false;
-                    break;
+                sqlCmdStr += "currency_code = '" + currency_code + "' ";
+                useAnd = true;
             }
 
-            return valid;
+            if(entity != null)
+            {
+                if (useAnd == true)
+                    sqlCmdStr += "and entity = '" + entity + "' ";
+                else
+                    sqlCmdStr += "entity = '" + entity + "' ";
+            }
+
+            return DBExecute_DT();
         }
+
+        #region COUNTRY_CODES TABLE
+        /// <summary>
+        /// Check to see is code is a valid alpha_2, alpha_3 or numeric code
+        /// </summary>
+        /// <param name="country"></param>
+        /// <returns></returns>
+        public bool isValidISOCountryCode(string country)
+        {
+            int result = 0;
+
+            if ( int.TryParse(country, out result) == true )
+                sqlCmdStr = "SELECT * FROM country_codes where numeric_code = '" + country + "'";
+            else if ( country.Length == 2 )
+                sqlCmdStr = "SELECT * FROM country_codes where alpha_2_code = '" + country + "'";
+            else if (country.Length == 3)
+                sqlCmdStr = "SELECT * FROM country_codes where alpha_3_code = '" + country + "'";
+
+            return DBExecute_Bool();
+        }
+
+        /// <summary>
+        /// Returns the country name from the country_codes table given at least one of the following:
+        /// alpha_2_code, alpha_3_code and/or numeric_code. If not supplying a code set it to "null".
+        /// </summary>
+        /// <param name="alpha2"></param>
+        /// <param name="alpha3"></param>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public string getCountryNameFromCountryCodes(string alpha2, string alpha3, string num)
+        {
+            bool useAnd = false;
+
+            if (alpha2 == null && alpha3 == null && num == null)
+                return null;
+
+            sqlCmdStr = "SELECT country_name FROM country_codes WHERE ";
+            if (alpha2 != null)
+            {
+                sqlCmdStr += "alpha_2_code = '" + alpha2 + "' ";
+                useAnd = true;
+            }
+
+            if (alpha3 != null)
+            {
+                if (useAnd == true)
+                    sqlCmdStr += "and alpha_3_code = '" + alpha3 + "' ";
+                else
+                    sqlCmdStr += "alpha_3_code = '" + alpha3 + "' ";
+                useAnd = true;
+            }
+
+            if (num != null)
+            {
+                if (useAnd == true)
+                    sqlCmdStr += "and numeric_code = '" + num + "' ";
+                else
+                    sqlCmdStr += "numeric_code = '" + num + "' ";
+            }
+
+            return DBExecute_String();
+        }
+
+        /// <summary>
+        /// Returns the alpha_2_code from the country_codes table given at least one of the following:
+        /// country_name, alpha_3_code and/or numeric_code. If not supplying a code set it to "null".
+        /// </summary>
+        /// <param name="countryName"></param>
+        /// <param name="alpha3"></param>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public string getAlpha2FromCountryCodes(string countryName, string alpha3, string num)
+        {
+            bool useAnd = false;
+
+            if (countryName == null && alpha3 == null && num == null)
+                return null;
+
+            sqlCmdStr = "SELECT alpha_2 FROM country_codes WHERE ";
+            if (countryName != null)
+            {
+                sqlCmdStr += "country_name = '" + countryName + "' ";
+                useAnd = true;
+            }
+
+            if (alpha3 != null)
+            {
+                if (useAnd == true)
+                    sqlCmdStr += "and alpha_3_code = '" + alpha3 + "' ";
+                else
+                    sqlCmdStr += "alpha_3_code = '" + alpha3 + "' ";
+                useAnd = true;
+            }
+
+            if (num != null)
+            {
+                if (useAnd == true)
+                    sqlCmdStr += "and numeric_code = '" + num + "' ";
+                else
+                    sqlCmdStr += "numeric_code = '" + num + "' ";
+            }
+
+            return DBExecute_String();
+        }
+
+        /// <summary>
+        /// Returns the alpha_3_code from the country_codes table given at least one of the following:
+        /// country_name, alpha_2_code and/or numeric_code. If not supplying a code set it to "null".
+        /// </summary>
+        /// <param name="countryName"></param>
+        /// <param name="alpha2"></param>
+        /// <param name="num"></param>
+        /// <returns></returns>
+        public string getAlpha3FromCountryCodes(string countryName, string alpha2, string num)
+        {
+            bool useAnd = false;
+
+            if (countryName == null && alpha2 == null && num == null)
+                return null;
+
+            sqlCmdStr = "SELECT alpha_3 FROM country_codes WHERE ";
+            if (countryName != null)
+            {
+                sqlCmdStr += "country_name = '" + countryName + "' ";
+                useAnd = true;
+            }
+
+            if (alpha2 != null)
+            {
+                if (useAnd == true)
+                    sqlCmdStr += "and alpha_2_code = '" + alpha2 + "' ";
+                else
+                    sqlCmdStr += "alpha_2_code = '" + alpha2 + "' ";
+                useAnd = true;
+            }
+
+            if (num != null)
+            {
+                if (useAnd == true)
+                    sqlCmdStr += "and numeric_code = '" + num + "' ";
+                else
+                    sqlCmdStr += "numeric_code = '" + num + "' ";
+            }
+
+            return DBExecute_String();
+        }
+
+        /// <summary>
+        /// Returns the numeric_code from the country_codes table given at least one of the following:
+        /// country_name, alpha_2_code and/or alpha_3_code. If not supplying a code set it to "null".
+        /// </summary>
+        /// <param name="countryName"></param>
+        /// <param name="alpha2"></param>
+        /// <param name="alpha3"></param>
+        /// <returns></returns>
+        public string getNumericFromCountryCodes(string countryName, string alpha2, string alpha3)
+        {
+            bool useAnd = false;
+
+            if (countryName == null && alpha2 == null && alpha3 == null)
+                return null;
+
+            sqlCmdStr = "SELECT alpha_3 FROM country_codes WHERE ";
+            if (countryName != null)
+            {
+                sqlCmdStr += "country_name = '" + countryName + "' ";
+                useAnd = true;
+            }
+
+            if (alpha2 != null)
+            {
+                if (useAnd == true)
+                    sqlCmdStr += "and alpha_2_code = '" + alpha2 + "' ";
+                else
+                    sqlCmdStr += "alpha_2_code = '" + alpha2 + "' ";
+                useAnd = true;
+            }
+
+            if (alpha3 != null)
+            {
+                if (useAnd == true)
+                    sqlCmdStr += "and alpha_3_code = '" + alpha3 + "' ";
+                else
+                    sqlCmdStr += "alpha_3_code = '" + alpha3 + "' ";
+            }
+
+            return DBExecute_String();
+        }
+
+        #endregion
     }
 }

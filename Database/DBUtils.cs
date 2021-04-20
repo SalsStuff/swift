@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace Database
 {
     public class DBUtils
     {
-        SqlConnection m_cnn = null;
+        public SqlConnection m_cnn { get; set; } = null;
+        public string sqlCmdStr { get; set; } = null;
 
         /// <summary>
         /// Class Constructor
@@ -185,6 +187,80 @@ namespace Database
             {
                 throw new Exception("Failure to save MT Record.\n" + ex.Message);
             }
+        }
+
+        public bool DBExecute_Bool()
+        {
+            bool result = false;
+
+            try
+            {
+                DBOpen();
+                SqlCommand command = new SqlCommand(sqlCmdStr, m_cnn);
+                command.ExecuteNonQuery();
+
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    result = true;
+                    break;
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failure in DBExecute_Bool.\n" + ex.Message);
+            }
+
+            return result;
+        }
+
+        public string DBExecute_String()
+        {
+            string result = null;
+
+            try
+            {
+                DBOpen();
+                SqlCommand command = new SqlCommand(sqlCmdStr, m_cnn);
+                command.ExecuteNonQuery();
+
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    result = reader[0].ToString();
+                    break;
+                }
+                reader.Close();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failure in DBExecute_Bool.\n" + ex.Message);
+            }
+
+            return result;
+        }
+
+        public DataTable DBExecute_DT()
+        {
+            DataTable dataTable = new DataTable();
+
+            try
+            {
+                DBOpen();
+                SqlCommand command = new SqlCommand(sqlCmdStr, m_cnn);
+                command.ExecuteNonQuery();
+
+                SqlDataAdapter da = new SqlDataAdapter(command);
+                da.Fill(dataTable);
+                da.Dispose();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Failure in DBExecute_Bool.\n" + ex.Message);
+            }
+
+            return dataTable;
         }
     }
 }
