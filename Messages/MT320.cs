@@ -215,6 +215,7 @@ namespace Messages
         };
         #endregion
 
+        #region MESSAGE SETUP
         /// <summary>
         /// Method Constructor
         /// </summary>
@@ -335,11 +336,12 @@ namespace Messages
         {
             string input = message.Substring(3);
             // Clean up message
-            input = input.Replace(System.Environment.NewLine, "");
-            input = input.Replace("\r\n", "");
-            string test = input.Substring(0, 1);
-            if (test.Equals(":") == true)
-                input = input.Substring(1);
+            //input = input.Replace(System.Environment.NewLine, "");
+            //input = input.Replace("\r\n", "");
+            //string test = input.Substring(0, 1);
+            //if (test.Equals(":") == true)
+            //    input = input.Substring(1);
+            input = input.Substring(input.IndexOf(':') + 1);
 
             // Remove the End of Block flag
             input = input.Substring(0, input.Length - 2);
@@ -425,6 +427,8 @@ namespace Messages
         {
         
         }
+
+        #endregion
 
         #region GET SET Functions
         /// <summary>
@@ -641,7 +645,6 @@ namespace Messages
                             if (Is_T37G_Valid(field) == false)
                                 validTag = false;
                             break;
-                            /*
                         case "38J":
                             if (Is_T38J_Valid(field) == false)
                                 validTag = false;
@@ -650,23 +653,266 @@ namespace Messages
                             if (Is_T39M_Valid(field) == false)
                                 validTag = false;
                             break;
-                            */
                         default:
                             Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence A - can not validate.");
                             break;
                     }
                     break;
                 case "C":
+                    switch (field.Tag)
+                    {
+                        case "15C":
+                            if (Is_T15C_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "53A":
+                        case "53D":
+                        case "53J":
+                            if (Is_T53_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "56A":
+                        case "56D":
+                        case "56J":
+                            if (Is_T56_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "57A":
+                        case "57D":
+                        case "57J":
+                            if (Is_T57_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "58A":
+                        case "58D":
+                        case "58J":
+                            if (Is_T58_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "86A":
+                        case "86D":
+                        case "86J":
+                            if (Is_T86_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        default:
+                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence A - can not validate.");
+                            break;
+                    }
                     break;
                 case "D":
+                    switch (field.Tag)
+                    {
+                        case "15D":
+                            if (Is_T15D_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "53A":
+                        case "53D":
+                        case "53J":
+                            if (Is_T53_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "56A":
+                        case "56D":
+                        case "56J":
+                            if (Is_T56_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "57A":
+                        case "57D":
+                        case "57J":
+                            if (Is_T57_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "58A":
+                        case "58D":
+                        case "58J":
+                            if (Is_T58_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "86A":
+                        case "86D":
+                        case "86J":
+                            if (Is_T86_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        default:
+                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence A - can not validate.");
+                            break;
+                    }
                     break;
                 case "E":
+                    switch (field.Tag)
+                    {
+                        case "15E":
+                            if (Is_T15E_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "53A":
+                        case "53D":
+                        case "53J":
+                            if (Is_T53_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "56A":
+                        case "56D":
+                        case "56J":
+                            if (Is_T56_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "57A":
+                        case "57D":
+                        case "57J":
+                            if (Is_T57_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "58A":
+                        case "58D":
+                        case "58J":
+                            if (Is_T58_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "86A":
+                        case "86D":
+                        case "86J":
+                            if (Is_T86_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        default:
+                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence A - can not validate.");
+                            break;
+                    }
                     break;
                 case "F":
+                    switch (field.Tag)
+                    {
+                        case "15F":
+                            if (Is_T15F_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "53A":
+                        case "53D":
+                        case "53J":
+                            if (Is_T53_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "56A":
+                        case "56D":
+                        case "56J":
+                            if (Is_T56_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "57A":
+                        case "57D":
+                        case "57J":
+                            if (Is_T57_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "58A":
+                        case "58D":
+                        case "58J":
+                            if (Is_T58_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "86A":
+                        case "86D":
+                        case "86J":
+                            if (Is_T86_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        default:
+                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence A - can not validate.");
+                            break;
+                    }
                     break;
                 case "G":
+                    switch (field.Tag)
+                    {
+                        case "15G":
+                            if (Is_T15G_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "33B":
+                            if (Is_T33B_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "33E":
+                            if (Is_T33E_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "36":
+                            if (Is_T36_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "37L":
+                            if (Is_T37L_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        default:
+                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence A - can not validate.");
+                            break;
+                    }
                     break;
                 case "H":
+                    switch (field.Tag)
+                    {
+                        case "15H":
+                            if (Is_T15H_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "21G":
+                            if (Is_T21G_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "24D":
+                            if (Is_T24D_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "26H":
+                            if (Is_T26H_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "29A":
+                            if (Is_T29A_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "34C":
+                            if (Is_T34C_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "71F":
+                            if (Is_T71F_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "72":
+                            if (Is_T72_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "84A":
+                        case "84B":
+                        case "84D":
+                        case "84J":
+                            if (Is_T84_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "85A":
+                        case "85B":
+                        case "85D":
+                        case "85J":
+                            if (Is_T85_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "88A":
+                        case "88D":
+                        case "88J":
+                            if (Is_T88_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        default:
+                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence A - can not validate.");
+                            break;
+                    }
                     break;
                 case "I":
                     break;
@@ -903,12 +1149,8 @@ namespace Messages
                         valid = false;
                         Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is not 4 characters long.");
                     }
-                    if ( (field.Value.Contains("AMND") == true) || (field.Value.Contains("CANC") == true) ||
-                         (field.Value.Contains("DUPL") == true) || (field.Value.Contains("NEWT") == true) )
-                    {
-                        // Do nothing for now.
-                    }
-                    else
+                    if ( (field.Value.Contains("AMND") == false) && (field.Value.Contains("CANC") == false) &&
+                         (field.Value.Contains("DUPL") == false) && (field.Value.Contains("NEWT") == false) )
                     {
                         valid = false;
                         Anomalies.Add("ERROR T36 - Tag " + field.Tag + "," + field.Name + ", field must contain one of the following: AMND, CANC, DUPL or NEWT");
@@ -2176,12 +2418,1696 @@ namespace Messages
         /// </summary>
         /// <param name="field"></param>
         /// <returns></returns>
-        //private bool Is_T39M_Valid(TagData<string, string, string, string, int> field)
-        //{
+        private bool Is_T39M_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            Util util = new Util();
 
-        //}
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("39M") == true)
+                {
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length != 2)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T40 - Tag " + field.Tag + " - Incorrect field length : " + field.Value.Length);
+                    }
+                    
+                    if(util.isValidISOCountryCode(field.Value) == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T73 - Tag " + field.Tag + " - " + field.Value + " - Country Code : is not a valid ISO country code. " );
+                    }
+
+                }
+            }
+            return valid;
+        }
 
 
+        #endregion
+
+        #region SEQUENCE C TAG VALIDATIONS
+        /// <summary>
+        /// Is_T15C_Valid
+        /// Format
+        ///     Option C    This is an empty field
+        /// Presence
+        ///     Mandatory in mandatory sequence C
+        /// Definition    
+        ///     This field specifies the start of mandatory sequence C Settlement Instructions for Amounts Payable by Party A.
+        /// Usage Rules
+        ///     Only the field tag must be present, the field is empty.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T15C_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            // 15C is a mandatory field in a mandatory block. It must be present
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("15C") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        if (isAnyTagPresentInSequence(sequenceC) == true)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                        }
+                    }
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Equals("") == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Only the field tag must be present, the field must be empty. It contains : " + field.Value);
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T15C_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T53_Valid
+        /// Format
+        ///     Option A	    [/1!a] [/34x]               (Party Identifier)
+        ///                     4!a2!a2!c[3!c]              (Identifier Code)
+        ///
+        ///     Option D        [/ 1!a][/ 34x]              (Party Identifier)
+        ///                     4*35x                       (Name and Address)
+        ///
+        ///     Option J	    5*40x                       (Party Identification)
+        ///
+        /// Presence
+        ///     Optional in mandatory sequences C and D
+        ///     Optional in optional sequences E and F
+        ///     
+        /// Definition
+        ///     This field identifies the financial institution from which party A will transfer the funds (sequence C).
+        ///     This field identifies the financial institution from which party B will transfer the funds (sequence D).
+        ///     This field identifies the financial institution from which party A will transfer the interest (sequence E).
+        ///     This field identifies the financial institution from which party B will transfer the interest (sequence F).
+        ///
+        /// Codes
+        ///     In option J, Party Identification must be specified as a list of pairs (Code)(Value) and the following codes and format must be used (Error code(s): T78).
+        ///     Note that optional codes are surrounded by square brackets('[' and ']') which are not part of the syntax.
+        ///     The codes must be placed between slashes('/').
+        ///
+        ///     ABIC        4!a2!a2!c[3!c] or 4!a       Identifier Code or 'UKWN' if BIC not known
+        ///     [ACCT]      34x                         Account number(optional)
+        ///     [ADD1]      35x                         First line of the address(optional)
+        ///     [ADD2]      35x                         Second line of the address(optional)
+        ///     [CITY]      35x                         City, possibly followed by state and country(optional)
+        ///     [CLRC]      35x                         Clearing code(optional)
+        ///     [GBSC]      6!n                         UK domestic sort code(optional)
+        ///     NAME        34x                         Party's name
+        ///     [USCH]      6!n                         CHIPS UID(optional)
+        ///     [USFW]      9!n                         FedWire Routing Number(optional)
+        ///
+        /// Codes       
+        ///     In option J, an alternative is to specify Party Identification as the following code(Error code(s): T78) :
+        ///     The code must be placed between slashes('/').
+        ///
+        ///     NETS            Payment flows are netted based on a bilateral agreement
+        ///
+        ///     Codes
+        ///         In option J, an alternative is to specify Party Identification as the following code(Error code(s): T78) :
+        ///         The code must be placed between slashes('/').
+        ///         
+        ///         SSIS        Standing settlement instructions are used
+        /// 
+        /// Network Validated Rules
+        ///     Identifier Code must be a registered financial institution BIC(Error code(s): T27, T28, T29, T45).
+        ///     Identifier Code must be a financial institution BIC.This error code applies to all types of BICs referenced in a FIN message including connected BICs, non-connected BICs, Masters, Synonyms, Live destinations and Test & Training destinations (Error code(s): C05).
+        ///     
+        /// Usage Rules
+        ///     For matching purposes, option A must be used when available.
+        ///     Field 53a is used only when the payer wants to inform the payee where the funds come from.
+        ///     See the chapter Guidelines for this MT.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T53_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 53A / 53D / 53J is an optional field.
+                if ((field.Tag.Equals("53A") == true) || (field.Tag.Equals("53D") == true) || (field.Tag.Equals("53J") == true))
+                {
+                    if (field.Present == 1)
+                    {
+                        // Add checks
+                    }
+                    field.Value = field.Value.Trim();
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T53_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T56_Valid
+        /// Format
+        ///     Option A        [/ 1!a][/34x]           (Party Identifier)			
+		///		                4!a2!a2!c[3!c]          (Identifier Code)
+        ///     Option D        [/ 1!a][/ 34x]          (Party Identifier)
+        ///				        4*35x                   (Name and Address)
+        ///     Option J		5*40x                   (Party Identification)
+        ///
+        /// Presence
+        ///     Optional (referenced in rule C7) in mandatory sequences C and D
+        ///     Optional (referenced in rule C7) in optional sequences E and F
+        ///
+        /// Definition
+        ///    This field identifies the first intermediary institution for the transfer of the funds (sequences C and D).
+        ///    This field identifies the first intermediary institution for the transfer of the interest (sequences E and F).
+        ///
+        /// Codes
+        ///     In option J, Party Identification must be specified as a list of pairs(Code)(Value) and the following codes and format must be used(Error code(s): T78).
+	    ///     Note that optional codes are surrounded by square brackets('[' and ']') which are not part of the syntax.
+        ///     The codes must be placed between slashes('/').
+        ///
+        ///     	ABIC		4!a2!a2!c[3!c] or 4!a Identifier Code or 'UKWN' if BIC not known
+        ///         [ACCT]		34x Account number(optional)
+        ///         [ADD1]		35x First line of the address(optional)
+        ///         [ADD2]		35x Second line of the address(optional)
+        ///         [CITY]		35x City, possibly followed by state and country(optional)
+        ///         [CLRC]		35x Clearing code(optional)
+        ///         [GBSC]		6!n UK domestic sort code(optional)
+        ///         NAME		34x Party's name
+        ///         [USCH]		6!n CHIPS UID(optional)
+        ///         [USFW]		9!n FedWire Routing Number(optional)
+        ///
+        ///     Codes
+        ///         In option J, an alternative is to specify Party Identification as the following code(Error code(s): T78) :
+        ///         The code must be placed between slashes('/').
+        ///
+        ///         NETS        Payment flows are netted based on a bilateral agreement
+        ///
+        ///     Codes
+        ///         In option J, an alternative is to specify Party Identification as the following code(Error code(s): T78) :
+        ///         The code must be placed between slashes('/').
+        ///     
+        ///         SSIS        Standing settlement instructions are used
+        ///
+        /// Network Validated Rules
+        ///     Identifier Code must be a registered financial institution BIC(Error code(s): T27, T28, T29, T45).
+        ///     Identifier Code must be a financial institution BIC.This error code applies to all types of BICs referenced in a FIN message including connected BICs, non-connected BICs, Masters, Synonyms, Live destinations and Test & Training destinations (Error code(s): C05).
+        /// 
+        /// Usage Rules
+        ///     This field is used when there is at least one financial institution between the delivery institution and the receiving institution.
+        ///     For matching purposes, option A must be used when available.
+        ///     See the chapter Guidelines for this MT.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T56_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 56A / 56D / 56J is an optional field.
+                if ((field.Tag.Equals("56A") == true) || (field.Tag.Equals("56D") == true) || (field.Tag.Equals("56J") == true))
+                {
+                    if (field.Present == 1)
+                    {
+                        // Add checks
+                    }
+                    field.Value = field.Value.Trim();
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T56_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T57_Valid
+        /// Format
+        ///     Option A        [/ 1!a][/34x]           (Party Identifier)
+		///				        4!a2!a2!c[3!c]          (Identifier Code)
+        ///     Option D        [/ 1!a][/ 34x]          (Party Identifier)
+        ///						4*35x                   (Name and Address)
+        ///     Option J		5*40x                   (Party Identification)
+        ///
+        /// Presence
+        ///     Mandatory in mandatory sequences C and D
+        ///     Mandatory in optional sequences E amd F
+        ///
+        /// Definition
+        ///     This field identifies the financial institution and account where party B will receive the payment (sequence C).
+        ///     This field identifies the financial institution and account where party A will receive the payment (sequence D).
+        ///     This field identifies the financial institution and account where party B will receive the interest (sequence E).
+        ///     This field identifies the financial institution and account where party A will receive the interest (sequence F).
+        ///
+        /// Codes
+        ///     In option D, one of the following codes may be used in Name and Address:
+        ///     
+	    ///     NET             When net settlement takes place
+        ///     NONE            When no settlement is taking place
+        ///     SSI             When standing settlement instructions apply
+        ///     UNKNOWN         When the settlement instructions are not known
+        ///
+        ///     Codes
+        ///         In option J, Party Identification must be specified as a list of pairs(Code)(Value) and the following codes and format must be used(Error code(s): T78).
+		///         Note that optional codes are surrounded by square brackets('[' and ']') which are not part of the syntax.
+        ///         The codes must be placed between slashes('/').
+        ///
+		///         ABIC			4!a2!a2!c[3!c] or 4!a Identifier Code or 'UKWN' if BIC not known
+        ///         [ACCT]			34x Account number(optional)
+        ///         [ADD1]			35x First line of the address(optional)
+        ///         [ADD2]			35x Second line of the address(optional)
+        ///         [CITY]			35x City, possibly followed by state and country(optional)
+        ///         [CLRC]			35x Clearing code(optional)
+        ///         [GBSC]			6!n UK domestic sort code(optional)
+        ///         NAME			34x Party's name
+        ///         [USCH]			6!n CHIPS UID(optional)
+        ///         [USFW]			9!n FedWire Routing Number(optional)
+        ///
+        ///     Codes
+        ///         In option J, an alternative is to specify Party Identification as the following code(Error code(s): T78) :
+        ///         The code must be placed between slashes('/').
+        ///         
+        ///         NETS Payment flows are netted based on a bilateral agreement
+        ///
+        ///     Codes
+        ///         In option J, an alternative is to specify Party Identification as the following code(Error code(s): T78) :
+        ///         The code must be placed between slashes('/').
+        ///
+        /// 		SSIS Standing settlement instructions are used
+        ///
+        /// Network Validated Rules
+        ///     Identifier Code must be a registered financial institution BIC(Error code(s): T27, T28, T29, T45).
+	    ///     Identifier Code must be a financial institution BIC.This error code applies to all types of BICs referenced in a FIN message including connected BICs, non-connected BICs, Masters, Synonyms, Live destinations and Test & Training destinations (Error code(s): C05).
+        ///
+        /// Usage Rules
+        ///     For matching purposes, option A must be used when available.
+        ///     Party Identifier in options A and D may be used to indicate a CHIPS Universal Identifier.When used, it must be preceded by a double slash '//', and the code CH and 6 digits.
+        ///     See the chapter Guidelines for this MT.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T57_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 57A / 57D / 57J is an optional field.
+                if ((field.Tag.Equals("57A") == true) || (field.Tag.Equals("57D") == true) || (field.Tag.Equals("57J") == true))
+                {
+                    if (field.Present == 1)
+                    {
+                        // Add checks
+                    }
+                    field.Value = field.Value.Trim();
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T57_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T58_Valid
+        /// Format
+        ///     Option A            [/ 1!a][/34x]           (Party Identifier)
+        ///						    4!a2!a2!c[3!c]          (Identifier Code)
+        ///     Option D            [/ 1!a][/ 34x]          (Party Identifier)
+        /// 						4*35x                   (Name and Address)
+        ///     Option J			5*40x                   (Party Identification)
+        ///
+        /// Presence
+        ///     Optional in mandatory sequences C and D
+        ///     Mandatory in optional sequence E and F
+        ///
+        /// Definition
+        ///     This field specifies the institution in favour of which the payment is made when different from Party B (sequence C).
+        ///     This field specifies the institution in favour of which the payment is made when different from party A (sequence D).
+        ///     This field specifies the institution in favour of which the payment is made when different from party B (sequence E).
+        ///     This field specifies the institution in favour of which the payment is made when different from party A (sequence F).
+        ///     
+        ///
+        /// Codes
+        ///     In option J, Party Identification must be specified as a list of pairs (Code)(Value) and the following codes and format must be used (Error code(s): T78).
+	    ///     Note that optional codes are surrounded by square brackets('[' and ']') which are not part of the syntax.
+        ///     The codes must be placed between slashes('/').
+        ///
+		///         ABIC			4!a2!a2!c[3!c] or 4!a Identifier Code or 'UKWN' if BIC not known
+        ///         [ACCT]			34x Account number(optional)
+        ///         [ADD1]			35x First line of the address(optional)
+        ///         [ADD2]			35x Second line of the address(optional)
+        ///         [CITY]			35x City, possibly followed by state and country(optional)
+        ///         [CLRC]			35x Clearing code(optional)
+        ///         [GBSC]			6!n UK domestic sort code(optional)
+        ///         [LEIC]			18!c2!n Legal Entity Identifier(optional)
+        ///         NAME			34x Party's name
+        ///         [USCH]			6!n CHIPS UID(optional)
+        ///         [USFW]			9!n FedWire Routing Number(optional)
+        ///
+        /// Network Validated Rules
+        ///     Identifier Code must be a registered BIC(Error code(s): T27, T28, T29, T45).
+        ///
+        /// Usage Rules
+        ///     For matching purposes, option A must be used when available.
+        ///     See the chapter Guidelines for this MT.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T58_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 58A / 58D / 58J is an optional field.
+                if ((field.Tag.Equals("58A") == true) || (field.Tag.Equals("58D") == true) || (field.Tag.Equals("58J") == true))
+                {
+                    if (field.Present == 1)
+                    {
+                        // Add checks
+                    }
+                    field.Value = field.Value.Trim();
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T58_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T86_Valid
+        /// Format
+        ///     Option A        [/ 1!a][/34x]           (Party Identifier)
+        ///						4!a2!a2!c[3!c]          (Identifier Code)
+        ///     Option D        [/ 1!a][/ 34x]          (Party Identifier)
+        ///			            4*35x                   (Name and Address)
+        ///     Option J	    5*40x                   (Party Identification)
+        ///
+        /// Presence
+        ///     Conditional(see rule C7) in mandatory sequences C and D
+        ///     Conditional (see rule C7) in optional sequences E and F
+        ///     
+        ///
+        /// Definition
+        ///     This field identifies the second intermediary institution for the transfer of the funds (sequence C and D).
+        ///     This field identifies the second intermediary institution for the transfer of the interest (sequence E and F).
+        ///
+        /// Codes
+        ///     In option J, Party Identification must be specified as a list of pairs(Code)(Value) and the following codes and format must be used(Error code(s): T78).
+	    ///     Note that optional codes are surrounded by square brackets('[' and ']') which are not part of the syntax.
+        ///     The codes must be placed between slashes('/').
+        ///
+        ///     ABIC			4!a2!a2!c[3!c] or 4!a Identifier Code or 'UKWN' if BIC of financial institution not known
+        ///     [ACCT]			34x Account number(optional)
+        ///     [ADD1]			35x First line of the address(optional)
+        ///     [ADD2]			35x Second line of the address(optional)
+        ///     [CITY]			35x City, possibly followed by state and country(optional)
+        ///     [CLRC]			35x Clearing code(optional)
+        ///     [GBSC]			6!n UK domestic sort code(optional)
+        ///     NAME			34x Party's name
+        ///     [USCH]			6!n CHIPS UID(optional)
+        ///     [USFW]			9!n FedWire Routing Number(optional)
+        ///
+        /// Codes
+        ///     In option J, an alternative is to specify Party Identification as the following code(Error code(s): T78) :
+        ///     The code must be placed between slashes('/').
+        ///
+	    ///     NETS            Payment flows are netted based on a bilateral agreement
+        ///
+        /// Codes
+        ///     In option J, an alternative is to specify Party Identification as the following code(Error code(s): T78) :
+        ///     The code must be placed between slashes('/').
+        ///
+		///     SSIS            Standing settlement instructions are used
+        ///
+        /// Network Validated Rules
+        ///     Identifier Code must be a registered financial institution BIC(Error code(s): T27, T28, T29, T45).
+	    ///     Identifier Code must be a financial institution BIC.This error code applies to all types of BICs referenced in a FIN message including connected BICs, non-connected BICs, Masters, Synonyms, Live destinations and Test & Training destinations (Error code(s): C05).
+        ///
+        /// Usage Rules
+        ///     This field is used when there is a second financial institution between the delivery institution and the receiving institution.In the payment chain, this intermediary comes before the first intermediary.
+        ///     For matching purposes, option A must be used when available.
+        ///     See the chapter Guidelines for this MT.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T86_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 86A / 86D / 86J is an optional field.
+                if ((field.Tag.Equals("86A") == true) || (field.Tag.Equals("86D") == true) || (field.Tag.Equals("86J") == true))
+                {
+                    if (field.Present == 1)
+                    {
+                        // Add checks
+                    }
+                    field.Value = field.Value.Trim();
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T86_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        #endregion
+
+        #region SEQUENCE D TAG VALIDATIONS
+        /// <summary>
+        /// Is_T15D_Valid
+        /// Format
+        ///     Option D    This is an empty field
+        /// Presence
+        ///     Mandatory in mandatory sequence D
+        /// Definition    
+        ///     This field specifies the start of mandatory sequence D Settlement Instructions for Amounts Payable by Party B.
+        /// Usage Rules
+        ///     Only the field tag must be present, the field is empty.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T15D_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            // 15C is a mandatory field in a mandatory block. It must be present
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("15D") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        if (isAnyTagPresentInSequence(sequenceD) == true)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                        }
+                    }
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Equals("") == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Only the field tag must be present, the field must be empty. It contains : " + field.Value);
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T15D_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+        #endregion
+
+        #region SEQUENCE E TAG VALIDATIONS
+        /// <summary>
+        /// Is_T15E_Valid
+        /// Format
+        ///     Option E    This is an empty field
+        /// Presence
+        ///     Mandatory in optional sequence E
+        /// Definition    
+        ///     This field specifies the start of optional sequence E Settlement Instructions for Interests Payable by Party A.
+        /// Usage Rules
+        ///     Only the field tag must be present, the field is empty.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T15E_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            // 15C is a mandatory field in a mandatory block. It must be present
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("15E") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        if (isAnyTagPresentInSequence(sequenceE) == true)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                        }
+                    }
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Equals("") == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Only the field tag must be present, the field must be empty. It contains : " + field.Value);
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T15E_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+        #endregion
+
+        #region SEQUENCE F TAG VALIDATIONS
+        /// <summary>
+        /// Is_T15F_Valid
+        /// Format
+        ///     Option F    This is an empty field
+        /// Presence
+        ///     Mandatory in optional sequence E
+        /// Definition    
+        ///     This field specifies the start of optional sequence F Settlement Instructions for Interests Payable by Party B.
+        /// Usage Rules
+        ///     Only the field tag must be present, the field is empty.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T15F_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            // 15C is a mandatory field in a mandatory block. It must be present
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("15F") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        if (isAnyTagPresentInSequence(sequenceF) == true)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                        }
+                    }
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Equals("") == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Only the field tag must be present, the field must be empty. It contains : " + field.Value);
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T15F_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+        #endregion
+
+        #region SEQUENCE G TAG VALIDATIONS
+        /// <summary>
+        /// Is_T15G_Valid
+        /// Format
+        ///     This is an empty field
+        /// Presence
+        ///     Mandatory in optional sequence G
+        /// Definition    
+        ///     This field specifies the start of optional sequence G General Information.
+        /// Usage Rules
+        ///     Only the field tag must be present, the field is empty.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T15G_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            // 15A is a mandatory field in a mandatory block. It must be present
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("15G") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                    }
+                    if (field.Value.Equals("") == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Only the field tag must be present, the field must be empty. It contains : " + field.Value);
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T15G_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T33B_Valid
+        /// Format
+        ///     Option B	3!a15d     (Currency)(Amount)
+        /// Presence
+        ///     Mandatory in optional sequence G
+        /// Definition
+        ///     This field specifies the currency and net interest amount (after deductions of taxes).
+        /// Network Validated Rules
+        ///     Currency must be a valid ISO 4217 currency code (Error code(s): T52).
+        ///     The integer part of Amount must contain at least one digit.A decimal comma is mandatory and is included in the maximum length.The number of digits following the comma must not exceed the maximum number allowed for the specified currency(Error code(s): C03, T40, T43).
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T33B_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            Util util = new Util();
+            double num = 0.0;
+
+            // 33B is a mandatory field in an optional block.
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("33B") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                    }
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length > 18)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect field length : " + field.Value.Length);
+                    }
+
+                    string ccy = field.Value.Substring(0, 3);
+                    if (util.IsValidCcy(ccy) == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T52 - Tag " + field.Tag + " - Invalid currency : " + ccy);
+                    }
+
+                    string amount = field.Value.Substring(3, field.Value.Length - 3);
+                    if (amount.Length > 15 || amount.Length < 2)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T40 - Tag " + field.Tag + "," + field.Name + ", this field must contain at least 1 digit and a decomal point or comma and no more than 12 characters.");
+                    }
+
+
+                    if (amount.Contains(".") == false && amount.Contains(",") == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T43 - Tag " + field.Tag + "," + field.Name + ", this field must contain a decomal point or comma.");
+                    }
+
+                    if (double.TryParse(amount, out num) == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ",this is not a valid numeric value.");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T33B_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T33E_Valid
+        /// Format
+        ///     Option E	3!a15d     (Currency)(Amount)
+        /// Presence
+        ///     Mandatory in optional sequence G
+        /// Definition
+        ///     This field specifies the tax amount in the reporting currency.
+        /// Network Validated Rules
+        ///     Currency must be a valid ISO 4217 currency code (Error code(s): T52).
+        ///     The integer part of Amount must contain at least one digit.A decimal comma is mandatory and is included in the maximum length.The number of digits following the comma must not exceed the maximum number allowed for the specified currency(Error code(s): C03, T40, T43).
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T33E_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            Util util = new Util();
+            double num = 0.0;
+
+            // 33B is a mandatory field in an optional block.
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("33E") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                    }
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length > 18)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect field length : " + field.Value.Length);
+                    }
+
+                    string ccy = field.Value.Substring(0, 3);
+                    if (util.IsValidCcy(ccy) == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T52 - Tag " + field.Tag + " - Invalid currency : " + ccy);
+                    }
+
+                    string amount = field.Value.Substring(3, field.Value.Length - 3);
+                    if (amount.Length > 15 || amount.Length < 2)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T40 - Tag " + field.Tag + "," + field.Name + ", this field must contain at least 1 digit and a decomal point or comma and no more than 12 characters.");
+                    }
+
+
+                    if (amount.Contains(".") == false && amount.Contains(",") == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T43 - Tag " + field.Tag + "," + field.Name + ", this field must contain a decomal point or comma.");
+                    }
+
+                    if (double.TryParse(amount, out num) == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ",this is not a valid numeric value.");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T33E_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T36_Valid
+        /// Format
+        ///     12d             (Rate)
+        ///
+        /// Presence
+        ///     Mandatory in optional sequence G
+        ///
+        /// Definition
+        ///     This field specifies the exchange rate between the transaction currency and the reporting currency.
+        ///
+        /// Network Validated Rules
+        ///     The integer part of Rate must contain at least one digit.A decimal comma is mandatory and is included in the maximum length (Error code(s): T40, T43).
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T36_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            double num = 0.0;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 20 is a mandatory field in a mandatory block. It must be present
+                if (field.Tag.Equals("36") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                    }
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length > 12 || field.Value.Length < 2)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T40 - Tag " + field.Tag + "," + field.Name + ", this field must contain at least 1 digit and a decomal point or comma and no more than 12 characters.");
+                    }
+                    if (field.Value.Contains(".") == false && field.Value.Contains(",") == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T43 - Tag " + field.Tag + "," + field.Name + ", this field must contain a decomal point or comma.");
+                    }
+                    if (double.TryParse(field.Value, out num) == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ",this is not a valid numeric value.");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T36_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T37L_Valid
+        /// Format
+        ///     Option L	        12d             (Rate)
+        ///
+        /// Presence
+        ///     Mandatory in optional sequence G
+        ///
+        /// Definition
+        ///     This field specifies the tax percentage.
+        ///
+        /// Network Validated Rules
+        ///     The integer part of Rate must contain at least one digit.A decimal comma is mandatory and is included in the maximum length (Error code(s): T40, T43).
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T37L_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            double num = 0.0;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 20 is a mandatory field in a mandatory block. It must be present
+                if (field.Tag.Equals("37L") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                    }
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length > 12 || field.Value.Length < 2)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T40 - Tag " + field.Tag + "," + field.Name + ", this field must contain at least 1 digit and a decomal point or comma and no more than 12 characters.");
+                    }
+                    if (field.Value.Contains(".") == false && field.Value.Contains(",") == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T43 - Tag " + field.Tag + "," + field.Name + ", this field must contain a decomal point or comma.");
+                    }
+                    if(double.TryParse(field.Value, out num) == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ",this is not a valid numeric value.");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T37L_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+        #endregion
+
+        #region SEQUENCE H TAG VALIDATIONS
+        /// <summary>
+        /// Is_T15H_Valid
+        /// Format
+        ///     Option H        This is an empty field
+        /// Presence
+        ///     Mandatory in conditional (see rule C10) sequence H
+        /// Definition    
+        ///     This field specifies the start of conditional sequence H Additional Information.
+        /// Usage Rules
+        ///     Only the field tag must be present, the field is empty.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T15H_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            // 15A is a mandatory field in a mandatory block. It must be present
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("15H") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                    }
+                    if (field.Value.Equals("") == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Only the field tag must be present, the field must be empty. It contains : " + field.Value);
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T15H_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T21G_Valid
+        /// Format
+        ///     Option G            16x
+        /// Presence
+        ///     Optional in conditional (see rule C10) sequence H
+        /// Definition
+        ///     This field specifies the broker's reference of the trade.
+        /// Network Validated Rules
+        ///     This field must not start or end with a slash '/' and must not contain two consecutive slashes '//' (Error code(s): T26).
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T21G_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 21G is NOT a mandatory field.
+                if (field.Tag.Equals("21G") == true)
+                {
+                    if (field.Present == 1)
+                    {
+                        field.Value = field.Value.Trim();
+                        if (field.Value.Length > 16)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 16 characters.");
+                        }
+                        if (field.Value.Substring(0, 1).Equals("/") == true)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR T26 - Tag " + field.Tag + "," + field.Name + ", starts with a '/'");
+                        }
+                        if (field.Value.Substring(field.Value.Length - 1, 1).Equals("/") == true)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR T26 - Tag " + field.Tag + "," + field.Name + ", ends with a '/'");
+                        }
+                        if (field.Value.Contains("//") == true)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR T26 - Tag " + field.Tag + "," + field.Name + ", contains a '//'");
+                        }
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T21G_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T24D_Valid
+        /// Format
+        ///     Option D	        4!c[/ 35x]              (Method) (Additional Information)
+        /// Presence
+        ///     Optional in conditional (see rule C10) sequence H
+        /// Definition
+        ///     This field specifies how the deal was agreed.
+        /// Codes
+        ///     Method must contain one of the following codes, optionally followed with Additional Information (Error code(s): T68):
+        ///     
+        ///     BROK                Deal made via a money broker
+        ///     ELEC                Deal made via an electronic system(Reuters, EBS etc.)
+        ///     PHON                Deal agreed on the phone        
+        ///     
+        /// Usage Rules
+        ///     For voice brokers this field contains the code BROK. If the broker needs to be identified explicitly, field 88a must be used.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T24D_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            string code = null;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 24D is NOT a mandatory field.
+                if (field.Tag.Equals("24D") == true)
+                {
+                    if (field.Present == 1)
+                    {
+                        field.Value = field.Value.Trim();
+                        if (field.Value.Length > 40)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 40 characters.");
+                        }
+
+                        code = field.Value.Substring(0, 4);
+                        if ((code.Contains("BROK") == false) && (code.Contains("ELEC") == false) && (code.Contains("PHON") == false))
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR T68 - Tag " + field.Tag + "," + field.Name + ", field must contain one of the following: BROK, ELEC, or PHON");
+                        }
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T24D_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T26H_Valid
+        /// Format
+        ///     Option H            16x
+        /// Presence
+        ///     Optional in conditional (see rule C10) sequence H
+        /// Definition
+        ///     This field specifies the counterparty's reference, if known.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T26H_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 21G is NOT a mandatory field.
+                if (field.Tag.Equals("26H") == true)
+                {
+                    if (field.Present == 1)
+                    {
+                        field.Value = field.Value.Trim();
+                        if (field.Value.Length > 16)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 16 characters.");
+                        }
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T26H_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T29A_Valid
+        /// Format
+        ///     Option A	    4*35x           (Narrative)
+        /// Presence
+        ///     Optional in conditional (see rule C10) sequence H
+        /// Definition
+        ///     This field specifies the name and/or telephone number of the person the Receiver may contact for any queries concerning this transaction.
+        ///     
+        /// Codes
+        ///     One or more of the following codes may be used, placed between slashes:
+        ///     
+        ///     DEPT                    followed by the name of the department
+        ///     FAXT                    followed by fax number
+        ///     NAME                    followed by the name of the contact person
+        ///     PHON                    followed by the telephone number
+        ///     TELX                    followed by the telex number
+        ///     
+        /// Usage Rules
+        ///     The codes do not need to be put on separate lines. It is the '/' at the beginning of a code and not the end-of-line that marks the end of the information behind the previous code.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T29A_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            string input = field.Value;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 21G is NOT a mandatory field.
+                if (field.Tag.Equals("29A") == true)
+                {
+                    if (field.Present == 1)
+                    {
+                        if (field.Value.Length > 144)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 144 characters.");
+                        }
+
+                        if (field.Value.Substring(field.Value.Length - 2, 2).Equals("\r\n") == true)
+                            input = field.Value.Substring(0, field.Value.Length - 2);
+                        string[] stringSeparators = new string[] { "\r\n" };
+                        string[] lines = input.Split(stringSeparators, StringSplitOptions.None);
+                        if(lines.Length > 4)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", Maximum number of lines is 4.");
+                        }
+                        foreach(string ln in lines)
+                        {
+                            if(ln.Length > 35)
+                            {
+                                valid = false;
+                                Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", Maximum number of characters per line is 35.");
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T29A_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T34C_Valid
+        /// Format
+        ///     Option C	        4!c/[N]3!a15d              (Commission Type)(Sign)(Currency/Percent)(Amount/Rate)
+        /// Presence
+        ///     Optional in conditional (see rule C10) sequence H
+        /// Definition
+        ///     This field specifies the type of the commission and either the currency and amount of the commission or the rate (percentage) which is used to calculate the amount.
+        /// Codes
+        ///     Commission Type may contain one of the following codes:
+        ///     
+        ///     ACCA                Accrued Capitalisation
+        ///     ACRU                Accrued Interest Amount
+        ///     AKTI                Aktiengewinn
+        ///     ANTO                Net Gain/Loss Amount
+        ///     BAKL                Backload Fees Amount
+        ///     CBCH                Correspondent Bank Charges
+        ///     CHAR                Charges/Fees
+        ///     COAX                Consumption Tax
+        ///     COUN                Country, National, Federal Tax
+        ///     CREB                Rebate/Bonification
+        ///     DEAL                Trade Amount
+        ///     DSCA                Discount Amount
+        ///     ENTF                Entrance Fees Amount
+        ///     EQUL                Equalisation/Depreciation Deposit
+        ///     ERFE                Early Redemption Fee Amount
+        ///     EUTR                EU Tax Retention Amount
+        ///     EXEC                Executing Broker's Commission
+        ///     HDGE                Hedging cost
+        ///     ISDI                Issue Discount/Allowance
+        ///     LADT                Local Tax(Country specific 1)
+        ///     LEVY                Payment Levy Tax
+        ///     LIDT                Local Tax(Country specific 2)
+        ///     LOCL                Local Tax
+        ///     LOCO                Local Broker's Commission
+        ///     LOTE                Local Tax(Country specific 3)
+        ///     LYDT                Local Tax(Country specific 4)
+        ///     MACO                Matching/Confirmation Fee
+        ///     MARG                Margin Amount
+        ///     OCMT                Original Currency Amount
+        ///     OTHR                Other Amount
+        ///     OTMG                On top Margin
+        ///     PRDF                Difference in Price
+        ///     PRMA                Premium Amount
+        ///     PRWI                Partial Redemption Withholding Amount
+        ///     REFD                Expected Refund
+        ///     REGF                Regulatory Fees
+        ///     REMU                Remuneration Amount
+        ///     RESU                Resulting Amount
+        ///     RSCH                Research fees
+        ///     SAMG                Sales Margin
+        ///     SETT                Settlement Amount
+        ///     SHIP                Shipping Amount
+        ///     SPCN                Special Concessions
+        ///     STAM                Stamp Duty
+        ///     STEX                Stock Exchange Tax
+        ///     SUBS                Subscription Interest
+        ///     TOTL                Total value of all commissions
+        ///     TRAN                Transfer Tax
+        ///     TRAX                Transaction Tax
+        ///     VATA                Value-Added Tax
+        ///     WITH                Withholding Tax
+        ///     ZWIS                Zwischengewinn
+        /// 
+        /// Network Validated Rules
+        ///     Currency/Percent must be a valid ISO 4217 currency code or the code PCT(Error code(s): T52).
+        ///     The integer part of Amount/Rate must contain at least one digit.A decimal comma is mandatory and is included in the maximum length.The number of digits following the comma must not exceed the maximum number allowed for the specified currency(Error code(s): C03, T40, T43).
+        ///     If Amount/Rate is zero, Sign must not be present(Error code(s): T14).
+        ///     
+        /// Usage Rules
+        ///     This field is used to report details of fees, expenses and commissions. This field is not intended to be used to instruct separate settlement of these charges, as this is typically incorporated within other settlement fields in the message.
+        ///     The field may be repeated, in order to provide a breakdown of charges.The code TOTL may be used on its own, or in addition to other codes, to report the total charges related to the trade.
+        ///     If a charge is negative, Sign must be present.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T34C_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            string code = null;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 24D is NOT a mandatory field.
+                if (field.Tag.Equals("34C") == true)
+                {
+                    if (field.Present == 1)
+                    {
+                        field.Value = field.Value.Trim();
+                        if (field.Value.Length > 23)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 23 characters.");
+                        }
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T34C_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T72_Valid
+        /// Format
+        ///             6*35x                       (Narrative Structured Format)
+        ///             
+        ///     The following line format must be used:
+        ///             Line 1	                    /8c/[additional information]                        (Code) (Narrative)
+        ///             Lines 2-6	                [//continuation of additional information]          (Narrative)
+        ///                                                         or                                      or
+        ///                                         [/8c/[additional information]]                      (Code)(Narrative)
+        /// Presence
+        ///     Optional in conditional (see rule C10) sequence H
+        /// Definition
+        ///     This field specifies additional information for the Receiver and applies to the whole messages.
+        ///     
+        /// Codes
+        ///     Bilaterally agreed codes can be used in this field. The following codes may be used in Code if required.
+        ///     
+        ///     TIME                    When the time at which the transaction was concluded is to be specified.
+        ///     VENU                    When the venue where the transaction was executed must be reported.
+        ///     
+        /// Usage Rules
+        ///     Only bilaterally agreed codes can be used in this field.
+        ///     Each code used must be put between slashes and appear at the beginning of a line.
+        ///     All alphabetic characters in a code must be in upper case.
+        ///     Additional explanatory information, which may be continued on the next lines, is preceded by a double slash '//'. Narrative text that is not qualified by a code must start with a double slash '//' on a new line, and should preferably be the last information in this field.
+        ///     Field 72 must not be used for information for which another field is intended.
+        ///     The use of this field with unstructured text may require manual intervention and thus cause delay in automated systems.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T72_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            string input = field.Value;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 72 is NOT a mandatory field.
+                if (field.Tag.Equals("72") == true)
+                {
+                    if (field.Present == 1)
+                    {
+                        // validation code
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T72_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T71F_Valid
+        /// Format
+        ///     Option F	        3!a15d                  (Currency)(Amount)
+        /// Presence
+        ///     Conditional (see rule C8, also referenced in rules C8 and C9) in conditional (see rule C10) sequence H
+        /// Definition
+        ///     This field specifies the brokerage fee for a broker confirmation.
+        /// Network Validated Rules
+        ///     Currency must be a valid ISO 4217 currency code (Error code(s): T52).
+        ///     The integer part of Amount must contain at least one digit.A decimal comma is mandatory and is included in the maximum length.
+        ///     The number of digits following the comma must not exceed the maximum number allowed for the specified currency(Error code(s): C03, T40, T43).
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T71F_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            string ccy = null;
+            Util u = new Util();
+            double num = 0.0;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 24D is NOT a mandatory field.
+                if (field.Tag.Equals("71F") == true)
+                {
+                    if (field.Present == 1)
+                    {
+                        field.Value = field.Value.Trim();
+                        if (field.Value.Length > 18)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 18 characters.");
+                        }
+
+                        ccy = field.Value.Substring(0, 3);
+                        if ((u.IsValidCcy(ccy) == false))
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", field must contain a valid ISO currency.");
+                        }
+
+                        if (Double.TryParse(field.Value.Substring(3, field.Value.Length-3), out num) == false)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + " - amount is not a double. ");
+                        }
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T71F_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T84_Valid
+        /// Format
+        ///     Option A	    [/1!a] [/34x]           (Party Identifier)
+        ///                     4!a2!a2!c[3!c]          (Identifier Code)
+        ///     Option B        [/1!a][/34x]            (Party Identifier)
+        ///                     [35x]                   (Location)
+        ///     Option D        [/ 1!a][/ 34x]          (Party Identifier)
+        ///                     4*35x                   (Name and Address)
+        ///     Option J	    5*40x                   (Party Identification)
+        /// Presence
+        ///     Optional in conditional (see rule C10) sequence H
+        /// Definition
+        ///     This field specifies the branch of party A with whom the deal was done.
+        /// Codes
+        ///     In option J, Party Identification must be specified as a list of pairs (Code)(Value) and the following codes and format must be used (Error code(s): T78).
+        ///     Note that optional codes are surrounded by square brackets('[' and ']') which are not part of the syntax.
+        ///     The codes must be placed between slashes('/').
+        ///     ABIC        4!a2!a2!c[3!c] or 4!a       Identifier Code or 'UKWN' if BIC not known
+        ///     [ACCT]      34x                         Account number(optional)
+        ///     [ADD1]      35x                         First line of the address(optional)
+        ///     [ADD2]      35x                         Second line of the address(optional)
+        ///     [CITY]      35x                         City, possibly followed by state and country(optional)
+        ///     [CLRC]      35x                         Clearing code(optional)
+        ///     [GBSC]      6!n                         UK domestic sort code(optional)
+        ///     [LEIC]      18!c2!n                     Legal Entity Identifier(optional)
+        ///     NAME        34x                         Party's name
+        ///     [USCH]      6!n                         CHIPS UID(optional)
+        ///     [USFW]      9!n                         FedWire Routing Number(optional)
+        /// Network Validation Rules
+        ///     Identifier Code must be a registered BIC (Error code(s): T27, T28, T29, T45).
+        /// Usage Rules
+        ///     The absence of this field means that party A is the dealing branch.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T84_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 84A / 84B / 84D / 84J is an optional field.
+                if ((field.Tag.Equals("84A") == true) || (field.Tag.Equals("84B") == true) || (field.Tag.Equals("84D") == true) || (field.Tag.Equals("84J") == true))
+                {
+                    // Validation Code
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T84_Valid");
+                }
+            }
+            
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T85_Valid
+        /// Format
+        ///     Option A	    [/1!a] [/34x]           (Party Identifier)
+        ///                     4!a2!a2!c[3!c]          (Identifier Code)
+        ///     Option B        [/1!a][/34x]            (Party Identifier)
+        ///                     [35x]                   (Location)
+        ///     Option D        [/ 1!a][/ 34x]          (Party Identifier)
+        ///                     4*35x                   (Name and Address)
+        ///     Option J	    5*40x                   (Party Identification)
+        /// Presence
+        ///     Optional in conditional (see rule C10) sequence H
+        /// Definition
+        ///     This field specifies the branch of party B with whom the deal was done.
+        /// Codes
+        ///     In option J, Party Identification must be specified as a list of pairs (Code)(Value) and the following codes and format must be used (Error code(s): T78).
+        ///     Note that optional codes are surrounded by square brackets('[' and ']') which are not part of the syntax.
+        ///     The codes must be placed between slashes('/').
+        ///     ABIC        4!a2!a2!c[3!c] or 4!a       Identifier Code or 'UKWN' if BIC not known
+        ///     [ACCT]      34x                         Account number(optional)
+        ///     [ADD1]      35x                         First line of the address(optional)
+        ///     [ADD2]      35x                         Second line of the address(optional)
+        ///     [CITY]      35x                         City, possibly followed by state and country(optional)
+        ///     [CLRC]      35x                         Clearing code(optional)
+        ///     [GBSC]      6!n                         UK domestic sort code(optional)
+        ///     [LEIC]      18!c2!n                     Legal Entity Identifier(optional)
+        ///     NAME        34x                         Party's name
+        ///     [USCH]      6!n                         CHIPS UID(optional)
+        ///     [USFW]      9!n                         FedWire Routing Number(optional)
+        /// Network Validation Rules
+        ///     Identifier Code must be a registered BIC (Error code(s): T27, T28, T29, T45).
+        /// Usage Rules
+        ///     The absence of this field means that party B is the dealing branch.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T85_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 85A / 85B / 85D / 85J is an optional field.
+                if ((field.Tag.Equals("85A") == true) || (field.Tag.Equals("85B") == true) || (field.Tag.Equals("85D") == true) || (field.Tag.Equals("85J") == true))
+                {
+                    // Validation Code
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T85_Valid");
+                }
+            }
+            
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T88_Valid
+        /// Format
+        ///     Option A	    [/1!a] [/34x]           (Party Identifier)
+        ///                     4!a2!a2!c[3!c]          (Identifier Code)
+        ///     Option D        [/ 1!a][/ 34x]          (Party Identifier)
+        ///                     4*35x                   (Name and Address)
+        ///     Option J	    5*40x                   (Party Identification)
+        /// Presence
+        ///     Conditional (see rule C8) in conditional (see rule C10) sequence H
+        /// Definition
+        ///     This field specifies the broker which arranged the deal between party A and party B or, when two money brokers are involved, between party A and the other money broker.
+        /// Codes
+        ///     In option J, Party Identification must be specified as a list of pairs (Code)(Value) and the following codes and format must be used (Error code(s): T78).
+        ///     Note that optional codes are surrounded by square brackets('[' and ']') which are not part of the syntax.
+        ///     The codes must be placed between slashes('/').
+        ///     ABIC        4!a2!a2!c[3!c] or 4!a       Identifier Code or 'UKWN' if BIC not known
+        ///     [ACCT]      34x                         Account number(optional)
+        ///     [ADD1]      35x                         First line of the address(optional)
+        ///     [ADD2]      35x                         Second line of the address(optional)
+        ///     [CITY]      35x                         City, possibly followed by state and country(optional)
+        ///     [CLRC]      35x                         Clearing code(optional)
+        ///     [GBSC]      6!n                         UK domestic sort code(optional)
+        ///     [LEIC]      18!c2!n                     Legal Entity Identifier(optional)
+        ///     NAME        34x                         Party's name
+        ///     [USCH]      6!n                         CHIPS UID(optional)
+        ///     [USFW]      9!n                         FedWire Routing Number(optional)
+        /// Network Validation Rules
+        ///     Identifier Code must be a registered BIC (Error code(s): T27, T28, T29, T45).
+        /// Usage Rules
+        ///     This field is only used to identify voice brokers. Electronic brokerage systems must be identified in field 24D Dealing Method.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T88_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 88A / 88D / 88J is an optional field.
+                if ((field.Tag.Equals("88A") == true) || (field.Tag.Equals("88D") == true) || (field.Tag.Equals("88J") == true))
+                {
+                    // Validation Code
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T88_Valid");
+                }
+            }
+            
+            return valid;
+        }
+        #endregion
+
+        #region SEQUENCE I TAG VALIDATIONS - TBD
+        /// <summary>
+        /// Is_T15I_Valid
+        /// Format
+        ///     Option I        This is an empty field
+        /// Presence
+        ///     Mandatory in optional sequence I
+        /// Definition    
+        ///     This field specifies the start of optional sequence I Additional Amounts.
+        /// Usage Rules
+        ///     Only the field tag must be present, the field is empty.
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T15I_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            // 15A is a mandatory field in an optional block. It must be present
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("15I") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                    }
+                    if (field.Value.Equals("") == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Only the field tag must be present, the field must be empty. It contains : " + field.Value);
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T15I_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
         #endregion
 
         #endregion
@@ -2238,6 +4164,7 @@ namespace Messages
             return allTagsValid;
         }
 
+        #region Network Validated Rules
         /// <summary>
         /// Validation rule C1 
         /// In sequence A, the presence of field 21 depends on the value of fields 22B and 22A as follows (Error code(s): D70):
@@ -2730,6 +4657,8 @@ namespace Messages
         }
         #endregion
 
+        #endregion
+
         #region SAVE DATA
         public void saveRecord(BlockHeader headers)
         {
@@ -2880,50 +4809,6 @@ namespace Messages
     }
 }
 
-
-/**************************** method list ************************************
- * 
- * public MT320()												
- * public MT320(String msg)
- * 
- * private void InitializeMT320()
- * private void DefineScope()
- * private void ResetVariables()
- * private void ParseBlock4(string message)
- * private void ParsePipeMsg(string message)
- * private void FillDataTags(string[] tags)
- * **private void ParsePipeMsg(string message)
- * 
- * GET SET 
- * public List<TagData<string, string, string, string>> this[int index]
- * public List<TagData<string, string, string, string>> this[int index]
- * public string Scope
- * public List<string> Anomalies
- * public string GetTagName(string sequence, string tag)
- * public string GetTagValue(string sequence, string tag)
- * public void SetTagValue(string sequence, string tag, string value)
- * public bool IsTagMandatory(string sequence, string tag)
- * public string GetTagStatus(string sequence, string tag)
- * **public string GeDetailtXML()
- * 
- * VALIDATION
- * public bool IsMessageValid()
- * **public bool ValidateTag(string sequence, string tag)
- * **public bool ValidateTags()
- *
- * private bool Valid_VR_C1()
- * private bool Valid_VR_C2()
- * private bool Valid_VR_C3()
- * **private bool Valid_VR_C4()
- * **private bool Valid_VR_C5()
- * **private bool Valid_VR_C6()
- * **private bool Valid_VR_C7()
- * **private bool Valid_VR_C8()
- * **private bool Valid_VR_C9()
- * **private bool Valid_VR_C10()
- * **private bool Valid_VR_C11()
- * 
- ***/
 
 /**************************** method needed ************************************
  * 

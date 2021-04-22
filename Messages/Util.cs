@@ -57,6 +57,7 @@ namespace Messages
             }
         }
 
+        #region CURRENCY TABLE
         /// <summary>
         /// IsValidCcy
         ///     Will return true if the currency is an ISO 4217 currency; false otherwise
@@ -71,6 +72,13 @@ namespace Messages
             return DBExecute_Bool();
         }
 
+        /// <summary>
+        /// Returns the currency name from the currency table, given at least one of the following:
+        /// currency_code and/or entity. If not supplying a value set it to "null".
+        /// </summary>
+        /// <param name="currency_code"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         public DataTable getCurrencyNameFromCurrency(string currency_code, string entity)
         {
             bool useAnd = false;
@@ -95,6 +103,71 @@ namespace Messages
 
             return DBExecute_DT();
         }
+
+        /// <summary>
+        /// Returns the currency code from the currency table, given at least one of the following:
+        /// currency_name and/or entity. If not supplying a value set it to "null".
+        /// </summary>
+        /// <param name="currency_name"></param>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public DataTable getCurrencyCodeFromCurrency(string currency_name, string entity)
+        {
+            bool useAnd = false;
+
+            if (currency_name == null && entity == null)
+                return null;
+
+            sqlCmdStr = "SELECT currency_code FROM currency WHERE ";
+            if (currency_name != null)
+            {
+                sqlCmdStr += "currency_name = '" + currency_name + "' ";
+                useAnd = true;
+            }
+
+            if (entity != null)
+            {
+                if (useAnd == true)
+                    sqlCmdStr += "and entity = '" + entity + "' ";
+                else
+                    sqlCmdStr += "entity = '" + entity + "' ";
+            }
+
+            return DBExecute_DT();
+        }
+
+        /// <summary>
+        /// Returns the entity from the currency table, given at least one of the following:
+        /// currency_code and/or currency_name. If not supplying a value set it to "null".
+        /// </summary>
+        /// <param name="currency_code"></param>
+        /// <param name="currency_name"></param>
+        /// <returns></returns>
+        public DataTable getEntityFromCurrency(string currency_code, string currency_name)
+        {
+            bool useAnd = false;
+
+            if (currency_code == null && currency_name == null)
+                return null;
+
+            sqlCmdStr = "SELECT entity FROM currency WHERE ";
+            if (currency_code != null)
+            {
+                sqlCmdStr += "currency_code = '" + currency_code + "' ";
+                useAnd = true;
+            }
+
+            if (currency_name != null)
+            {
+                if (useAnd == true)
+                    sqlCmdStr += "and currency_name = '" + currency_name + "' ";
+                else
+                    sqlCmdStr += "currency_name = '" + currency_name + "' ";
+            }
+
+            return DBExecute_DT();
+        }
+        #endregion
 
         #region COUNTRY_CODES TABLE
         /// <summary>
@@ -166,7 +239,7 @@ namespace Messages
         /// <param name="alpha3"></param>
         /// <param name="num"></param>
         /// <returns></returns>
-        public string getAlpha2FromCountryCodes(string countryName, string alpha3, string num)
+        private string getAlpha2FromCountryCodes(string countryName, string alpha3, string num)
         {
             bool useAnd = false;
 
@@ -208,7 +281,7 @@ namespace Messages
         /// <param name="alpha2"></param>
         /// <param name="num"></param>
         /// <returns></returns>
-        public string getAlpha3FromCountryCodes(string countryName, string alpha2, string num)
+        private string getAlpha3FromCountryCodes(string countryName, string alpha2, string num)
         {
             bool useAnd = false;
 

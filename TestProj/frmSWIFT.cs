@@ -314,6 +314,8 @@ namespace TestProj
             DataTable rr = null;
 
             rr = mUtil.getCurrencyNameFromCurrency("USD", null);
+            rr = mUtil.getCurrencyNameFromCurrency("USD", "GUAM");
+            rr = mUtil.getCurrencyNameFromCurrency(null, "Belgium");
 
         }
     }

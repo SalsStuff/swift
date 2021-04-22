@@ -111,6 +111,26 @@ namespace Messages
             return present;
         }
 
+        protected bool isAnyTagPresentInSequence(List<TagData<string, string, string, string, int>> sequence)
+        {
+            bool present = false;
+
+            foreach (TagData<string, string, string, string, int> t in sequence)
+            {
+                if (t.Tag.StartsWith("15") == true)
+                {
+                    continue;
+                }
+                else if (Convert.ToBoolean(t.Present) == true)
+                {
+                    present = true;
+                    break;
+                }
+            }
+
+            return present;
+        }
+
         protected bool IsNewSequencePresent(List<TagData<string, string, string, string, int>> seq)
         {
             bool presentSequence = true;
