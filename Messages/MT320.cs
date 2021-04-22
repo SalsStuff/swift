@@ -654,7 +654,7 @@ namespace Messages
                                 validTag = false;
                             break;
                         default:
-                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence A - can not validate.");
+                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence B - can not validate.");
                             break;
                     }
                     break;
@@ -696,7 +696,7 @@ namespace Messages
                                 validTag = false;
                             break;
                         default:
-                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence A - can not validate.");
+                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence C - can not validate.");
                             break;
                     }
                     break;
@@ -738,7 +738,7 @@ namespace Messages
                                 validTag = false;
                             break;
                         default:
-                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence A - can not validate.");
+                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence D - can not validate.");
                             break;
                     }
                     break;
@@ -780,7 +780,7 @@ namespace Messages
                                 validTag = false;
                             break;
                         default:
-                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence A - can not validate.");
+                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence E - can not validate.");
                             break;
                     }
                     break;
@@ -822,7 +822,7 @@ namespace Messages
                                 validTag = false;
                             break;
                         default:
-                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence A - can not validate.");
+                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence F - can not validate.");
                             break;
                     }
                     break;
@@ -850,7 +850,7 @@ namespace Messages
                                 validTag = false;
                             break;
                         default:
-                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence A - can not validate.");
+                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence G - can not validate.");
                             break;
                     }
                     break;
@@ -910,11 +910,51 @@ namespace Messages
                                 validTag = false;
                             break;
                         default:
-                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence A - can not validate.");
+                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence H - can not validate.");
                             break;
                     }
                     break;
                 case "I":
+                    switch (field.Tag)
+                    {
+                        case "15I":
+                            if (Is_T15I_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "18A":
+                            if (Is_T18A_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "30F":
+                            if (Is_T30F_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "32H":
+                            if (Is_T32H_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "53A":
+                        case "53D":
+                        case "53J":
+                            if (Is_T53_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "56":
+                            if (Is_T56_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "57":
+                            if (Is_T57_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        case "86":
+                            if (Is_T86_Valid(field) == false)
+                                validTag = false;
+                            break;
+                        default:
+                            Anomalies.Add("ERROR : Unknown tag " + field.Tag + " in sequence I - can not validate.");
+                            break;
+                    }
                     break;
                 default:
                     break;
@@ -1849,11 +1889,13 @@ namespace Messages
         ///     Option F:  8!n
         /// Presence
         ///     Conditional(see rule C5, also referenced in rule C6) in mandatory sequence B
+        ///     Mandatory in optional sequence I
         /// Definition
         ///     This field specifies the last day of the first/next interest period.
         /// Network Validated Rules
         ///     Date must be a valid date expressed as YYYYMMDD(Error code(s): T50).
         /// Usage Rules
+        ///     (For sequence B)
         ///     This field should only be used when there is at least one interest payment before maturity.
         ///     In the first confirmation of a loan/deposit, this field contains the date of the first interest payment 
         ///     while in a rollover confirmation, this field specifies the next interest payment date.
@@ -2171,11 +2213,14 @@ namespace Messages
         ///     Option H    [N]3!a15d       (Sign)(Currency) (Amount)
         /// Presence
         ///     Conditional(see rule C3, also referenced in rules C4 and C9) in mandatory sequence B
+        ///     Mandatory in optional sequence I
         /// Definition
         ///     For a rollover confirmation(22B= ROLL), this field specifies the difference between the previous and 
         ///     the new principal amount, with interest included when interest is settled through the same cash flow.
         ///     For a maturity confirmation (22B= MATU), this field specifies the amount with optional interest to be 
         ///     paid by the borrower at maturity date.
+        ///     
+        ///     For sequence I, This field specifies the amount of a fee.
         /// Network Validated Rules
         ///     Currency must be a valid ISO 4217 currency code (Error code(s): T52).
         ///     The integer part of Amount must contain at least one digit.A decimal comma is mandatory and is included 
@@ -2444,8 +2489,6 @@ namespace Messages
             }
             return valid;
         }
-
-
         #endregion
 
         #region SEQUENCE C TAG VALIDATIONS
@@ -2514,12 +2557,14 @@ namespace Messages
         /// Presence
         ///     Optional in mandatory sequences C and D
         ///     Optional in optional sequences E and F
+        ///     Optional in optional sequence I
         ///     
         /// Definition
         ///     This field identifies the financial institution from which party A will transfer the funds (sequence C).
         ///     This field identifies the financial institution from which party B will transfer the funds (sequence D).
         ///     This field identifies the financial institution from which party A will transfer the interest (sequence E).
         ///     This field identifies the financial institution from which party B will transfer the interest (sequence F).
+        ///     This field identifies the financial institution from which the payer will transfer the funds (sequence I).
         ///
         /// Codes
         ///     In option J, Party Identification must be specified as a list of pairs (Code)(Value) and the following codes and format must be used (Error code(s): T78).
@@ -2597,9 +2642,10 @@ namespace Messages
         /// Presence
         ///     Optional (referenced in rule C7) in mandatory sequences C and D
         ///     Optional (referenced in rule C7) in optional sequences E and F
+        ///     Optional (referenced in rule C7) in optional sequence I
         ///
         /// Definition
-        ///    This field identifies the first intermediary institution for the transfer of the funds (sequences C and D).
+        ///    This field identifies the first intermediary institution for the transfer of the funds (sequences C, D and I).
         ///    This field identifies the first intermediary institution for the transfer of the interest (sequences E and F).
         ///
         /// Codes
@@ -2678,12 +2724,14 @@ namespace Messages
         /// Presence
         ///     Mandatory in mandatory sequences C and D
         ///     Mandatory in optional sequences E amd F
+        ///     Mandatory in optional sequence I
         ///
         /// Definition
         ///     This field identifies the financial institution and account where party B will receive the payment (sequence C).
         ///     This field identifies the financial institution and account where party A will receive the payment (sequence D).
         ///     This field identifies the financial institution and account where party B will receive the interest (sequence E).
         ///     This field identifies the financial institution and account where party A will receive the interest (sequence F).
+        ///     This field identifies the financial institution and account where the option seller will receive the premium (sequence I).
         ///
         /// Codes
         ///     In option D, one of the following codes may be used in Name and Address:
@@ -2909,7 +2957,6 @@ namespace Messages
 
             return valid;
         }
-
         #endregion
 
         #region SEQUENCE D TAG VALIDATIONS
@@ -2930,7 +2977,7 @@ namespace Messages
         {
             bool valid = true;
 
-            // 15C is a mandatory field in a mandatory block. It must be present
+            // 15D is a mandatory field in a mandatory block. It must be present
             if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
             {
                 if (field.Tag.Equals("15D") == true)
@@ -3749,7 +3796,6 @@ namespace Messages
         private bool Is_T34C_Valid(TagData<string, string, string, string, int> field)
         {
             bool valid = true;
-            string code = null;
 
             if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
             {
@@ -4062,7 +4108,7 @@ namespace Messages
         }
         #endregion
 
-        #region SEQUENCE I TAG VALIDATIONS - TBD
+        #region SEQUENCE I TAG VALIDATIONS
         /// <summary>
         /// Is_T15I_Valid
         /// Format
@@ -4099,6 +4145,59 @@ namespace Messages
                 {
                     valid = false;
                     Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T15I_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T18A_Valid
+        /// Format
+        ///     Option A	    5n              (Number)
+        ///     
+        /// Presence
+        ///     Mandatory in optional sequence I
+        ///     
+        /// Definition
+        ///     This field specifies the number of times fields 30F Payment Date and 32H Currency, Payment Amount are present in this sequence.
+        ///     
+        /// Network Validated Rules
+        ///     Number must equal the number of occurrences of the subsequent field 30F (Error code(s): D96).
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        private bool Is_T18A_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            Util util = new Util();
+            int num = 0;
+
+            // 18A is a mandatory field in a optional block.
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("18A") == true)
+                {
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length > 5)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect field length : " + field.Value.Length);
+                    }
+                    if (int.TryParse(field.Value, out num) == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - is not an integer value");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T18A_Valid");
                 }
             }
             else
