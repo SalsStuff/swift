@@ -311,12 +311,9 @@ namespace TestProj
 
         private void btnTest_Click(object sender, EventArgs e)
         {
-            DataTable rr = null;
 
-            rr = mUtil.getCurrencyNameFromCurrency("USD", null);
-            rr = mUtil.getCurrencyNameFromCurrency("USD", "GUAM");
-            rr = mUtil.getCurrencyNameFromCurrency(null, "Belgium");
-
+            ((MT320)MsgContainer).testFunctions();
+            
         }
     }
 }

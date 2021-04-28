@@ -15,6 +15,22 @@ namespace Messages
 
         public Object DB_Conn { get; set; } = null;
 
+        protected string whichSequence(List<TagData<string, string, string, string, int>> sequence)
+        {
+            string seq = null;
+
+            foreach (TagData<string, string, string, string, int> t in sequence)
+            {
+                if (t.Tag.Contains("15") == true)
+                {
+                    seq = t.Tag.Substring(2,1);
+                    break;
+                }
+            }
+
+            return seq;
+        }
+
         /// <summary>
         /// Get method the return the readable name of a SWIFT tag number
         /// </summary>
@@ -65,7 +81,7 @@ namespace Messages
         /// <param name="sequence"></param>
         /// <param name="tag"></param>
         /// <param name="value"></param>
-        protected void SetTagValue(List<TagData<string, string, string, string, int>> sequence, string tag, string value)
+        protected virtual void SetTagValue(List<TagData<string, string, string, string, int>> sequence, string tag, string value)
         {
             foreach (TagData<string, string, string, string, int> t in sequence)
             {
