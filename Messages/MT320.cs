@@ -4847,31 +4847,38 @@ namespace Messages
             List<string> retLst = new List<string>();
             string[] stringSeparators = new string[] { "\r\n" };
 
-            if (rawStr != null && rawStr.Length >= 1 && isTagPresentInSequence(seq, option) == true)
+            try
             {
-                if (option.Contains("A") == true || option.Contains("B") == true || option.Contains("D"))
+                if (rawStr != null && rawStr.Length >= 1 && isTagPresentInSequence(seq, option) == true)
                 {
-                    if (rawStr[0].Equals("/"))
+                    if (option.Contains("A") == true || option.Contains("B") == true || option.Contains("D"))
                     {
-                        string[] lines = rawStr.Split(stringSeparators, StringSplitOptions.None);
-                        retLst.Add(lines[0].Substring(1));  // remoive the first '/'
-                        retLst.Add(lines[1]);
+                        if (rawStr[0].Equals("/"))
+                        {
+                            string[] lines = rawStr.Split(stringSeparators, StringSplitOptions.None);
+                            retLst.Add(lines[0].Substring(1));  // remoive the first '/'
+                            retLst.Add(lines[1]);
+                        }
+                        else
+                        {
+                            retLst.Add(null);
+                            retLst.Add(rawStr);
+                        }
                     }
-                    else
+                    else if (option.Contains("J") == true)
                     {
-                        retLst.Add(null);
                         retLst.Add(rawStr);
                     }
                 }
-                else if(option.Contains("J") == true)
+                else
                 {
-                    retLst.Add(rawStr);
+                    retLst.Add(null);
+                    retLst.Add(null);
                 }
             }
-            else
+            catch(Exception ex)
             {
-                retLst.Add(null);
-                retLst.Add(null);
+                throw new Exception("Invalid Tag Data: Tag " + option + ".\n" + ex.Message);
             }
 
             return retLst;
@@ -4892,29 +4899,36 @@ namespace Messages
             double multiplier = 1.0;
             string amtStr = null;
 
-            if (rawStr != null && rawStr.Length >= 1 && isTagPresentInSequence(seq, option) == true)
+            try
             {
-                if (rawStr.Substring(0, 1).Equals("N") && (Char.IsLetter(rawStr[1]) == true && Char.IsLetter(rawStr[2]) == true && Char.IsLetter(rawStr[3]) == true))
+                if (rawStr != null && rawStr.Length >= 1 && isTagPresentInSequence(seq, option) == true)
                 {
-                    multiplier = -1.0;
-                    ccy = rawStr.Substring(1, 3);
-                    amtStr = rawStr.Substring(4, rawStr.Length - 4);
-                    amtStr = amtStr.Replace(",", ".");
-                    amount = Convert.ToDouble(amtStr) * multiplier;
+                    if (rawStr.Substring(0, 1).Equals("N") && (Char.IsLetter(rawStr[1]) == true && Char.IsLetter(rawStr[2]) == true && Char.IsLetter(rawStr[3]) == true))
+                    {
+                        multiplier = -1.0;
+                        ccy = rawStr.Substring(1, 3);
+                        amtStr = rawStr.Substring(4, rawStr.Length - 4);
+                        amtStr = amtStr.Replace(",", ".");
+                        amount = Convert.ToDouble(amtStr) * multiplier;
+                    }
+                    else
+                    {
+                        multiplier = 1.0;
+                        ccy = rawStr.Substring(0, 3);
+                        amtStr = rawStr.Substring(3, rawStr.Length - 3);
+                        amtStr = amtStr.Replace(",", ".");
+                        amount = Convert.ToDouble(amtStr) * multiplier;
+                    }
                 }
                 else
                 {
-                    multiplier = 1.0;
-                    ccy = rawStr.Substring(0, 3);
-                    amtStr = rawStr.Substring(3, rawStr.Length - 3);
-                    amtStr = amtStr.Replace(",", ".");
-                    amount = Convert.ToDouble(amtStr) * multiplier;
+                    ccy = null;
+                    amount = null;
                 }
             }
-            else
+            catch(Exception ex)
             {
-                ccy = null;
-                amount = null;
+                throw new Exception("Invalid Tag Data: Tag " + option + ".\n" + ex.Message);
             }
         }
 
@@ -4942,39 +4956,46 @@ namespace Messages
             ccy = new List<string>();
             amount = new List<Nullable<double>>();
 
-            foreach (TagData<string, string, string, string, int> t in seq)
+            try
             {
-                if (t.Tag.Equals("34C") == true)
+                foreach (TagData<string, string, string, string, int> t in seq)
                 {
-                    rawStr = t.Value;
-                    if (rawStr != null && rawStr.Length >= 8 && isTagPresentInSequence(seq, option) == true)
+                    if (t.Tag.Equals("34C") == true)
                     {
-                        type.Add(rawStr.Substring(0, 4));
-                        rawStr = rawStr.Substring(5, rawStr.Length - 5);   // remove the type and '/' character
-                        if (rawStr.Substring(0, 1).Equals("N") && (Char.IsLetter(rawStr[1]) == true && Char.IsLetter(rawStr[2]) == true && Char.IsLetter(rawStr[3]) == true))
+                        rawStr = t.Value;
+                        if (rawStr != null && rawStr.Length >= 8 && isTagPresentInSequence(seq, option) == true)
                         {
-                            multiplier = -1.0;
-                            ccy.Add(rawStr.Substring(1, 3));
-                            amtStr = rawStr.Substring(4, rawStr.Length - 4);
-                            amtStr = amtStr.Replace(",", ".");
-                            amount.Add(Convert.ToDouble(amtStr) * multiplier);
+                            type.Add(rawStr.Substring(0, 4));
+                            rawStr = rawStr.Substring(5, rawStr.Length - 5);   // remove the type and '/' character
+                            if (rawStr.Substring(0, 1).Equals("N") && (Char.IsLetter(rawStr[1]) == true && Char.IsLetter(rawStr[2]) == true && Char.IsLetter(rawStr[3]) == true))
+                            {
+                                multiplier = -1.0;
+                                ccy.Add(rawStr.Substring(1, 3));
+                                amtStr = rawStr.Substring(4, rawStr.Length - 4);
+                                amtStr = amtStr.Replace(",", ".");
+                                amount.Add(Convert.ToDouble(amtStr) * multiplier);
+                            }
+                            else
+                            {
+                                multiplier = 1.0;
+                                ccy.Add(rawStr.Substring(0, 3));
+                                amtStr = rawStr.Substring(3, rawStr.Length - 3);
+                                amtStr = amtStr.Replace(",", ".");
+                                amount.Add(Convert.ToDouble(amtStr) * multiplier);
+                            }
                         }
                         else
                         {
-                            multiplier = 1.0;
-                            ccy.Add(rawStr.Substring(0, 3));
-                            amtStr = rawStr.Substring(3, rawStr.Length - 3);
-                            amtStr = amtStr.Replace(",", ".");
-                            amount.Add(Convert.ToDouble(amtStr) * multiplier);
+                            type = null;
+                            ccy = null;
+                            amount = null;
                         }
                     }
-                    else
-                    {
-                        type = null;
-                        ccy = null;
-                        amount = null;
-                    }
                 }
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Invalid Tag Data: Tag " + option + ".\n" + ex.Message);
             }
         }
 
@@ -5002,42 +5023,49 @@ namespace Messages
             ccy = new List<string>();
             amount = new List<Nullable<double>>();
 
-            foreach (TagData<string, string, string, string, int> t in seq)
+            try
             {
-                if(t.Tag.Equals("30F") == true && isTagPresentInSequence(seq, "30F") == true)
+                foreach (TagData<string, string, string, string, int> t in seq)
                 {
-                    date.Add(t.Value);
-                }
-
-                if (t.Tag.Equals("32H") == true)
-                {
-                    rawStr = t.Value;
-                    if (rawStr != null && rawStr.Length >= 8 && isTagPresentInSequence(seq, "32H") == true)
+                    if (t.Tag.Equals("30F") == true && isTagPresentInSequence(seq, "30F") == true)
                     {
-                        if (rawStr.Substring(0, 1).Equals("N") && (Char.IsLetter(rawStr[1]) == true && Char.IsLetter(rawStr[2]) == true && Char.IsLetter(rawStr[3]) == true))
+                        date.Add(t.Value);
+                    }
+
+                    if (t.Tag.Equals("32H") == true)
+                    {
+                        rawStr = t.Value;
+                        if (rawStr != null && rawStr.Length >= 8 && isTagPresentInSequence(seq, "32H") == true)
                         {
-                            multiplier = -1.0;
-                            ccy.Add(rawStr.Substring(1, 3));
-                            amtStr = rawStr.Substring(4, rawStr.Length - 4);
-                            amtStr = amtStr.Replace(",", ".");
-                            amount.Add(Convert.ToDouble(amtStr) * multiplier);
+                            if (rawStr.Substring(0, 1).Equals("N") && (Char.IsLetter(rawStr[1]) == true && Char.IsLetter(rawStr[2]) == true && Char.IsLetter(rawStr[3]) == true))
+                            {
+                                multiplier = -1.0;
+                                ccy.Add(rawStr.Substring(1, 3));
+                                amtStr = rawStr.Substring(4, rawStr.Length - 4);
+                                amtStr = amtStr.Replace(",", ".");
+                                amount.Add(Convert.ToDouble(amtStr) * multiplier);
+                            }
+                            else
+                            {
+                                multiplier = 1.0;
+                                ccy.Add(rawStr.Substring(0, 3));
+                                amtStr = rawStr.Substring(3, rawStr.Length - 3);
+                                amtStr = amtStr.Replace(",", ".");
+                                amount.Add(Convert.ToDouble(amtStr) * multiplier);
+                            }
                         }
                         else
                         {
-                            multiplier = 1.0;
-                            ccy.Add(rawStr.Substring(0, 3));
-                            amtStr = rawStr.Substring(3, rawStr.Length - 3);
-                            amtStr = amtStr.Replace(",", ".");
-                            amount.Add(Convert.ToDouble(amtStr) * multiplier);
+                            date = null;
+                            ccy = null;
+                            amount = null;
                         }
                     }
-                    else
-                    {
-                        date = null;
-                        ccy = null;
-                        amount = null;
-                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Invalid Tag Data - Aditional Amounts .\n" + ex.Message);
             }
         }
 
@@ -5055,29 +5083,36 @@ namespace Messages
             Nullable<double> rate = 0.0;
             double multiplier = 1.0;
 
-            if (rawStr != null && rawStr.Length >= 1 && isTagPresentInSequence(seq, option) == true)
+            try
             {
-                if (rawStr.Substring(0, 1).Equals("N"))
+                if (rawStr != null && rawStr.Length >= 1 && isTagPresentInSequence(seq, option) == true)
                 {
-                    multiplier = -1.0;
-                    rateStr = rawStr.Substring(1, rawStr.Length - 1);
-                    rateStr = rateStr.Replace(",", ".");
-                    rate = Convert.ToDouble(rateStr) * multiplier;
+                    if (rawStr.Substring(0, 1).Equals("N"))
+                    {
+                        multiplier = -1.0;
+                        rateStr = rawStr.Substring(1, rawStr.Length - 1);
+                        rateStr = rateStr.Replace(",", ".");
+                        rate = Convert.ToDouble(rateStr) * multiplier;
+                    }
+                    else
+                    {
+                        multiplier = 1.0;
+                        rateStr = rawStr.Substring(0, rawStr.Length);
+                        rateStr = rateStr.Replace(",", ".");
+                        rate = Convert.ToDouble(rateStr) * multiplier;
+                    }
                 }
                 else
                 {
-                    multiplier = 1.0;
-                    rateStr = rawStr.Substring(0, rawStr.Length);
-                    rateStr = rateStr.Replace(",", ".");
-                    rate = Convert.ToDouble(rateStr) * multiplier;
+                    rate = 0.0;
                 }
             }
-            else
+            catch (Exception ex)
             {
-                rate = 0.0;
+                throw new Exception("Invalid Tag Data: Tag " + option + ".\n" + ex.Message);
             }
 
-                return rate;
+            return rate;
         }
 
         /// <summary>
@@ -5096,8 +5131,15 @@ namespace Messages
             
             if (rawStr != null && rawStr.Length >= 1 && isTagPresentInSequence(seq, "38J") == true)
             {
-                indicator = rawStr.Substring(0, 1);
-                number = Convert.ToInt32(rawStr.Substring(1, 3));
+                try
+                {
+                    indicator = rawStr.Substring(0, 1);
+                    number = Convert.ToInt32(rawStr.Substring(1, 3));
+                }
+                catch(Exception ex)
+                {
+                    throw new Exception("Invalid Tag Data: Tag 38J.\n" + ex.Message);
+                }
             }
         }
 
@@ -5147,7 +5189,14 @@ namespace Messages
         {
             Nullable<int> number = null;
 
-            number = Convert.ToInt32(GetTagValue(seq, "18A"));
+            try
+            {
+                number = Convert.ToInt32(GetTagValue(seq, "18A"));
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Invalid Tag Data: Tag 18A.\n" + ex.Message);
+            }
 
             return number;
         }
@@ -5261,9 +5310,17 @@ namespace Messages
         {
             string method = null;
 
-            method = GetTagValue(seq, "24D");
+            try
+            {
+                method = GetTagValue(seq, "24D");
+                method = method.Substring(0, 4);
+            }
+            catch(Exception ex)
+            {
+                throw new Exception("Invalid Tag Data: Tag 24D.\n" + ex.Message);
+            }
 
-            return method.Substring(0, 4);
+            return method;
         }
 
         /// <summary>
@@ -5323,9 +5380,24 @@ namespace Messages
             return GetTagValue(seq, "30F");
         }
 
+        /// <summary>
+        /// getT30F32H_AdditionalAmounts
+        /// 
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <param name="date"></param>
+        /// <param name="ccy"></param>
+        /// <param name="amount"></param>
         public void getT30F32H_AdditionalAmounts(List<TagData<string, string, string, string, int>> seq, out List<string> date, out List<string> ccy, out List<Nullable<double>> amount)
         {
-            parseAdditionalAmounts(seq, out date, out ccy, out amount);
+            try
+            {
+                parseAdditionalAmounts(seq, out date, out ccy, out amount);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -5391,7 +5463,14 @@ namespace Messages
             string ccy = null;
             Nullable<double> amount = null;
 
-            parseCcyAmt(seq, "32B", out ccy, out amount);
+            try
+            {
+                parseCcyAmt(seq, "32B", out ccy, out amount);
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
 
             return ccy;
         }
@@ -5409,7 +5488,14 @@ namespace Messages
             string ccy = null;
             Nullable<double> amount = null;
 
-            parseCcyAmt(seq, "32B", out ccy, out amount);
+            try
+            {
+                parseCcyAmt(seq, "32B", out ccy, out amount);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return amount;
         }
@@ -5426,7 +5512,14 @@ namespace Messages
             string ccy = null;
             Nullable<double> amount = null;
 
-            parseCcyAmt(seq, "32H", out ccy, out amount);
+            try
+            {
+                parseCcyAmt(seq, "32H", out ccy, out amount);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return ccy;
         }
@@ -5445,7 +5538,14 @@ namespace Messages
             string ccy = null;
             Nullable<double> amount = null;
 
-            parseCcyAmt(seq, "32H", out ccy, out amount);
+            try
+            {
+                parseCcyAmt(seq, "32H", out ccy, out amount);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return amount;
         }
@@ -5462,7 +5562,14 @@ namespace Messages
             string ccy = null;
             Nullable<double> amount = null;
 
-            parseCcyAmt(seq, "33B", out ccy, out amount);
+            try
+            {
+                parseCcyAmt(seq, "33B", out ccy, out amount);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return ccy;
         }
@@ -5479,7 +5586,14 @@ namespace Messages
             string ccy = null;
             Nullable<double> amount = null;
 
-            parseCcyAmt(seq, "33B", out ccy, out amount);
+            try
+            {
+                parseCcyAmt(seq, "33B", out ccy, out amount);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return amount;
         }
@@ -5496,7 +5610,14 @@ namespace Messages
             string ccy = null;
             Nullable<double> amount = null;
 
-            parseCcyAmt(seq, "33E", out ccy, out amount);
+            try
+            {
+                parseCcyAmt(seq, "33E", out ccy, out amount);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return ccy;
         }
@@ -5513,14 +5634,36 @@ namespace Messages
             string ccy = null;
             Nullable<double> amount = null;
 
-            parseCcyAmt(seq, "33E", out ccy, out amount);
+            try
+            {
+                parseCcyAmt(seq, "33E", out ccy, out amount);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return amount;
         }
 
+        /// <summary>
+        /// getT34C_CommissionAndFees
+        /// 
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <param name="type"></param>
+        /// <param name="ccy"></param>
+        /// <param name="amount"></param>
         public void getT34C_CommissionAndFees(List<TagData<string, string, string, string, int>> seq, out List<string>type, out List<string>ccy, out List<Nullable<double>>amount)
         {
-            parseCommissionAndFees(seq, "34C", out type, out ccy, out amount);
+            try
+            {
+                parseCommissionAndFees(seq, "34C", out type, out ccy, out amount);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
 
         /// <summary>
@@ -5535,7 +5678,14 @@ namespace Messages
             string ccy = null;
             Nullable<double> amount = null;
 
-            parseCcyAmt(seq, "34E", out ccy, out amount);
+            try
+            {
+                parseCcyAmt(seq, "34E", out ccy, out amount);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return ccy;
         }
@@ -5555,7 +5705,14 @@ namespace Messages
             string ccy = null;
             Nullable<double> amount = null;
 
-            parseCcyAmt(seq, "34E", out ccy, out amount);
+            try
+            {
+                parseCcyAmt(seq, "34E", out ccy, out amount);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return amount;
         }
@@ -5571,7 +5728,14 @@ namespace Messages
         {
             Nullable<double> rate = null;
 
-            rate = parseRate(seq, "36");
+            try
+            {
+                rate = parseRate(seq, "36");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return rate;
         }
@@ -5587,7 +5751,14 @@ namespace Messages
         {
             Nullable<double> rate = null;
 
-            rate = parseRate(seq, "37G");
+            try
+            {
+                rate = parseRate(seq, "37G");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return rate;
         }
@@ -5603,7 +5774,14 @@ namespace Messages
         {
             Nullable<double> rate = null;
 
-            rate = parseRate(seq, "37L");
+            try
+            {
+                rate = parseRate(seq, "37L");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return rate;
         }
@@ -5623,7 +5801,14 @@ namespace Messages
             string indicator = null;
             Nullable<int> number = null;
 
-            parseT38J(seq, out indicator, out number);
+            try
+            {
+                parseT38J(seq, out indicator, out number);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return indicator;
         }
@@ -5640,7 +5825,14 @@ namespace Messages
             string indicator = null;
             Nullable<int> number = null;
 
-            parseT38J(seq, out indicator, out number);
+            try
+            {
+                parseT38J(seq, out indicator, out number);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return number;
         }
@@ -5668,7 +5860,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "53A");
+            try
+            {
+                lst = parsePartyAgent(seq, "53A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -5684,7 +5883,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "53A");
+            try
+            {
+                lst = parsePartyAgent(seq, "53A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -5700,7 +5906,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "53D");
+            try
+            {
+                lst = parsePartyAgent(seq, "53D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -5716,7 +5929,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "53D");
+            try
+            {
+                lst = parsePartyAgent(seq, "53D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -5732,7 +5952,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "53J");
+            try
+            {
+                lst = parsePartyAgent(seq, "53J");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -5748,7 +5975,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "56A");
+            try
+            {
+                lst = parsePartyAgent(seq, "56A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -5764,7 +5998,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "56A");
+            try
+            {
+                lst = parsePartyAgent(seq, "56A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -5780,7 +6021,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "56D");
+            try
+            {
+                lst = parsePartyAgent(seq, "56D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -5796,7 +6044,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "56D");
+            try
+            {
+                lst = parsePartyAgent(seq, "56D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -5812,7 +6067,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "56J");
+            try
+            {
+                lst = parsePartyAgent(seq, "56J");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -5828,7 +6090,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "57A");
+            try
+            {
+                lst = parsePartyAgent(seq, "57A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -5844,7 +6113,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "57A");
+            try
+            {
+                lst = parsePartyAgent(seq, "57A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -5860,7 +6136,15 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "57D");
+            try
+            {
+                lst = parsePartyAgent(seq, "57D");
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -5876,7 +6160,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "57D");
+            try
+            {
+                lst = parsePartyAgent(seq, "57D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -5892,7 +6183,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "57J");
+            try
+            {
+                lst = parsePartyAgent(seq, "57J");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -5908,7 +6206,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "58A");
+            try
+            {
+                lst = parsePartyAgent(seq, "58A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -5924,7 +6229,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "58A");
+            try
+            {
+                lst = parsePartyAgent(seq, "58A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -5940,7 +6252,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "58D");
+            try
+            {
+                lst = parsePartyAgent(seq, "58D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -5956,7 +6275,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "58D");
+            try
+            {
+                lst = parsePartyAgent(seq, "58D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -5972,7 +6298,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "58J");
+            try
+            {
+                lst = parsePartyAgent(seq, "58J");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -5989,7 +6322,14 @@ namespace Messages
             string ccy = null;
             Nullable<double> amount = null;
 
-            parseCcyAmt(seq, "71F", out ccy, out amount);
+            try
+            {
+                parseCcyAmt(seq, "71F", out ccy, out amount);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return ccy;
         }
@@ -6006,7 +6346,14 @@ namespace Messages
             string ccy = null;
             Nullable<double> amount = null;
 
-            parseCcyAmt(seq, "71F", out ccy, out amount);
+            try
+            {
+                parseCcyAmt(seq, "71F", out ccy, out amount);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return amount;
         }
@@ -6051,7 +6398,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "82A");
+            try
+            {
+                lst = parsePartyAgent(seq, "82A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6067,7 +6421,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "82A");
+            try
+            {
+                lst = parsePartyAgent(seq, "82A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -6083,7 +6444,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "82D");
+            try
+            {
+                lst = parsePartyAgent(seq, "82D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6099,7 +6467,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "82D");
+            try
+            {
+                lst = parsePartyAgent(seq, "82D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -6115,7 +6490,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "82J");
+            try
+            {
+                lst = parsePartyAgent(seq, "82J");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6131,7 +6513,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "83A");
+            try
+            {
+                lst = parsePartyAgent(seq, "83A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6147,7 +6536,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "83A");
+            try
+            {
+                lst = parsePartyAgent(seq, "83A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -6163,7 +6559,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "83D");
+            try
+            {
+                lst = parsePartyAgent(seq, "83D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6179,7 +6582,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "83D");
+            try
+            {
+                lst = parsePartyAgent(seq, "83D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -6195,7 +6605,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "83J");
+            try
+            {
+                lst = parsePartyAgent(seq, "83J");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6210,8 +6627,14 @@ namespace Messages
         public string getT84A_ID(List<TagData<string, string, string, string, int>> seq)
         {
             List<string> lst = new List<string>();
-
-            lst = parsePartyAgent(seq, "84A");
+            try
+            {
+                lst = parsePartyAgent(seq, "84A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6227,7 +6650,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "84A");
+            try
+            {
+                lst = parsePartyAgent(seq, "84A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -6243,7 +6673,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "84B");
+            try
+            {
+                lst = parsePartyAgent(seq, "84B");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6259,7 +6696,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "84B");
+            try
+            {
+                lst = parsePartyAgent(seq, "84B");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -6275,7 +6719,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "84D");
+            try
+            {
+                lst = parsePartyAgent(seq, "84D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6291,7 +6742,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "84D");
+            try
+            {
+                lst = parsePartyAgent(seq, "84D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -6307,7 +6765,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "84J");
+            try
+            {
+                lst = parsePartyAgent(seq, "84J");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6323,7 +6788,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "85A");
+            try
+            {
+                lst = parsePartyAgent(seq, "85A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6339,7 +6811,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "85A");
+            try
+            {
+                lst = parsePartyAgent(seq, "85A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -6355,7 +6834,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "85B");
+            try
+            {
+                lst = parsePartyAgent(seq, "85B");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6371,7 +6857,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "85B");
+            try
+            {
+                lst = parsePartyAgent(seq, "85B");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -6387,7 +6880,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "84D");
+            try
+            {
+                lst = parsePartyAgent(seq, "84D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6403,7 +6903,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "85D");
+            try
+            {
+                lst = parsePartyAgent(seq, "85D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -6419,7 +6926,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "85J");
+            try
+            {
+                lst = parsePartyAgent(seq, "85J");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6435,7 +6949,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "86A");
+            try
+            {
+                lst = parsePartyAgent(seq, "86A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6451,7 +6972,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "86A");
+            try
+            {
+                lst = parsePartyAgent(seq, "86A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -6467,7 +6995,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "86D");
+            try
+            {
+                lst = parsePartyAgent(seq, "86D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6483,7 +7018,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "86D");
+            try
+            {
+                lst = parsePartyAgent(seq, "86D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -6499,7 +7041,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "86J");
+            try
+            {
+                lst = parsePartyAgent(seq, "86J");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6515,7 +7064,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "87A");
+            try
+            {
+                lst = parsePartyAgent(seq, "87A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6531,7 +7087,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "87A");
+            try
+            {
+                lst = parsePartyAgent(seq, "87A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -6547,7 +7110,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "87D");
+            try
+            {
+                lst = parsePartyAgent(seq, "87D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6563,7 +7133,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "87D");
+            try
+            {
+                lst = parsePartyAgent(seq, "87D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -6579,7 +7156,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "87J");
+            try
+            {
+                lst = parsePartyAgent(seq, "87J");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6597,7 +7181,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "88A");
+            try
+            {
+                lst = parsePartyAgent(seq, "88A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6615,7 +7206,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "88A");
+            try
+            {
+                lst = parsePartyAgent(seq, "88A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -6633,7 +7231,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "88D");
+            try
+            {
+                lst = parsePartyAgent(seq, "88D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6651,7 +7256,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "88D");
+            try
+            {
+                lst = parsePartyAgent(seq, "88D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[1];
         }
@@ -6669,7 +7281,14 @@ namespace Messages
         {
             List<string> lst = new List<string>();
 
-            lst = parsePartyAgent(seq, "88J");
+            try
+            {
+                lst = parsePartyAgent(seq, "88J");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
 
             return lst[0];
         }
@@ -6710,7 +7329,7 @@ namespace Messages
                     saveBlock1(ref_id, headers);
                     saveBlock2(ref_id, headers);
                     saveBlock3(ref_id, headers);
-                    saveBlock4(ref_id, null/*headers*/);
+                    saveBlock4(ref_id);
                     saveBlock5(ref_id, headers);
                     dbu.DBCommit(ref_id.ToString());
                 }
@@ -6792,18 +7411,15 @@ namespace Messages
             }
         }
 
-        private void saveBlock4(long refid, BlockHeader hdr)
+        private void saveBlock4(long refid)
         {
             string sqlCmd = null;
-
-            if (hdr == null)
-                return;
 
             try
             {
                 sqlCmd = "INSERT INTO dbo.MT320_SequenceA (reference_id, senders_ref_20, related_ref_21, operation_type_22a, operation_scope_94a, event_type_22b, ";
-                sqlCmd += "common_ref_22c, party_a_contact_num_21n, party_a_id_82a, party_a_code_82a, party_a_id_82d, party_a_addr_82d, party_a_id_82j, party_b_id_82a, ";
-                sqlCmd += "party_b_code_82a, party_b_id_82d, party_b_addr_82d, party_b_id_82j, fund_party_id_83a, fund_party_code_83a, fund_party_id_83d, ";
+                sqlCmd += "common_ref_22c, party_a_contact_num_21n, party_a_id_82a, party_a_code_82a, party_a_id_82d, party_a_addr_82d, party_a_id_82j, party_b_id_87a, ";
+                sqlCmd += "party_b_code_87a, party_b_id_87d, party_b_addr_87d, party_b_id_87j, fund_party_id_83a, fund_party_code_83a, fund_party_id_83d, ";
                 sqlCmd += "fund_party_addr_83d, fund_party_id_83j, terms_77d)";
                 sqlCmd += "VALUES ('" + refid + "', '" +
                                     getT20_SendersReference(sequenceA) + "', '" +
@@ -6884,7 +7500,7 @@ namespace Messages
                                     getT58A_Code(sequenceC) + "', '" +
                                     getT58D_ID(sequenceC) + "', '" +
                                     getT58D_NameAddr(sequenceC) + "', '" +
-                                    getT58J_ID(sequenceC) + "'')";
+                                    getT58J_ID(sequenceC) + "')";
                 dbu.saveMTRecord(sqlCmd);
 
                 sqlCmd = "INSERT INTO dbo.MT320_SequenceD (reference_id, delevery_agent_id_53a, delevery_agent_code_53a, delevery_agent_id_53d, delevery_agent_addr_53d, ";
@@ -6917,7 +7533,7 @@ namespace Messages
                                     getT58A_Code(sequenceD) + "', '" +
                                     getT58D_ID(sequenceD) + "', '" +
                                     getT58D_NameAddr(sequenceD) + "', '" +
-                                    getT58J_ID(sequenceD) + "'')";
+                                    getT58J_ID(sequenceD) + "')";
                 dbu.saveMTRecord(sqlCmd);
 
                 sqlCmd = "INSERT INTO dbo.MT320_SequenceE (reference_id, delevery_agent_id_53a, delevery_agent_code_53a, delevery_agent_id_53d, delevery_agent_addr_53d, ";
@@ -6950,7 +7566,7 @@ namespace Messages
                                     getT58A_Code(sequenceE) + "', '" +
                                     getT58D_ID(sequenceE) + "', '" +
                                     getT58D_NameAddr(sequenceE) + "', '" +
-                                    getT58J_ID(sequenceE) + "'')";
+                                    getT58J_ID(sequenceE) + "')";
                 dbu.saveMTRecord(sqlCmd);
 
                 sqlCmd = "INSERT INTO dbo.MT320_SequenceF (reference_id, delevery_agent_id_53a, delevery_agent_code_53a, delevery_agent_id_53d, delevery_agent_addr_53d, ";
@@ -6983,7 +7599,7 @@ namespace Messages
                                     getT58A_Code(sequenceF) + "', '" +
                                     getT58D_ID(sequenceF) + "', '" +
                                     getT58D_NameAddr(sequenceF) + "', '" +
-                                    getT58J_ID(sequenceF) + "'')";
+                                    getT58J_ID(sequenceF) + "')";
                 dbu.saveMTRecord(sqlCmd);
 
                 sqlCmd = "INSERT INTO dbo.MT320_SequenceG (reference_id, tax_rate_37l, transaction_currency_33b, transaction_net_interest_amount_33b, exchange_rate, ";
@@ -6994,7 +7610,7 @@ namespace Messages
                                     getT33B_Amount(sequenceF) + "', '" +
                                     getT36_ExchangeRate(sequenceF) + "', '" +
                                     getT33E_Currency(sequenceF) + "', '" +
-                                    getT33E_Amount(sequenceF) + "', ')";
+                                    getT33E_Amount(sequenceF) + "')";
                 dbu.saveMTRecord(sqlCmd);
 
                 sqlCmd = "INSERT INTO dbo.MT320_SequenceH (reference_id, contact_information_29a, dealing_method_24d, dealing_method_information_24d, dealing_branch_party_a_id_84a, ";
@@ -7076,7 +7692,7 @@ namespace Messages
                 List<Nullable<double>> amt = new List<Nullable<double>>();
                 getT30F32H_AdditionalAmounts(sequenceI, out date, out ccy, out amt);
 
-                for (int i = 0; i < feeType.Count(); i++)
+                for (int i = 0; i < date.Count(); i++)
                 {
                     sqlCmd = "INSERT INTO dbo.MT320_AdditionalAmounts (reference_id, payment_date_30F, currency_32h, payment_amount_32h)";
                     sqlCmd += "VALUES ('" + refid + "', '" +
@@ -7128,6 +7744,7 @@ namespace Messages
             Nullable<double> dd = 0.0;
             Nullable<int> ii = 0;
 
+            ss = getT24D_DealingMethod(sequenceH);
             ss = getT82A_ID(sequenceA);
             ss = getT82A_Code(sequenceA);
             ss = getT82D_ID(sequenceA);
