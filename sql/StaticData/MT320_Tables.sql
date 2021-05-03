@@ -9,6 +9,7 @@ CREATE TABLE "MT320_Block1" (
 	"session_number" VARCHAR(50) NULL,
 	"sequence_number" VARCHAR(50) NULL,
 ); 
+CREATE_INDEX IDX_UNIQUE_CLUSTERED MT320_Block1_idx MT320_Block1  [reference_id] 
 
 CREATE TABLE "MT320_Block2" (
 	"reference_id" BIGINT NOT NULL,
@@ -30,6 +31,7 @@ CREATE TABLE "MT320_Block2" (
 	"output_date" varchar(50) NULL,
 	"output_time" varchar(50) NULL,
 ); 
+CREATE_INDEX IDX_UNIQUE_CLUSTERED MT320_Block2_idx MT320_Block2  [reference_id] 
 
 CREATE TABLE "MT320_Block3" (
 	"reference_id" BIGINT NOT NULL,
@@ -47,6 +49,7 @@ CREATE TABLE "MT320_Block3" (
 	"tag433_sanctions_sir" varchar(50) NULL,
 	"tag434_payment_cir" varchar(50) NULL,
 ); 
+CREATE_INDEX IDX_UNIQUE_CLUSTERED MT320_Block3_idx MT320_Block3  [reference_id] 
 
 CREATE TABLE "MT320_Block5" (
 	"reference_id" BIGINT NOT NULL,
@@ -79,6 +82,7 @@ CREATE TABLE "MT320_Block5" (
 	"sys_mor_session_number" varchar(50) NULL,
 	"sys_mor_sequence_number" varchar(50) NULL,
 ); 
+CREATE_INDEX IDX_UNIQUE_CLUSTERED MT320_Block5_idx MT320_Block5  [reference_id] 
 
 CREATE TABLE "MT320_SequenceA" (
 	"reference_id" BIGINT NOT NULL,
@@ -106,6 +110,7 @@ CREATE TABLE "MT320_SequenceA" (
 	"fund_party_id_83j" varchar(250) NULL,
 	"terms_77d"	varchar(250) NULL,
 );
+CREATE_INDEX IDX_UNIQUE_CLUSTERED MT320_SequenceA_idx MT320_SequenceA  [reference_id] 
 
 CREATE TABLE "MT320_SequenceB" (
 	"reference_id" BIGINT NOT NULL,
@@ -127,6 +132,7 @@ CREATE TABLE "MT320_SequenceB" (
 	"number_of_days_38j" int NULL,
 	"payment_clearing_center_39m" varchar(50) NULL,
 );
+CREATE_INDEX IDX_UNIQUE_CLUSTERED MT320_SequenceB_idx MT320_SequenceB  [reference_id] 
 
 CREATE TABLE "MT320_SequenceC" (
 	"reference_id" BIGINT NOT NULL,
@@ -156,6 +162,7 @@ CREATE TABLE "MT320_SequenceC" (
 	"beneficiary_inst_addr_58d" varchar(150) NULL,
 	"beneficiary_inst_id_58j" varchar(250) NULL,
 );
+CREATE_INDEX IDX_UNIQUE_CLUSTERED MT320_SequenceC_idx MT320_SequenceC  [reference_id] 
 
 CREATE TABLE "MT320_SequenceD" (
 	"reference_id" BIGINT NOT NULL,
@@ -185,6 +192,7 @@ CREATE TABLE "MT320_SequenceD" (
 	"beneficiary_inst_addr_58d" varchar(150) NULL,
 	"beneficiary_inst_id_58j" varchar(250) NULL,
 );
+CREATE_INDEX IDX_UNIQUE_CLUSTERED MT320_SequenceD_idx MT320_SequenceD  [reference_id] 
 
 CREATE TABLE "MT320_SequenceE" (
 	"reference_id" BIGINT NOT NULL,
@@ -214,6 +222,7 @@ CREATE TABLE "MT320_SequenceE" (
 	"beneficiary_inst_addr_58d" varchar(150) NULL,
 	"beneficiary_inst_id_58j" varchar(250) NULL,
 );
+CREATE_INDEX IDX_UNIQUE_CLUSTERED MT320_SequenceE_idx MT320_SequenceE  [reference_id] 
 
 CREATE TABLE "MT320_SequenceF" (
 	"reference_id" BIGINT NOT NULL,
@@ -243,6 +252,7 @@ CREATE TABLE "MT320_SequenceF" (
 	"beneficiary_inst_addr_58d" varchar(150) NULL,
 	"beneficiary_inst_id_58j" varchar(250) NULL,
 );
+CREATE_INDEX IDX_UNIQUE_CLUSTERED MT320_SequenceF_idx MT320_SequenceF  [reference_id] 
 
 CREATE TABLE "MT320_SequenceG" (
 	"reference_id" BIGINT NOT NULL,
@@ -253,6 +263,7 @@ CREATE TABLE "MT320_SequenceG" (
 	"reporting_currency_33e" varchar(50) NULL,
 	"reporting_tax_amount_33e" float NULL,
 );
+CREATE_INDEX IDX_UNIQUE_CLUSTERED MT320_SequenceG_idx MT320_SequenceG  [reference_id] 
 
 CREATE TABLE "MT320_SequenceH" (
 	"reference_id" BIGINT NOT NULL,
@@ -280,6 +291,7 @@ CREATE TABLE "MT320_SequenceH" (
 	"broker_identification_id_88j" varchar(250) NULL,
 	"send_receive_information_72" varchar(250) NULL,
 );
+CREATE_INDEX IDX_UNIQUE_CLUSTERED MT320_SequenceH_idx MT320_SequenceH  [reference_id] 
 
 CREATE TABLE "MT320_CommissionFees" (
 	"reference_id" BIGINT NOT NULL,
@@ -287,6 +299,7 @@ CREATE TABLE "MT320_CommissionFees" (
 	"currency_percent_34c" varchar(50) NULL,
 	"amount_rate_34c" float NULL,
 );
+CREATE_INDEX IDX_UNIQUE_CLUSTERED MT320_CommissionFees_idx MT320_CommissionFees  [reference_id] 
 
 CREATE TABLE "MT320_SequenceI" (
 	"reference_id" BIGINT NOT NULL,
@@ -312,6 +325,7 @@ CREATE TABLE "MT320_SequenceI" (
 	"receiving_agent_addr_57d" varchar(150) NULL,
 	"receiving_agent_id_57j" varchar(250) NULL,
 );
+CREATE_INDEX IDX_UNIQUE_CLUSTERED MT320_SequenceI_idx MT320_SequenceI  [reference_id] 
 
 CREATE TABLE "MT320_AdditionalAmounts" (
 	"reference_id" BIGINT NOT NULL,
@@ -319,7 +333,7 @@ CREATE TABLE "MT320_AdditionalAmounts" (
 	"currency_32h" varchar(50) NULL,
 	"payment_amount_32h" float NULL,
 );
-
+CREATE_INDEX IDX_UNIQUE_CLUSTERED MT320_AdditionalAmounts_idx MT320_AdditionalAmounts  [reference_id]
 
 
 

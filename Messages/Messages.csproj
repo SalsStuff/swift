@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlockHeader.cs" />
+    <Compile Include="MT112.cs" />
     <Compile Include="MT320.cs" />
     <Compile Include="MTMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

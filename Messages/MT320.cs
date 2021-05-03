@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using System.IO;
 using Database;
 
 namespace Messages
@@ -239,8 +235,31 @@ namespace Messages
                 ParsePipeMsg(msg);
         }
 
+        /// <summary>
+        /// Get method to return specified data sequence
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public List<TagData<string, string, string, string, int>> this[int index]
+        {
+            get
+            {
+                if (index == 0) { return sequenceA; }
+                else if (index == 1) { return sequenceB; }
+                else if (index == 2) { return sequenceC; }
+                else if (index == 3) { return sequenceD; }
+                else if (index == 4) { return sequenceE; }
+                else if (index == 5) { return sequenceF; }
+                else if (index == 6) { return sequenceG; }
+                else if (index == 7) { return sequenceH; }
+                else if (index == 8) { return sequenceI; }
+                else { return null; }
+            }
+        }
+
         private void InitializeMT320()
         {
+            numOfSequences = 9;
             ResetVariables();
             DefineScope();
             Anomalies.Clear();
@@ -335,29 +354,14 @@ namespace Messages
         /// <param name="message"></param>
         private void ParseBlock4(string message)
         {
-            string input = message.Substring(3);
-            // Clean up message
-            //input = input.Replace(System.Environment.NewLine, "");
-            //input = input.Replace("\r\n", "");
-            //string test = input.Substring(0, 1);
-            //if (test.Equals(":") == true)
-            //    input = input.Substring(1);
-            input = input.Substring(input.IndexOf(':') + 1);
+            string[] result = ParseBlock4MessageString(message);
 
-            // Remove the End of Block flag
-            input = input.Substring(0, input.Length - 2);
-            // Split the tags and values up
-            string[] result = input.Split(':');
-            result = result.Where((s, i) => i % 2 == 0)
-                        .Zip(result.Where((s, i) => i % 2 == 1), (a, b) => a + "~" + b)
-                        .ToArray();
-            
             FillDataTags(result);
 
             IsMessageValid();
         }
 
-        private List<TagData<string, string, string, string, int>> getSequence(string seqId)
+        protected override List<TagData<string, string, string, string, int>> getSequence(string seqId)
         {
             List<TagData<string, string, string, string, int>> sequence = null;
 
@@ -394,39 +398,6 @@ namespace Messages
                     break;
             }
             return sequence;
-        }
-
-        /// <summary>
-        /// Fill in the class variables with the SWIFT message data
-        /// </summary>
-        /// <param name="tags"></param>
-        private void FillDataTags(string[] tags)
-        {
-            List<TagData<string, string, string, string, int>> useSequence = null;
-            
-            foreach (string key in tags)
-            {
-                string[] keyPair = key.Split('~');
-                if (keyPair[0].Contains("15") == true)
-                {
-                    useSequence = getSequence(keyPair[0].Substring(2));
-                    SetTagPresent(useSequence, keyPair[0], 1);
-                }
-                else
-                {
-                    SetTagValue(useSequence, keyPair[0], keyPair[1]);
-                    SetTagPresent(useSequence, keyPair[0], 1);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Parse a pipe delimited SWIFT message
-        /// </summary>
-        /// <param name="message"></param>
-        private void ParsePipeMsg(string message)
-        {
-        
         }
 
         /// <summary>
@@ -503,38 +474,6 @@ namespace Messages
 
         #region GET SET Functions
         /// <summary>
-        /// Get method to return specified data sequence
-        /// </summary>
-        /// <param name="index"></param>
-        /// <returns></returns>
-        public List<TagData<string, string, string, string, int>> this[int index]
-        {
-            get
-            {
-                if (index == 0) { return sequenceA; }
-                else if (index == 1) { return sequenceB; }
-                else if (index == 2) { return sequenceC; }
-                else if (index == 3) { return sequenceD; }
-                else if (index == 4) { return sequenceE; }
-                else if (index == 5) { return sequenceF; }
-                else if (index == 6) { return sequenceG; }
-                else if (index == 7) { return sequenceH; }
-                else if (index == 8) { return sequenceI; }
-                else { return null; }
-            }
-        }
-
-        /// <summary>
-        /// Get method to return the number of class/message data sequence
-        /// </summary>
-        public int numOfSequences { get; } = 9;
-
-        /// <summary>
-        /// Get method to read back any errors or warnings set during the parsing of the message
-        /// </summary>
-        public List<string> Anomalies { get; } = new List<string>();
-
-        /// <summary>
         /// Get / Set method to auto validate message.
         /// If set to true the message will be validated when read in.
         /// If set to false an explicit call will be needed after the message is read in.
@@ -545,22 +484,6 @@ namespace Messages
         /// Get / Set method to always validate tag whether or not it is present in message.
         /// </summary>
         public bool AlwaysValidateTag { get; set; } = false;
-
-
-        public string GeDetailtXML()
-        {
-            using (var sw = new StringWriter())
-            {
-                using (var xw = XmlWriter.Create(sw))
-                {
-                    // Build Xml with xw.
-        
-        
-                }
-
-                return sw.ToString();
-            }
-        }
         #endregion
 
         #region Validation Rules
@@ -1032,6 +955,75 @@ namespace Messages
             }
 
             return validTag;
+        }
+
+        /// <summary>
+        /// Validate all tags in message
+        /// </summary>
+        private bool ValidateTags()
+        {
+            bool allTagsValid = true;
+            List<string> seqs = new List<string>() { "A", "B", "C", "D", "E", "F", "G", "H", "I" };
+            List<TagData<string, string, string, string, int>> seq;
+            bool validateField = true;
+            int T82present = 0;
+            int T87present = 0;
+            int T57present = 0;
+
+            foreach (string sid in seqs)
+            {
+                seq = getSequence(sid);
+
+                if (IsNewSequencePresent(seq) == true)
+                {
+                    foreach (TagData<string, string, string, string, int> t in seq)
+                    {
+                        validateField = true;
+                        /* check for vairants */
+                        if (sid.Equals("A") == true)
+                        {
+                            if ((t.Tag.Equals("82A") && t.Present == 0) || (t.Tag.Equals("82D") && t.Present == 0) || (t.Tag.Equals("82J") && t.Present == 0))
+                            {
+                                validateField = false;
+                                T82present++;
+                            }
+                            if ((t.Tag.Equals("87A") && t.Present == 0) || (t.Tag.Equals("87D") && t.Present == 0) || (t.Tag.Equals("87J") && t.Present == 0))
+                            {
+                                validateField = false;
+                                T87present++;
+                            }
+                        }
+
+                        if(sid.Equals("C") == true || sid.Equals("D") == true || sid.Equals("E") == true || sid.Equals("F") == true || sid.Equals("I") == true)
+                        {
+                            if ((t.Tag.Equals("57A") && t.Present == 0) || (t.Tag.Equals("57D") && t.Present == 0) || (t.Tag.Equals("57J") && t.Present == 0))
+                            {
+                                validateField = false;
+                                T57present++;
+                            }
+                        }
+
+                        if (validateField == true)
+                        {
+                            if (ValidateTag(sid, t) == false)
+                            {
+                                Anomalies.Add("Tag " + t.Tag + " : Failed validation.");
+                                allTagsValid = false;
+                            }
+                        }
+                    }
+                }
+
+                if ((sid.Equals("A") == true) && (T82present == 3))
+                    Anomalies.Add("ERROR: Mandatory Tag 82 is not present in any variantion");
+                else if ((sid.Equals("A") == true) && (T87present == 3))
+                    Anomalies.Add("ERROR: Mandatory Tag 87 is not present in any variantion");
+                else if ((sid.Equals("C") == true || sid.Equals("D") == true || sid.Equals("E") == true || sid.Equals("F") == true || sid.Equals("I") == true)
+                    && T57present == 3)
+                    Anomalies.Add("ERROR: Mandatory Tag 57 is not present in any variantion in sequence " + sid);
+            }
+
+            return allTagsValid;
         }
 
         #region FIELD VALIDATIONS
@@ -4279,60 +4271,7 @@ namespace Messages
             return valid;
         }
         #endregion
-
         #endregion
-
-        /// <summary>
-        /// Validate all tags in message
-        /// </summary>
-        private bool ValidateTags()
-        {
-            bool allTagsValid = true;
-            List<string> seqs = new List<string>() { "A", "B", "C", "D", "E", "F", "G", "H", "I" };
-            List<TagData<string, string, string, string, int>> seq;
-            bool validateField = true;
-            int T82present = 0;
-            int T87present = 0;
-
-            foreach (string sid in seqs)
-            {
-                seq = getSequence(sid);
-
-                if (IsNewSequencePresent(seq) == true)
-                {
-                    foreach (TagData<string, string, string, string, int> t in seq)
-                    {
-                        validateField = true;
-                        /* check for vairants */
-                        if( (t.Tag.Equals("82A") && t.Present == 0) || (t.Tag.Equals("82D") && t.Present == 0) || (t.Tag.Equals("82J") && t.Present == 0) )
-                        {
-                            validateField = false;
-                            T82present++;
-                        }
-                        if ((t.Tag.Equals("87A") && t.Present == 0) || (t.Tag.Equals("87D") && t.Present == 0) || (t.Tag.Equals("87J") && t.Present == 0))
-                        {
-                            validateField = false;
-                            T87present++;
-                        }
-                        if (validateField == true)
-                        { 
-                            if (ValidateTag(sid, t) == false)
-                            {
-                                Anomalies.Add("Tag " + t.Tag + " : Failed validation.");
-                                allTagsValid = false;
-                            }
-                        }
-                    }
-                }
-
-                if((sid.Equals("A") == true) && (T82present == 3))
-                    Anomalies.Add("ERROR: Mandatory Tag 82 is not present in any variantion");
-                else if ((sid.Equals("A") == true) && (T87present == 3))
-                    Anomalies.Add("ERROR: Mandatory Tag 87 is not present in any variantion");
-            }
-
-            return allTagsValid;
-        }
 
         #region Network Validated Rules
         /// <summary>
@@ -4830,108 +4769,7 @@ namespace Messages
         #endregion
 
         #region TAG PARSING
-
-        /// <summary>
-        /// parsePartyAgent
-        /// 
-        /// Parses Tags 53A/D/J, 56A/D/J, 57A/D/J, 58A/D/J, 82A/D/J, 83A/D/J, 84A/B/D/J, 85A/B/D/J, 
-        /// 86A/D/J, 87A/D/J and 88A/D/J of a given 
-        /// sequence and returns the id and code in a list
-        /// </summary>
-        /// <param name="seq"></param>
-        /// <param name="option"></param>
-        /// <returns></returns>
-        private List<string> parsePartyAgent(List<TagData<string, string, string, string, int>> seq, string option)
-        {
-            string rawStr = GetTagValue(seq, option);
-            List<string> retLst = new List<string>();
-            string[] stringSeparators = new string[] { "\r\n" };
-
-            try
-            {
-                if (rawStr != null && rawStr.Length >= 1 && isTagPresentInSequence(seq, option) == true)
-                {
-                    if (option.Contains("A") == true || option.Contains("B") == true || option.Contains("D"))
-                    {
-                        if (rawStr[0].Equals("/"))
-                        {
-                            string[] lines = rawStr.Split(stringSeparators, StringSplitOptions.None);
-                            retLst.Add(lines[0].Substring(1));  // remoive the first '/'
-                            retLst.Add(lines[1]);
-                        }
-                        else
-                        {
-                            retLst.Add(null);
-                            retLst.Add(rawStr);
-                        }
-                    }
-                    else if (option.Contains("J") == true)
-                    {
-                        retLst.Add(rawStr);
-                    }
-                }
-                else
-                {
-                    retLst.Add(null);
-                    retLst.Add(null);
-                }
-            }
-            catch(Exception ex)
-            {
-                throw new Exception("Invalid Tag Data: Tag " + option + ".\n" + ex.Message);
-            }
-
-            return retLst;
-        }
-
-        /// <summary>
-        /// parseCcyAmt
-        /// 
-        /// Parses Tags 32B, 32H and 34E
-        /// </summary>
-        /// <param name="seq"></param>
-        /// <param name="option"></param>
-        /// <param name="ccy"></param>
-        /// <param name="amount"></param>
-        private void parseCcyAmt(List<TagData<string, string, string, string, int>> seq, string option, out string ccy, out Nullable<double> amount)
-        {
-            string rawStr = GetTagValue(seq, option);
-            double multiplier = 1.0;
-            string amtStr = null;
-
-            try
-            {
-                if (rawStr != null && rawStr.Length >= 1 && isTagPresentInSequence(seq, option) == true)
-                {
-                    if (rawStr.Substring(0, 1).Equals("N") && (Char.IsLetter(rawStr[1]) == true && Char.IsLetter(rawStr[2]) == true && Char.IsLetter(rawStr[3]) == true))
-                    {
-                        multiplier = -1.0;
-                        ccy = rawStr.Substring(1, 3);
-                        amtStr = rawStr.Substring(4, rawStr.Length - 4);
-                        amtStr = amtStr.Replace(",", ".");
-                        amount = Convert.ToDouble(amtStr) * multiplier;
-                    }
-                    else
-                    {
-                        multiplier = 1.0;
-                        ccy = rawStr.Substring(0, 3);
-                        amtStr = rawStr.Substring(3, rawStr.Length - 3);
-                        amtStr = amtStr.Replace(",", ".");
-                        amount = Convert.ToDouble(amtStr) * multiplier;
-                    }
-                }
-                else
-                {
-                    ccy = null;
-                    amount = null;
-                }
-            }
-            catch(Exception ex)
-            {
-                throw new Exception("Invalid Tag Data: Tag " + option + ".\n" + ex.Message);
-            }
-        }
-
+                
         /// <summary>
         /// parseCommissionAndFees
         /// 
@@ -5161,7 +4999,7 @@ namespace Messages
         /// <returns></returns>
         public string getT14D_DayCountFraction(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "14D");
+            return getT14D(seq);
         }
 
         /// <summary>
@@ -5187,18 +5025,7 @@ namespace Messages
         /// <returns></returns>
         public Nullable<int> getT18A_repetitions(List<TagData<string, string, string, string, int>> seq)
         {
-            Nullable<int> number = null;
-
-            try
-            {
-                number = Convert.ToInt32(GetTagValue(seq, "18A"));
-            }
-            catch(Exception ex)
-            {
-                throw new Exception("Invalid Tag Data: Tag 18A.\n" + ex.Message);
-            }
-
-            return number;
+            return getInt(seq, "18A");
         }
 
         /// <summary>
@@ -5210,7 +5037,7 @@ namespace Messages
         /// <returns></returns>
         public string getT20_SendersReference(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "20");
+            return getT20(seq);
         }
 
         /// <summary>
@@ -5222,7 +5049,7 @@ namespace Messages
         /// <returns></returns>
         public string getT21_RelatedReference(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "21");
+            return getT21(seq);
         }
 
         /// <summary>
@@ -5234,7 +5061,7 @@ namespace Messages
         /// <returns></returns>
         public string getT21G_BrokersReference(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "21G");
+            return getT21G(seq);
         }
 
         /// <summary>
@@ -5246,7 +5073,7 @@ namespace Messages
         /// <returns></returns>
         public string getT21N_PartyAContractNum(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "21N");
+            return getT21N(seq);
         }
 
         /// <summary>
@@ -5265,7 +5092,7 @@ namespace Messages
         /// <returns></returns>
         public string getT22A_OperationType(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "22A");
+            return getT22A(seq);
         }
 
         /// <summary>
@@ -5281,7 +5108,7 @@ namespace Messages
         /// <returns></returns>
         public string getT22B_EventType(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "22B");
+            return getT22B(seq);
         }
 
         /// <summary>
@@ -5293,7 +5120,7 @@ namespace Messages
         /// <returns></returns>
         public string getT22C_CommonReference(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "22C");
+            return getT22C(seq);
         }
 
         /// <summary>
@@ -5353,7 +5180,7 @@ namespace Messages
         /// <returns></returns>
         public string getT26H_CounterpartyReference(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "26H");
+            return getT26H(seq);
         }
 
         /// <summary>
@@ -5365,7 +5192,7 @@ namespace Messages
         /// <returns></returns>
         public string getT29A_ContractInfo(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "29A");
+            return getT29A(seq);
         }
 
         /// <summary>
@@ -5377,7 +5204,7 @@ namespace Messages
         /// <returns></returns>
         public string getT30F_LastDayOfFirstInterestPeriod(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "30F");
+            return getT30F(seq);
         }
 
         /// <summary>
@@ -5409,7 +5236,7 @@ namespace Messages
         /// <returns></returns>
         public string getT30P_MaturityDate(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "30P");
+            return getT30P(seq);
         }
 
         /// <summary>
@@ -5421,7 +5248,7 @@ namespace Messages
         /// <returns></returns>
         public string getT30T_TradeDate(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "30T");
+            return getT30T(seq);
         }
 
         /// <summary>
@@ -5436,7 +5263,7 @@ namespace Messages
         /// <returns></returns>
         public string getT30V_ValueDate(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "30V");
+            return getT30V(seq);
         }
 
         /// <summary>
@@ -5448,7 +5275,7 @@ namespace Messages
         /// <returns></returns>
         public string getT30X_NetInterestDueDate(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "30X");
+            return getT30X(seq);
         }
 
         /// <summary>
@@ -5726,18 +5553,7 @@ namespace Messages
         /// <returns></returns>
         public Nullable<double> getT36_ExchangeRate(List<TagData<string, string, string, string, int>> seq)
         {
-            Nullable<double> rate = null;
-
-            try
-            {
-                rate = parseRate(seq, "36");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return rate;
+            return getDouble(seq, "36");
         }
 
         /// <summary>
@@ -5749,18 +5565,7 @@ namespace Messages
         /// <returns></returns>
         public Nullable<double> getT37G_InterestRate(List<TagData<string, string, string, string, int>> seq)
         {
-            Nullable<double> rate = null;
-
-            try
-            {
-                rate = parseRate(seq, "37G");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return rate;
+            return getDouble(seq, "37G");
         }
 
         /// <summary>
@@ -5772,18 +5577,7 @@ namespace Messages
         /// <returns></returns>
         public Nullable<double> getT37L_TaxRate(List<TagData<string, string, string, string, int>> seq)
         {
-            Nullable<double> rate = null;
-
-            try
-            {
-                rate = parseRate(seq, "37L");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return rate;
+            return getDouble(seq, "37L");
         }
 
         /// <summary>
@@ -6367,7 +6161,7 @@ namespace Messages
         /// <returns></returns>
         public string getT72_Sender2ReceiverInfo(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "72");
+            return getT72(seq);
         }
 
         /// <summary>
@@ -6384,7 +6178,7 @@ namespace Messages
         /// <returns></returns>
         public string getT77D_Terms(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "77D");
+            return getT77D(seq);
         }
 
         /// <summary>
@@ -7306,11 +7100,10 @@ namespace Messages
         /// <returns></returns>
         public string getT94A_Scope(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "94A");
+            return getT94A(seq);
         }
 
         #endregion
-
 
         #region SAVE DATA
         public void saveRecord(BlockHeader headers)
@@ -7397,7 +7190,7 @@ namespace Messages
             {
                 sqlCmd = "INSERT INTO dbo.MT320_Block3 (reference_id, tag103_service_id, tag113_banking_priority, tag108_mur, tag119_validation_flag, ";
                 sqlCmd += "tag423_balance_check_point, tag106_mir, tag424_related_reference, tag111_service_type_id, tag121_unique_tran_reference, ";
-                sqlCmd += "tag115_adressee_info, tag165_payment_rir, tag433_sanctions_sir, tag434_payment_cir) ";
+                sqlCmd += "tag115_addressee_info, tag165_payment_rir, tag433_sanctions_sir, tag434_payment_cir) ";
                 sqlCmd += "VALUES('" + refid + "', '" + hdr.TAG103_ServiceID + "', '" + hdr.TAG113_BankingPriority + "', '" + hdr.TAG108_MUR + "', '";
                 sqlCmd += hdr.TAG119_ValidationFlag + "', '" + hdr.TAG423_BalanceCheckPoint + "', '" + hdr.TAG106_MIR + "', '" + hdr.TAG424_RelatedReference + "', '";
                 sqlCmd += hdr.TAG111_ServiceTypeID + "', '" + hdr.TAG121_UniqueTranReference + "', '" + hdr.TAG115_AddresseeInfo + "', '" + hdr.TAG165_PaymentRIR + "', '";
@@ -7744,7 +7537,8 @@ namespace Messages
             Nullable<double> dd = 0.0;
             Nullable<int> ii = 0;
 
-            ss = getT24D_DealingMethod(sequenceH);
+            ii = getT18A_repetitions(sequenceI);
+            /*ss = getT24D_DealingMethod(sequenceH);
             ss = getT82A_ID(sequenceA);
             ss = getT82A_Code(sequenceA);
             ss = getT82D_ID(sequenceA);
@@ -7778,7 +7572,7 @@ namespace Messages
 
             if (date.Count() != ccy.Count())
                 ss = "Oops!";
-
+            */
         }
     }
 }

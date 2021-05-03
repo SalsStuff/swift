@@ -100,6 +100,9 @@ namespace TestProj
         {
             switch(messageType)
             {
+                case "112":
+                    MsgContainer = new MT112(message);
+                    break;
                 case "320":
                     MsgContainer = new MT320(message);
                     break;
@@ -188,6 +191,9 @@ namespace TestProj
         {
             switch (messageType)
             {
+                case "112":
+                    display_112_Data();
+                    break;
                 case "320":
                     display_320_Data();
                     break;
@@ -267,16 +273,73 @@ namespace TestProj
             dgView.Columns["Present"].Visible = DEBUG_ON;
             txtScope.Text = ((MT320)MsgContainer).Scope;
         }
-    
+
+        
+        private void display_112_Data()
+        {
+            int sections = ((MT112)MsgContainer).numOfSequences;
+            MT112 fields = ((MT112)MsgContainer);
+            List<TagData<string, string, string, string, int>> fieldData = new List<TagData<string, string, string, string, int>>();
+            DataTable dt = new DataTable();
+
+            dt.Columns.Add("Tag Name", typeof(string));
+            dt.Columns.Add("Tag ID", typeof(string));
+            dt.Columns.Add("Tag Value", typeof(string));
+            dt.Columns.Add("Madatory", typeof(string));
+            dt.Columns.Add("Present", typeof(int));
+            
+            for (int s = 0; s < sections; s++)
+            {
+                fieldData = fields[s];
+                foreach (TagData<string, string, string, string, int> t in fieldData)
+                {
+                    dt.Rows.Add(new object[] { t.Name, t.Tag, t.Value, t.Mandatory, t.Present });
+                }
+            }
+            dgView.DataSource = dt;
+            foreach (DataGridViewRow row in dgView.Rows)
+            {
+                if (row.Cells["Present"].Value == null)
+                {
+                    continue;
+                }
+                if (row.Cells["Tag ID"].Value.ToString().Contains("15"))
+                {
+                    row.DefaultCellStyle.BackColor = Color.Yellow;
+                }
+                else if (row.Cells["Present"].Value.Equals(0))
+                {
+                    row.DefaultCellStyle.BackColor = Color.Gray;
+                }
+            }
+            dgView.Columns["Present"].Visible = DEBUG_ON;
+            
+            txtScope.Text = ((MT112)MsgContainer).Scope;
+        }
+        
+
         private void fillErrorsPage()
         {
+            List<string> mishaps = null;
             txtErrors.Text = "";
             foreach (string err in BH.Errors)
             {
                 txtErrors.Text += err + "\r\n";
             }
-
-            foreach (string err in ((MT320)MsgContainer).Anomalies)
+         
+            switch(BH.MessageType)
+            {
+                case "112":
+                    mishaps = ((MT112)MsgContainer).Anomalies;
+                    break;
+                case "320":
+                    mishaps = ((MT320)MsgContainer).Anomalies;
+                    break;
+                default:
+                    break;
+            }
+            
+            foreach (string err in mishaps)
             {
                 txtErrors.Text += err + "\r\n";
             }
@@ -296,6 +359,9 @@ namespace TestProj
             {
                 switch (mtype)
                 {
+                    case "112":
+                        ((MT112)MsgContainer).saveRecord(BH);
+                        break;
                     case "320":
                         ((MT320)MsgContainer).saveRecord(BH);
                         break;
