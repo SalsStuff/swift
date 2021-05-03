@@ -746,7 +746,7 @@ namespace Messages
         /// <returns></returns>
         public string getT20_TransactionReferenceNumber(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "20");
+            return getT20(seq);
         }
 
         /// <summary>
@@ -758,7 +758,7 @@ namespace Messages
         /// <returns></returns>
         public string getT21_ChequeNumber(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "21");
+            return getT21(seq);
         }
 
         /// <summary>
@@ -770,7 +770,7 @@ namespace Messages
         /// <returns></returns>
         public string getT30_DateOfIssue(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "30");
+            return getT30(seq);
         }
 
         /// <summary>
@@ -788,7 +788,7 @@ namespace Messages
 
             try
             {
-                parseDateCcyAmt(seq, "32B", out date, out ccy, out amount);
+                parseDateCcyAmt(seq, "32A", out date, out ccy, out amount);
             }
             catch (Exception ex)
             {
@@ -813,7 +813,7 @@ namespace Messages
 
             try
             {
-                parseDateCcyAmt(seq, "32B", out date, out ccy, out amount);
+                parseDateCcyAmt(seq, "32A", out date, out ccy, out amount);
             }
             catch (Exception ex)
             {
@@ -838,7 +838,7 @@ namespace Messages
 
             try
             {
-                parseDateCcyAmt(seq, "32B", out date, out ccy, out amount);
+                parseDateCcyAmt(seq, "32A", out date, out ccy, out amount);
             }
             catch (Exception ex)
             {
@@ -1063,6 +1063,11 @@ namespace Messages
                         retLst.Add(rawStr);
                     }
                 }
+                else
+                {
+                    retLst.Add(null);
+                    retLst.Add(null);
+                }
             }
             catch (Exception ex)
             {
@@ -1101,6 +1106,11 @@ namespace Messages
                         retLst.Add(rawStr);
                     }
                 }
+                else
+                {
+                    retLst.Add(null);
+                    retLst.Add(null);
+                }
             }
             catch (Exception ex)
             {
@@ -1120,7 +1130,7 @@ namespace Messages
         /// <returns></returns>
         public string getT76_Answers(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "76");
+            return getT76(seq);
         }
         #endregion
 
@@ -1209,7 +1219,7 @@ namespace Messages
             {
                 sqlCmd = "INSERT INTO dbo.MT112_Block3 (reference_id, tag103_service_id, tag113_banking_priority, tag108_mur, tag119_validation_flag, ";
                 sqlCmd += "tag423_balance_check_point, tag106_mir, tag424_related_reference, tag111_service_type_id, tag121_unique_tran_reference, ";
-                sqlCmd += "tag115_adressee_info, tag165_payment_rir, tag433_sanctions_sir, tag434_payment_cir) ";
+                sqlCmd += "tag115_addressee_info, tag165_payment_rir, tag433_sanctions_sir, tag434_payment_cir) ";
                 sqlCmd += "VALUES('" + refid + "', '" + hdr.TAG103_ServiceID + "', '" + hdr.TAG113_BankingPriority + "', '" + hdr.TAG108_MUR + "', '";
                 sqlCmd += hdr.TAG119_ValidationFlag + "', '" + hdr.TAG423_BalanceCheckPoint + "', '" + hdr.TAG106_MIR + "', '" + hdr.TAG424_RelatedReference + "', '";
                 sqlCmd += hdr.TAG111_ServiceTypeID + "', '" + hdr.TAG121_UniqueTranReference + "', '" + hdr.TAG115_AddresseeInfo + "', '" + hdr.TAG165_PaymentRIR + "', '";

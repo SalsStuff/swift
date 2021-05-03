@@ -4999,7 +4999,7 @@ namespace Messages
         /// <returns></returns>
         public string getT14D_DayCountFraction(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "14D");
+            return getT14D(seq);
         }
 
         /// <summary>
@@ -5025,18 +5025,7 @@ namespace Messages
         /// <returns></returns>
         public Nullable<int> getT18A_repetitions(List<TagData<string, string, string, string, int>> seq)
         {
-            Nullable<int> number = null;
-
-            try
-            {
-                number = Convert.ToInt32(GetTagValue(seq, "18A"));
-            }
-            catch(Exception ex)
-            {
-                throw new Exception("Invalid Tag Data: Tag 18A.\n" + ex.Message);
-            }
-
-            return number;
+            return getInt(seq, "18A");
         }
 
         /// <summary>
@@ -5048,7 +5037,7 @@ namespace Messages
         /// <returns></returns>
         public string getT20_SendersReference(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "20");
+            return getT20(seq);
         }
 
         /// <summary>
@@ -5060,7 +5049,7 @@ namespace Messages
         /// <returns></returns>
         public string getT21_RelatedReference(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "21");
+            return getT21(seq);
         }
 
         /// <summary>
@@ -5072,7 +5061,7 @@ namespace Messages
         /// <returns></returns>
         public string getT21G_BrokersReference(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "21G");
+            return getT21G(seq);
         }
 
         /// <summary>
@@ -5084,7 +5073,7 @@ namespace Messages
         /// <returns></returns>
         public string getT21N_PartyAContractNum(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "21N");
+            return getT21N(seq);
         }
 
         /// <summary>
@@ -5103,7 +5092,7 @@ namespace Messages
         /// <returns></returns>
         public string getT22A_OperationType(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "22A");
+            return getT22A(seq);
         }
 
         /// <summary>
@@ -5119,7 +5108,7 @@ namespace Messages
         /// <returns></returns>
         public string getT22B_EventType(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "22B");
+            return getT22B(seq);
         }
 
         /// <summary>
@@ -5131,7 +5120,7 @@ namespace Messages
         /// <returns></returns>
         public string getT22C_CommonReference(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "22C");
+            return getT22C(seq);
         }
 
         /// <summary>
@@ -5191,7 +5180,7 @@ namespace Messages
         /// <returns></returns>
         public string getT26H_CounterpartyReference(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "26H");
+            return getT26H(seq);
         }
 
         /// <summary>
@@ -5203,7 +5192,7 @@ namespace Messages
         /// <returns></returns>
         public string getT29A_ContractInfo(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "29A");
+            return getT29A(seq);
         }
 
         /// <summary>
@@ -5215,7 +5204,7 @@ namespace Messages
         /// <returns></returns>
         public string getT30F_LastDayOfFirstInterestPeriod(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "30F");
+            return getT30F(seq);
         }
 
         /// <summary>
@@ -5247,7 +5236,7 @@ namespace Messages
         /// <returns></returns>
         public string getT30P_MaturityDate(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "30P");
+            return getT30P(seq);
         }
 
         /// <summary>
@@ -5259,7 +5248,7 @@ namespace Messages
         /// <returns></returns>
         public string getT30T_TradeDate(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "30T");
+            return getT30T(seq);
         }
 
         /// <summary>
@@ -5274,7 +5263,7 @@ namespace Messages
         /// <returns></returns>
         public string getT30V_ValueDate(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "30V");
+            return getT30V(seq);
         }
 
         /// <summary>
@@ -5286,7 +5275,7 @@ namespace Messages
         /// <returns></returns>
         public string getT30X_NetInterestDueDate(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "30X");
+            return getT30X(seq);
         }
 
         /// <summary>
@@ -5564,18 +5553,7 @@ namespace Messages
         /// <returns></returns>
         public Nullable<double> getT36_ExchangeRate(List<TagData<string, string, string, string, int>> seq)
         {
-            Nullable<double> rate = null;
-
-            try
-            {
-                rate = parseRate(seq, "36");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return rate;
+            return getDouble(seq, "36");
         }
 
         /// <summary>
@@ -5587,18 +5565,7 @@ namespace Messages
         /// <returns></returns>
         public Nullable<double> getT37G_InterestRate(List<TagData<string, string, string, string, int>> seq)
         {
-            Nullable<double> rate = null;
-
-            try
-            {
-                rate = parseRate(seq, "37G");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return rate;
+            return getDouble(seq, "37G");
         }
 
         /// <summary>
@@ -5610,18 +5577,7 @@ namespace Messages
         /// <returns></returns>
         public Nullable<double> getT37L_TaxRate(List<TagData<string, string, string, string, int>> seq)
         {
-            Nullable<double> rate = null;
-
-            try
-            {
-                rate = parseRate(seq, "37L");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return rate;
+            return getDouble(seq, "37L");
         }
 
         /// <summary>
@@ -6205,7 +6161,7 @@ namespace Messages
         /// <returns></returns>
         public string getT72_Sender2ReceiverInfo(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "72");
+            return getT72(seq);
         }
 
         /// <summary>
@@ -6222,7 +6178,7 @@ namespace Messages
         /// <returns></returns>
         public string getT77D_Terms(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "77D");
+            return getT77D(seq);
         }
 
         /// <summary>
@@ -7144,7 +7100,7 @@ namespace Messages
         /// <returns></returns>
         public string getT94A_Scope(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "94A");
+            return getT94A(seq);
         }
 
         #endregion
@@ -7234,7 +7190,7 @@ namespace Messages
             {
                 sqlCmd = "INSERT INTO dbo.MT320_Block3 (reference_id, tag103_service_id, tag113_banking_priority, tag108_mur, tag119_validation_flag, ";
                 sqlCmd += "tag423_balance_check_point, tag106_mir, tag424_related_reference, tag111_service_type_id, tag121_unique_tran_reference, ";
-                sqlCmd += "tag115_adressee_info, tag165_payment_rir, tag433_sanctions_sir, tag434_payment_cir) ";
+                sqlCmd += "tag115_addressee_info, tag165_payment_rir, tag433_sanctions_sir, tag434_payment_cir) ";
                 sqlCmd += "VALUES('" + refid + "', '" + hdr.TAG103_ServiceID + "', '" + hdr.TAG113_BankingPriority + "', '" + hdr.TAG108_MUR + "', '";
                 sqlCmd += hdr.TAG119_ValidationFlag + "', '" + hdr.TAG423_BalanceCheckPoint + "', '" + hdr.TAG106_MIR + "', '" + hdr.TAG424_RelatedReference + "', '";
                 sqlCmd += hdr.TAG111_ServiceTypeID + "', '" + hdr.TAG121_UniqueTranReference + "', '" + hdr.TAG115_AddresseeInfo + "', '" + hdr.TAG165_PaymentRIR + "', '";
@@ -7581,7 +7537,8 @@ namespace Messages
             Nullable<double> dd = 0.0;
             Nullable<int> ii = 0;
 
-            ss = getT24D_DealingMethod(sequenceH);
+            ii = getT18A_repetitions(sequenceI);
+            /*ss = getT24D_DealingMethod(sequenceH);
             ss = getT82A_ID(sequenceA);
             ss = getT82A_Code(sequenceA);
             ss = getT82D_ID(sequenceA);
@@ -7615,7 +7572,7 @@ namespace Messages
 
             if (date.Count() != ccy.Count())
                 ss = "Oops!";
-
+            */
         }
     }
 }

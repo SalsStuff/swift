@@ -10,6 +10,7 @@ namespace Messages
 {
     public class MTMessage
     {
+        #region MEMBER VARIABLES
         /// <summary>
         /// Get method to return the SWIFT definition of message scope
         /// </summary>
@@ -26,6 +27,7 @@ namespace Messages
         /// Get method to read back any errors or warnings set during the parsing of the message
         /// </summary>
         public List<string> Anomalies { get; } = new List<string>();
+        #endregion
 
         protected string whichSequence(List<TagData<string, string, string, string, int>> sequence)
         {
@@ -175,7 +177,6 @@ namespace Messages
 
             return presentSequence;
         }
-
 
         /// <summary>
         /// Get method to determine if a tag is mandatory
@@ -474,5 +475,302 @@ namespace Messages
                 return sw.ToString();
             }
         }
+
+        #region GET TAG FUNCTIONS
+        /// <summary>
+        /// getT14D
+        /// 
+        /// Returns the value of tag 14D
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT14D(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "14D");
+        }
+
+        /// <summary>
+        /// getT17R
+        /// 
+        /// Returns the value in tag 17R
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT17R(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "17R");
+        }
+
+        /// <summary>
+        /// getInt
+        /// 
+        /// Returns the value in tag 18A
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public Nullable<int> getInt(List<TagData<string, string, string, string, int>> seq, string option)
+        {
+            Nullable<int> number = null;
+            int num;
+
+            if (int.TryParse(GetTagValue(seq, option), out num) == true)
+                number = num;
+            else
+                number = null;
+
+            return number;
+        }
+
+        /// <summary>
+        /// getT20
+        /// 
+        /// Returns the value in tag 20.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT20(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "20");
+        }
+
+        /// <summary>
+        /// getT21
+        /// 
+        /// Returns the value in tag 21.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT21(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "21");
+        }
+
+        /// <summary>
+        /// getT21G
+        /// 
+        /// Returns the value in tag 21G.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT21G(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "21G");
+        }
+
+        /// <summary>
+        /// getT21N
+        /// 
+        /// Returns the value of tag 21N.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT21N(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "21N");
+        }
+
+        /// <summary>
+        /// getT22A
+        /// 
+        /// Returns the value of tag 22A
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT22A(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "22A");
+        }
+
+        /// <summary>
+        /// getT22B
+        /// 
+        /// Returns the value of Tag 22B
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT22B(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "22B");
+        }
+
+        /// <summary>
+        /// getT22C
+        /// 
+        /// Returns the value 0f tag 22c.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT22C(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "22C");
+        }
+
+        /// <summary>
+        /// getT26H
+        /// 
+        /// Returns the value of tag 26H
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT26H(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "26H");
+        }
+
+        /// <summary>
+        /// getT29A
+        /// 
+        /// Returns the value 0f 29A
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT29A(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "29A");
+        }
+
+        /// <summary>
+        /// getT30
+        /// 
+        /// Returns the value of tag 30
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT30(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "30");
+        }
+
+        /// <summary>
+        /// getT30F
+        /// 
+        /// Returns the value of tag 30F
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT30F(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "30F");
+        }
+
+        /// <summary>
+        /// getT30P
+        /// 
+        /// Returns the value of tag 30P
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT30P(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "30P");
+        }
+
+        /// <summary>
+        /// getT30T
+        /// 
+        /// Returns the value of 30T
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT30T(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "30T");
+        }
+
+        /// <summary>
+        /// getT30V
+        /// 
+        /// Returns the value of tag 30V
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT30V(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "30V");
+        }
+
+        /// <summary>
+        /// getT30X
+        /// 
+        /// Returns the value of tag 30X
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT30X(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "30X");
+        }
+
+        /// <summary>
+        /// getDouble
+        /// 
+        /// Returns the value in tag 36
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public Nullable<double> getDouble(List<TagData<string, string, string, string, int>> seq, string option)
+        {
+            Nullable<double> number = null;
+            double num;
+
+            if (double.TryParse(GetTagValue(seq, option), out num) == true)
+                number = num;
+            else
+                number = null;
+
+            return number;
+        }
+
+        /// <summary>
+        /// getT72
+        /// 
+        /// Returns the value in tag 72
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT72(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "72");
+        }
+
+        /// <summary>
+        /// getT76
+        /// 
+        /// Returns the value of tag 76
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT76(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "76");
+        }
+
+        /// <summary>
+        /// getT77D
+        /// 
+        /// Returns the value of tag 77D
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT77D(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "77D");
+        }
+
+        /// <summary>
+        /// getT94A
+        /// 
+        /// Returns the value of tag 94A
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT94A(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "94A");
+        }
+
+        #endregion
+
+
     }
 }

@@ -359,6 +359,9 @@ namespace TestProj
             {
                 switch (mtype)
                 {
+                    case "112":
+                        ((MT112)MsgContainer).saveRecord(BH);
+                        break;
                     case "320":
                         ((MT320)MsgContainer).saveRecord(BH);
                         break;
