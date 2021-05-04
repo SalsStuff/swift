@@ -5137,15 +5137,12 @@ namespace Messages
         {
             string method = null;
 
-            try
-            {
-                method = GetTagValue(seq, "24D");
+            method = GetTagValue(seq, "24D");
+
+            if (method.Length >= 4)
                 method = method.Substring(0, 4);
-            }
-            catch(Exception ex)
-            {
-                throw new Exception("Invalid Tag Data: Tag 24D.\n" + ex.Message);
-            }
+            else
+                method = null;
 
             return method;
         }
@@ -7538,23 +7535,7 @@ namespace Messages
             Nullable<int> ii = 0;
 
             ii = getT18A_repetitions(sequenceI);
-            /*ss = getT24D_DealingMethod(sequenceH);
-            ss = getT82A_ID(sequenceA);
-            ss = getT82A_Code(sequenceA);
-            ss = getT82D_ID(sequenceA);
-            ss = getT82D_NameAddr(sequenceA);
-            ss = getT82J_ID(sequenceA);
-            ss = getT83A_ID(sequenceA);
-            ss = getT83A_Code(sequenceA);
-            ss = getT83D_ID(sequenceA);
-            ss = getT83D_NameAddr(sequenceA);
-            ss = getT83J_ID(sequenceA);
-            ss = getT87A_ID(sequenceA);
-            ss = getT87A_Code(sequenceA);
-            ss = getT87D_ID(sequenceA);
-            ss = getT87D_NameAddr(sequenceA);
-            ss = getT87J_ID(sequenceA);
-            ss = getT32B_Currency(sequenceB);
+            ss = getT24D_DealingMethod(sequenceH);
             dd = getT32B_Amount(sequenceB);
             ss = getT32H_Currency(sequenceB);
             dd = getT32H_Amount(sequenceB);
@@ -7572,7 +7553,6 @@ namespace Messages
 
             if (date.Count() != ccy.Count())
                 ss = "Oops!";
-            */
         }
     }
 }

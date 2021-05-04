@@ -746,6 +746,18 @@ namespace Messages
         }
 
         /// <summary>
+        /// getT75
+        /// 
+        /// Returns the value of tag 75
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT75(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "75");
+        }
+
+        /// <summary>
         /// getT77D
         /// 
         /// Returns the value of tag 77D

@@ -1,17 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Database;
 
 namespace Messages
 {
-    //https://www2.swift.com/knowledgecentre/publications/us1m_20200724/2.0?topic=mt112.htm
-    public class MT112 : MTMessage
+    //https://www2.swift.com/knowledgecentre/publications/us1m_20200724/2.0?topic=mt111-format-spec.htm
+    public class MT111 : MTMessage
     {
         DBUtils dbu = new DBUtils();
 
         #region SEQUENCE_VARIABLES
         // Sequence A - Mandatory
-        // Sequence A General Information contains information about the stop payment of a cheque.
+        // Sequence A General Information contains information about the request of a stop payment of a cheque.
         List<TagData<string, string, string, string, int>> sequenceA = new List<TagData<string, string, string, string, int>>
         {
             // Tag, Name, Value, Mandatory
@@ -24,7 +27,7 @@ namespace Messages
             new TagData<string, string, string, string, int>("52B", "Drawer Bank",                      "", "O", 0),
             new TagData<string, string, string, string, int>("52D", "Drawer Bank",                      "", "O", 0),
             new TagData<string, string, string, string, int>("59",  "Payee",                            "", "O", 0),
-            new TagData<string, string, string, string, int>("76",  "Answers",                          "", "M", 0)
+            new TagData<string, string, string, string, int>("75",  "Queries",                          "", "O", 0)
         };
         #endregion
 
@@ -32,18 +35,18 @@ namespace Messages
         /// <summary>
         /// Method Constructor
         /// </summary>
-        public MT112()
+        public MT111()
         {
-            InitializeMT112();
+            InitializeMT111();
         }
 
         /// <summary>
         /// Method Constructor
         /// </summary>
         /// <param name="msg"></param>
-        public MT112(String msg)
+        public MT111(String msg)
         {
-            InitializeMT112();
+            InitializeMT111();
 
             if (msg.Contains("{4:") == true)
                 ParseBlock4(msg);
@@ -65,7 +68,7 @@ namespace Messages
             }
         }
 
-        private void InitializeMT112()
+        private void InitializeMT111()
         {
             numOfSequences = 1;
             ResetVariables();
@@ -76,13 +79,13 @@ namespace Messages
         /// <summary>
         /// Definition of Message Scope
         /// This is the SWIFT definition of the message
-        /// It can be found at https://www2.swift.com/knowledgecentre/publications/us1m_20200724/2.0?topic=mt112-scope.htm
+        /// It can be found at https://www2.swift.com/knowledgecentre/publications/us1m_20200724/2.0?topic=mt111-scope.htm
         /// </summary>
         protected override void DefineScope()
         {
-            Scope = "MT 112 Scope:\r\n" +
-                    "This message type is sent by the drawee bank (on which a cheque is drawn) to the drawer bank or the bank acting on behalf of the drawer bank.\r\n" +
-                    "It is used to indicate what actions have been taken in attempting to stop payment of the cheque referred to in the message.\r\n";
+            Scope = "MT 111 Scope:\r\n" +
+                    "This single message type is sent by a drawer bank, or a bank acting on behalf of the drawer bank, to the bank on which a cheque has been drawn (the drawee bank).\r\n" +
+                    "It is used to request stop payment of the cheque referred to in the message.\r\n";
         }
 
         /// <summary>
@@ -198,8 +201,8 @@ namespace Messages
                             if (Is_T59_Valid(field) == false)
                                 validTag = false;
                             break;
-                        case "76":
-                            if (Is_T76_Valid(field) == false)
+                        case "75":
+                            if (Is_T75_Valid(field) == false)
                                 validTag = false;
                             break;
                         default:
@@ -475,11 +478,11 @@ namespace Messages
             if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
             {
                 strValue = field.Value;
-                if(field.Tag.Equals("32B") == true)
+                if (field.Tag.Equals("32B") == true)
                 {
                     string date = strValue.Substring(0, 6);
                     DateTime result;
-                    if(DateTime.TryParse(date, out result) == false)
+                    if (DateTime.TryParse(date, out result) == false)
                         Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect date format ");
 
                     strValue = strValue.Substring(6, strValue.Length - 6);
@@ -605,13 +608,13 @@ namespace Messages
                 field.Value = field.Value.Trim();
                 if ((field.Tag.Equals("52A") == true) && (field.Present == 1))
                 {
-                    if(field.Value.Length > 48)
+                    if (field.Value.Length > 48)
                     {
                         valid = false;
                         Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 48 characters.");
                     }
                 }
-                else if((field.Tag.Equals("52B") == true) && (field.Present == 1) )
+                else if ((field.Tag.Equals("52B") == true) && (field.Present == 1))
                 {
                     if (field.Value.Length > 72)
                     {
@@ -681,38 +684,37 @@ namespace Messages
         }
 
         /// <summary>
-        /// Is_T76_Valid
+        /// Is_T75_Valid
         /// Format
         ///     6*35x           (Narrative)
         ///     
         /// In addition to narrative text, the following line formats may be used:
-        ///     Line 1	            /2n/[supplement 1][supplement 2]                        (Answer Number) (Narrative1) (Narrative2)
+        ///     Line 1	            /2n/[supplement 1][supplement 2]                        (Query Number) (Narrative1) (Narrative2)
         ///     Lines 2-6	        [//continuation of supplementary information]           (Narrative)
         ///                                     or                                              or
-        ///                         [/2n/[supplement 1] [supplement 2]]                     (Answer Number)(Narrative1) (Narrative2)
+        ///                         [/2n/[supplement 1] [supplement 2]]                     (Query Number)(Narrative1) (Narrative2)
         /// Presence
-        ///     Mandatory
+        ///     Optional
         /// Definition
-        ///     This field must include information as to whether or not the stop payment has been effected. In addition, a response should be given to any request for reimbursement authorisation.
+        ///     This field may contain either the reason for stopping the payment of the cheque or a request for reimbursement authorisation.
         ///     
         /// Codes
         /// For frequently used answer texts, the following predefined Answer Numbers may be used:
-        /// 2       We hereby confirm that the transaction has been effected and advised on(1) ... (YYMMDD).        in response to Query 3 or 20
-        /// 10      We authorise you to debit our account.                                                          in response to Query 18
-        /// 11      Cover refunded to the credit of(1) ... (account/place).                                         in response to Query 19
-        /// 12      Stop instructions are not acceptable. (Reason) 
-        /// 13      Stop instructions duly recorded. (Further details, where applicable)                            in response to Query 21
-        /// 14      Stop instructions valid until(1) ... (YYMMDD).
+        /// 3       We have been advised that the beneficiary did not receive payment/cheque.Please state if and when the transaction was effected.
+        /// 18      Please authorise us to debit your account.
+        /// 19      Please refund cover to credit of(1) ... (account/place).
+        /// 20      Cheque/draft not debited as of closing balance of statement(1) ... (number) dated(2) ... (YYMMDD).
+        /// 21      Cheque has been stolen/lost.
         /// 
         /// Usage Rules
-        ///     Where a message contains more than one answer, each answer must appear on a separate line.
+        ///     Where a message contains more than one query, each query must appear on a separate line.
         ///     Numbers in brackets, for example, (1), mean that supplementary information is required.This supplementary information must be the first information following the code number.
-        ///     When supplement 2 is used, that is, two different pieces of supplementary information are provided, it must be preceded by a slash "/".
+        ///     When supplement 2 is used, that is, two different pieces of supplementary information are provided, the second piece of information should be preceded by a slash '/'.
         ///     
         /// </summary>
         /// <param name="field"></param>
         /// <returns></returns>
-        private bool Is_T76_Valid(TagData<string, string, string, string, int> field)
+        private bool Is_T75_Valid(TagData<string, string, string, string, int> field)
         {
             bool valid = true;
 
@@ -1129,16 +1131,15 @@ namespace Messages
         }
 
         /// <summary>
-        /// getT76_Answers
+        /// getT75_Answers
         /// 
-        /// Returns information as to whether or not the stop payment has been effected. 
-        /// In addition, a response should be given to any request for reimbursement authorisation.
+        /// Returns either the reason for stopping the payment of the cheque or a request for reimbursement authorisation.
         /// </summary>
         /// <param name="seq"></param>
         /// <returns></returns>
-        public string getT76_Answers(List<TagData<string, string, string, string, int>> seq)
+        public string getT75_Queries(List<TagData<string, string, string, string, int>> seq)
         {
-            return getT76(seq);
+            return getT75(seq);
         }
         #endregion
 
@@ -1152,7 +1153,7 @@ namespace Messages
             {
                 try
                 {
-                    sqlCmd = "Select max(reference_id) from dbo.MT112_Block1";
+                    sqlCmd = "Select max(reference_id) from dbo.MT111_Block1";
                     ref_id = dbu.getNewReferenceId(sqlCmd, -1);
 
                     dbu.DBBegin(ref_id.ToString());
@@ -1180,14 +1181,14 @@ namespace Messages
 
             try
             {
-                sqlCmd = "INSERT INTO dbo.MT112_Block1 (reference_id, application_id, service_id, lt_address, bic_code, logical_terminal_code, bic_branch_code, session_number, sequence_number) ";
+                sqlCmd = "INSERT INTO dbo.MT111_Block1 (reference_id, application_id, service_id, lt_address, bic_code, logical_terminal_code, bic_branch_code, session_number, sequence_number) ";
                 sqlCmd += "VALUES('" + refid + "', '" + hdr.ApplicationID + "', '" + hdr.ServiceID + "', '" + hdr.LTAddress + "', '" + hdr.BICCode + "', '" + hdr.LogicalTerminalCode + "', '" + hdr.BICBranchCode + "', '" + hdr.SessionNumber + "', '" + hdr.SequenceNumber + "')";
 
                 dbu.saveMTRecord(sqlCmd);
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to insert MT112 Block1 record.\n" + ex.Message);
+                throw new Exception("Failed to insert MT111 Block1 record.\n" + ex.Message);
             }
         }
 
@@ -1200,7 +1201,7 @@ namespace Messages
 
             try
             {
-                sqlCmd = "INSERT INTO dbo.MT112_Block2 (reference_id, input_output_id, message_type, destination_address, priority, delivery_monitoring, ";
+                sqlCmd = "INSERT INTO dbo.MT111_Block2 (reference_id, input_output_id, message_type, destination_address, priority, delivery_monitoring, ";
                 sqlCmd += "obsolescence_period, input_time, mir, mir_sender_date, mir_lt_address, mir_bic_code,  mir_lt_code, mir_bic_branch_code, ";
                 sqlCmd += "mir_session_number, mir_sequence_number, output_date, output_time) ";
                 sqlCmd += "VALUES('" + refid + "', '" + hdr.InputOutputID + "', '" + hdr.MessageType + "', '" + hdr.DestinationAddress + "', '";
@@ -1212,7 +1213,7 @@ namespace Messages
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to insert MT112 Block2 record.\n" + ex.Message);
+                throw new Exception("Failed to insert MT111 Block2 record.\n" + ex.Message);
             }
         }
 
@@ -1225,7 +1226,7 @@ namespace Messages
 
             try
             {
-                sqlCmd = "INSERT INTO dbo.MT112_Block3 (reference_id, tag103_service_id, tag113_banking_priority, tag108_mur, tag119_validation_flag, ";
+                sqlCmd = "INSERT INTO dbo.MT111_Block3 (reference_id, tag103_service_id, tag113_banking_priority, tag108_mur, tag119_validation_flag, ";
                 sqlCmd += "tag423_balance_check_point, tag106_mir, tag424_related_reference, tag111_service_type_id, tag121_unique_tran_reference, ";
                 sqlCmd += "tag115_addressee_info, tag165_payment_rir, tag433_sanctions_sir, tag434_payment_cir) ";
                 sqlCmd += "VALUES('" + refid + "', '" + hdr.TAG103_ServiceID + "', '" + hdr.TAG113_BankingPriority + "', '" + hdr.TAG108_MUR + "', '";
@@ -1237,7 +1238,7 @@ namespace Messages
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to insert MT112 Block3 record.\n" + ex.Message);
+                throw new Exception("Failed to insert MT111 Block3 record.\n" + ex.Message);
             }
         }
 
@@ -1247,9 +1248,9 @@ namespace Messages
 
             try
             {
-                sqlCmd = "INSERT INTO dbo.MT112_SequenceA (reference_id, transaction_reference_number_20, cheque_number_21, date_of_issue_30, date_32a, currency_32a, ";
+                sqlCmd = "INSERT INTO dbo.MT111_SequenceA (reference_id, transaction_reference_number_20, cheque_number_21, date_of_issue_30, date_32a, currency_32a, ";
                 sqlCmd += "amount_32a, currency_32b, amount_32b, party_id_52a, party_code_52a, party_id_52b, party_location_52b, party_id_52d, party_name_addr_52d, ";
-                sqlCmd += "payee_account_59, payee_name_addr_59, answers_76)";
+                sqlCmd += "payee_account_59, payee_name_addr_59, queries_75)";
                 sqlCmd += "VALUES ('" + refid + "', '" +
                                     getT20_TransactionReferenceNumber(sequenceA) + "', '" +
                                     getT21_ChequeNumber(sequenceA) + "', '" +
@@ -1267,14 +1268,14 @@ namespace Messages
                                     getT52D_NameAddr(sequenceA) + "', '" +
                                     getT59_PayeeAccount(sequenceA) + "', '" +
                                     getT59_PayeeNameAddr(sequenceA) + "', '" +
-                                    getT76_Answers(sequenceA) + "')";
+                                    getT75_Queries(sequenceA) + "')";
                 dbu.saveMTRecord(sqlCmd);
 
-                
+
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to insert MT112 Block4 record.\n" + ex.Message);
+                throw new Exception("Failed to insert MT111 Block4 record.\n" + ex.Message);
             }
         }
 
@@ -1287,7 +1288,7 @@ namespace Messages
 
             try
             {
-                sqlCmd = "INSERT INTO dbo.MT112_Block5 (reference_id, checksum, tng_message, pde, pde_time, pde_mir, pde_mir_date, pde_mir_lt_id, ";
+                sqlCmd = "INSERT INTO dbo.MT111_Block5 (reference_id, checksum, tng_message, pde, pde_time, pde_mir, pde_mir_date, pde_mir_lt_id, ";
                 sqlCmd += "pde_mir_session_number, pde_mir_sequence_number, dlm, mrf, mrf_date, mrf_time, mrf_mir, pdm, pdm_time,  pdm_mor, ";
                 sqlCmd += "pdm_mor_date, pdm_mor_lt_id, pdm_mor_session_number, pdm_mor_sequence_number, sys, sys_time, sys_mor, sys_mor_date, ";
                 sqlCmd += "sys_mor_lt_id, sys_mor_session_number, sys_mor_sequence_number)";
@@ -1302,7 +1303,7 @@ namespace Messages
             }
             catch (Exception ex)
             {
-                throw new Exception("Failed to insert MT112 Block5 record.\n" + ex.Message);
+                throw new Exception("Failed to insert MT111 Block5 record.\n" + ex.Message);
             }
         }
         #endregion
@@ -1310,7 +1311,7 @@ namespace Messages
 
         public void testFunctions()
         {
-            
+
 
         }
     }

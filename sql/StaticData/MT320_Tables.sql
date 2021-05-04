@@ -61,7 +61,7 @@ CREATE TABLE "MT320_Block5" (
 	"pde_mir_date" VARCHAR(50) NULL,
 	"pde_mir_lt_id" VARCHAR(50) NULL,
 	"pde_mir_session_number" VARCHAR(50) NULL,
-	"pde_sequence_number" varchar(50) NULL,
+	"pde_mir_sequence_number" varchar(50) NULL,
 	"dlm" varchar(50) NULL,
 	"mrf" varchar(50) NULL,
 	"mrf_date" varchar(50) NULL,

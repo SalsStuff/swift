@@ -1,4 +1,4 @@
-CREATE TABLE "MT112_Block1" (
+CREATE TABLE "MT111_Block1" (
 	"reference_id" BIGINT NOT NULL,
 	"application_id" VARCHAR(50) NULL,
 	"service_id" VARCHAR(50) NULL,
@@ -9,9 +9,9 @@ CREATE TABLE "MT112_Block1" (
 	"session_number" VARCHAR(50) NULL,
 	"sequence_number" VARCHAR(50) NULL,
 ); 
-CREATE UNIQUE INDEX MT112_Block1_idx ON MT112_Block1 (reference_id);
+CREATE UNIQUE INDEX MT111_Block1_idx ON MT111_Block1 (reference_id);
 
-CREATE TABLE "MT112_Block2" (
+CREATE TABLE "MT111_Block2" (
 	"reference_id" BIGINT NOT NULL,
 	"input_output_id" VARCHAR(50) NULL,
 	"message_type" VARCHAR(50) NULL,
@@ -31,9 +31,9 @@ CREATE TABLE "MT112_Block2" (
 	"output_date" varchar(50) NULL,
 	"output_time" varchar(50) NULL,
 ); 
-CREATE UNIQUE INDEX MT112_Block2_idx ON MT112_Block2 (reference_id);
+CREATE UNIQUE INDEX MT111_Block2_idx ON MT111_Block2 (reference_id);
 
-CREATE TABLE "MT112_Block3" (
+CREATE TABLE "MT111_Block3" (
 	"reference_id" BIGINT NOT NULL,
 	"tag103_service_id" VARCHAR(50) NULL,
 	"tag113_banking_priority" VARCHAR(50) NULL,
@@ -49,9 +49,9 @@ CREATE TABLE "MT112_Block3" (
 	"tag433_sanctions_sir" varchar(50) NULL,
 	"tag434_payment_cir" varchar(50) NULL,
 ); 
-CREATE UNIQUE INDEX MT112_Block3_idx ON MT112_Block3 (reference_id);
+CREATE UNIQUE INDEX MT111_Block3_idx ON MT111_Block3 (reference_id);
 
-CREATE TABLE "MT112_Block5" (
+CREATE TABLE "MT111_Block5" (
 	"reference_id" BIGINT NOT NULL,
 	"checksum" VARCHAR(50) NULL,
 	"tng_message" VARCHAR(50) NULL,
@@ -82,9 +82,9 @@ CREATE TABLE "MT112_Block5" (
 	"sys_mor_session_number" varchar(50) NULL,
 	"sys_mor_sequence_number" varchar(50) NULL,
 ); 
-CREATE UNIQUE INDEX MT112_Block5_idx ON MT112_Block5 (reference_id);
+CREATE UNIQUE INDEX MT111_Block5_idx ON MT111_Block5 (reference_id);
 
-CREATE TABLE "MT112_SequenceA" (
+CREATE TABLE "MT111_SequenceA" (
 	"reference_id" BIGINT NOT NULL,
 	"transaction_reference_number_20" varchar(50) NULL,
 	"cheque_number_21" varchar(50) NULL,
@@ -102,6 +102,6 @@ CREATE TABLE "MT112_SequenceA" (
 	"party_name_addr_52d" varchar(150) NULL,
 	"payee_account_59" varchar(50) NULL,
 	"payee_name_addr_59" varchar(150) NULL,
-	"answers_76" varchar(250) NULL,
+	"queries_75" varchar(250) NULL,
 );
-CREATE UNIQUE INDEX MT112_SequenceA_idx ON MT112_SequenceA (reference_id);
+CREATE UNIQUE INDEX MT111_SequenceA_idx ON MT111_SequenceA (reference_id);
