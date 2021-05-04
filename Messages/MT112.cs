@@ -16,7 +16,7 @@ namespace Messages
         {
             // Tag, Name, Value, Mandatory
             new TagData<string, string, string, string, int>("20",  "Transaction Reference Number",     "" ,"M", 0),
-            new TagData<string, string, string, string, int>("21",  "Cheque Numbere",                   "" ,"M", 0),
+            new TagData<string, string, string, string, int>("21",  "Cheque Number",                   "" ,"M", 0),
             new TagData<string, string, string, string, int>("30",  "Date of Issue",                    "" ,"M", 0),
             new TagData<string, string, string, string, int>("32A", "Amount",                           "", "M", 0),
             new TagData<string, string, string, string, int>("32B", "Amount",                           "", "M", 0),
@@ -734,7 +734,7 @@ namespace Messages
                 else
                 {
                     valid = false;
-                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T59_Valid");
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T76_Valid");
                 }
             }
 

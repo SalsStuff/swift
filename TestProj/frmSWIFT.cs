@@ -100,6 +100,9 @@ namespace TestProj
         {
             switch(messageType)
             {
+                case "105":
+                    MsgContainer = new MT105(message);
+                    break;
                 case "111":
                     MsgContainer = new MT111(message);
                     break;
@@ -194,6 +197,9 @@ namespace TestProj
         {
             switch (messageType)
             {
+                case "105":
+                    display_105_Data();
+                    break;
                 case "111":
                     display_111_Data();
                     break;
@@ -240,29 +246,29 @@ namespace TestProj
             txtSYSMorSeqNum.Text = BH.SYSMorSequenceNum;
         }
 
-        private void display_320_Data()
+        private void display_105_Data()
         {
-            int sections = ((MT320)MsgContainer).numOfSequences;
-            MT320 fields = ((MT320)MsgContainer);
+            int sections = ((MT105)MsgContainer).numOfSequences;
+            MT105 fields = ((MT105)MsgContainer);
             List<TagData<string, string, string, string, int>> fieldData = new List<TagData<string, string, string, string, int>>();
             DataTable dt = new DataTable();
-            
+
             dt.Columns.Add("Tag Name", typeof(string));
             dt.Columns.Add("Tag ID", typeof(string));
             dt.Columns.Add("Tag Value", typeof(string));
             dt.Columns.Add("Madatory", typeof(string));
             dt.Columns.Add("Present", typeof(int));
-            
+
             for (int s = 0; s < sections; s++)
             {
                 fieldData = fields[s];
-                foreach(TagData<string, string, string, string, int>t in fieldData)
+                foreach (TagData<string, string, string, string, int> t in fieldData)
                 {
                     dt.Rows.Add(new object[] { t.Name, t.Tag, t.Value, t.Mandatory, t.Present });
                 }
             }
             dgView.DataSource = dt;
-            foreach(DataGridViewRow row in dgView.Rows)
+            foreach (DataGridViewRow row in dgView.Rows)
             {
                 if (row.Cells["Present"].Value == null)
                 {
@@ -271,13 +277,15 @@ namespace TestProj
                 if (row.Cells["Tag ID"].Value.ToString().Contains("15"))
                 {
                     row.DefaultCellStyle.BackColor = Color.Yellow;
-                } else if (row.Cells["Present"].Value.Equals(0))
+                }
+                else if (row.Cells["Present"].Value.Equals(0))
                 {
                     row.DefaultCellStyle.BackColor = Color.Gray;
                 }
             }
             dgView.Columns["Present"].Visible = DEBUG_ON;
-            txtScope.Text = ((MT320)MsgContainer).Scope;
+
+            txtScope.Text = ((MT105)MsgContainer).Scope;
         }
 
         private void display_111_Data()
@@ -363,7 +371,47 @@ namespace TestProj
             
             txtScope.Text = ((MT112)MsgContainer).Scope;
         }
-        
+
+        private void display_320_Data()
+        {
+            int sections = ((MT320)MsgContainer).numOfSequences;
+            MT320 fields = ((MT320)MsgContainer);
+            List<TagData<string, string, string, string, int>> fieldData = new List<TagData<string, string, string, string, int>>();
+            DataTable dt = new DataTable();
+
+            dt.Columns.Add("Tag Name", typeof(string));
+            dt.Columns.Add("Tag ID", typeof(string));
+            dt.Columns.Add("Tag Value", typeof(string));
+            dt.Columns.Add("Madatory", typeof(string));
+            dt.Columns.Add("Present", typeof(int));
+
+            for (int s = 0; s < sections; s++)
+            {
+                fieldData = fields[s];
+                foreach (TagData<string, string, string, string, int> t in fieldData)
+                {
+                    dt.Rows.Add(new object[] { t.Name, t.Tag, t.Value, t.Mandatory, t.Present });
+                }
+            }
+            dgView.DataSource = dt;
+            foreach (DataGridViewRow row in dgView.Rows)
+            {
+                if (row.Cells["Present"].Value == null)
+                {
+                    continue;
+                }
+                if (row.Cells["Tag ID"].Value.ToString().Contains("15"))
+                {
+                    row.DefaultCellStyle.BackColor = Color.Yellow;
+                }
+                else if (row.Cells["Present"].Value.Equals(0))
+                {
+                    row.DefaultCellStyle.BackColor = Color.Gray;
+                }
+            }
+            dgView.Columns["Present"].Visible = DEBUG_ON;
+            txtScope.Text = ((MT320)MsgContainer).Scope;
+        }
 
         private void fillErrorsPage()
         {
@@ -376,6 +424,9 @@ namespace TestProj
          
             switch(BH.MessageType)
             {
+                case "105":
+                    mishaps = ((MT105)MsgContainer).Anomalies;
+                    break;
                 case "111":
                     mishaps = ((MT111)MsgContainer).Anomalies;
                     break;
@@ -409,6 +460,9 @@ namespace TestProj
             {
                 switch (mtype)
                 {
+                    case "105":
+                        ((MT105)MsgContainer).saveRecord(BH);
+                        break;
                     case "111":
                         ((MT111)MsgContainer).saveRecord(BH);
                         break;
