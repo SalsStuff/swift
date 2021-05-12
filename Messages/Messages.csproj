@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="BlockHeader.cs" />
     <Compile Include="MT105.cs" />
+    <Compile Include="MT110.cs" />
     <Compile Include="MT111.cs" />
     <Compile Include="MT112.cs" />
     <Compile Include="MT320.cs" />

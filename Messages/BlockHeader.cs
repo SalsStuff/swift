@@ -118,7 +118,8 @@ namespace Messages
             int i = 0;
             string[] tempStrs = { "", "", "", "", "" };
             string bStr = "";
-            
+            bool msgEnd = false;
+
             foreach (char c in msg)
             {
                 if( c.Equals('{') == true)
@@ -130,11 +131,14 @@ namespace Messages
                 {
                     start--;
                 }
-            
-                if(start == 0)
+
+                if (start == 0)
                 {
                     start = 0;
                     tempStrs[i] = bStr + c;
+
+                    if (tempStrs[i].Substring(tempStrs[i].Length - 2, 2).Equals("-}") == true)
+                        msgEnd = true;
                     bStr = "";
                     i++;
                 }
@@ -142,6 +146,9 @@ namespace Messages
                 {
                     bStr += c;
                 }
+
+                if (msgEnd == true)
+                    break;
             }
             
             int length = tempStrs.Length;

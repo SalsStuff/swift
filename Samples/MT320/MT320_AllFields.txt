@@ -1,0 +1,331 @@
+{1:F01ABFDGB20AXXX0034000449}{2:O3200525150721SCBLGB20AXXX38260098441507210525N}{3:{108:MMTEST}}{4:
+:15A:
+:20:MMTEST
+:21:Related Ref
+:22A:NEWT
+:94:AGNT
+:22B:CONF
+:22C:ABFD200002SCBL20
+:21N:ABC12345DEF7890
+:82A:SCBLGB20TSY
+:82D:Some Bank
+1234 Some Street
+Somewhere, Astate 12345
+:82J:Party Id 1
+Party Id 2
+Party Id 3
+Party Id 4
+Party Id 5
+:87A:ABFDGB20
+:87D:Another Bank
+5678 Another Street
+SomewhereElse, Astate 67890
+:87J:Another Party Id 1
+Another Party Id 2
+Another Party Id 3
+Another Party Id 4
+Another Party Id 5
+:77D:Term 1
+Term 2
+Term 3
+Term 4
+Term 5
+Term 6
+:15B:
+:17R:L
+:30T:20150626
+:30V:20150701
+:30P:20170630
+:32B:USD1,
+:32H:NGBP44,55
+:30X:20151125
+:34E:NUSD0,01
+:37G:2,
+:14D:ACT/360
+:30F:20150731
+:38J:D30
+:39M:US
+:15C:
+:57D:UNKNOWN
+:53A:CODEID21
+:53D:My Bank
+5678 MY Street
+MyCity, MYState 67890
+:53J:My Party Id 1
+My Party Id 2
+My Party Id 3
+My Party Id 4
+My Party Id 5
+:86A:CODEID25
+:86D:IM2C Bank
+5678 IM2C Street
+IM2CCity, IM2CState 67890
+:86J:IM2C Party Id 1
+IM2C Party Id 2
+IM2C Party Id 3
+IM2C Party Id 4
+IM2C Party Id 5
+:56A:CODEID29
+:56D:IM1C Bank
+5678 IM1C Street
+IM1CCity, IM1CState 67890
+:56J:IM1C Party Id 1
+IM1C Party Id 2
+IM1C Party Id 3
+IM1C Party Id 4
+IM1C Party Id 5
+:57A:CODEID33
+:57D:RAC Bank
+5678 RAC Street
+RACCity, RACState 67890
+:57J:RAC Party Id 1
+RAC Party Id 2
+RAC Party Id 3
+RAC Party Id 4
+RAC Party Id 5
+:58A:CODEID37
+:58D:BIC Bank
+5678 BIC Street
+BICCity, BICState 67890
+:58J:BIC Party Id 1
+BIC Party Id 2
+BIC Party Id 3
+BIC Party Id 4
+BIC Party Id 5
+:15D:
+:57D:UNKNOWN
+:53A:CODEID22
+:53D:Your Bank
+5678 MY Street
+YourCity, YourState 67890
+:53J:Your Party Id 1
+Your Party Id 2
+Your Party Id 3
+Your Party Id 4
+Your Party Id 5
+:86A:CODEID26
+:86D:IM2D Bank
+5678 IM2D Street
+IM2DCity, IM2DState 67890
+:86J:IM2D Party Id 1
+IM2D Party Id 2
+IM2D Party Id 3
+IM2D Party Id 4
+IM2D Party Id 5
+:56A:CODEID30
+:56D:IM1D Bank
+5678 IM1D Street
+IM1DCity, IM1DState 67890
+:56J:IM1D Party Id 1
+IM1D Party Id 2
+IM1D Party Id 3
+IM1D Party Id 4
+IM1D Party Id 5
+:57A:CODEID34
+:57D:RAD Bank
+5678 RAD Street
+RADCity, RADState 67890
+:57J:RAD Party Id 1
+RAD Party Id 2
+RAD Party Id 3
+RAD Party Id 4
+RAD Party Id 5
+:58A:CODEID38
+:58D:BID Bank
+5678 BID Street
+BIDCity, BIDState 67890
+:58J:BID Party Id 1
+BID Party Id 2
+BID Party Id 3
+BID Party Id 4
+BID Party Id 5
+:15E:
+:57D:UNKNOWN
+:53A:CODEID23
+:53D:Our Bank
+5678 Our Street
+OurCity, OurState 67890
+:53J:Our Party Id 1
+Our Party Id 2
+Our Party Id 3
+Our Party Id 4
+Our Party Id 5
+:86A:CODEID27
+:86D:IM2E Bank
+5678 IM2E Street
+IM2ECity, IM2EState 67890
+:86J:IM2E Party Id 1
+IM2E Party Id 2
+IM2E Party Id 3
+IM2E Party Id 4
+IM2E Party Id 5
+:56A:CODEID31
+:56D:IM1E Bank
+5678 IM1E Street
+IM1ECity, IM1EState 67890
+:56J:IM1E Party Id 1
+IM1E Party Id 2
+IM1E Party Id 3
+IM1E Party Id 4
+IM1E Party Id 5
+:57A:CODEID35
+:57D:RAE Bank
+5678 RAE Street
+RAECity, RAEState 67890
+:57J:RAE Party Id 1
+RAE Party Id 2
+RAE Party Id 3
+RAE Party Id 4
+RAE Party Id 5
+:58A:CODEID39
+:58D:BIE Bank
+5678 BIE Street
+BIECity, BIEState 67890
+:58J:BIE Party Id 1
+BIE Party Id 2
+BIE Party Id 3
+BIE Party Id 4
+BIE Party Id 5
+:15F:
+:57D:UNKNOWN
+:53A:CODEID24
+:53D:Their Bank
+5678 Their Street
+TheirCity, TheirState 67890
+:53J:Their Party Id 1
+Their Party Id 2
+Their Party Id 3
+Their Party Id 4
+Their Party Id 5
+:86A:CODEID28
+:86D:IM2F Bank
+5678 IM2F Street
+IM2FCity, IM2FState 67890
+:86J:IM2F Party Id 1
+IM2F Party Id 2
+IM2F Party Id 3
+IM2F Party Id 4
+IM2F Party Id 5
+:56A:CODEID32
+:56D:IM1F Bank
+5678 IM1F Street
+IM1FCity, IM1FState 67890
+:56J:IM1F Party Id 1
+IM1F Party Id 2
+IM1F Party Id 3
+IM1F Party Id 4
+IM1F Party Id 5
+:57A:CODEID36
+:57D:RAF Bank
+5678 RAF Street
+RAFCity, RAFState 67890
+:57J:RAF Party Id 1
+RAF Party Id 2
+RAF Party Id 3
+RAF Party Id 4
+RAF Party Id 5
+:58A:CODEID40
+:58D:BIF Bank
+5678 BIF Street
+BIFCity, BIFState 67890
+:58J:BIF Party Id 1
+BIF Party Id 2
+BIF Party Id 3
+BIF Party Id 4
+BIF Party Id 5
+:15G:
+:37L:4.25
+:33B:USD12345.67
+:36:1.50
+:33E:USD100.25
+:15H:
+:29A:Agent 1
+Addr1
+Addr2 how long is this string. huh
+:24D:BROK/My Broker sold it
+:84A:IDHCODE41
+:84B:OverHere, USA
+:84D:DBA Bank
+5678 DBA Street
+DBACity, DBAState 67890
+:84J:DBA Party Id 1
+DBA Party Id 2
+DBA Party Id 3
+DBA Party Id 4
+DBA Party Id 5
+:85A:IDHCODE42
+:85B:OverThere, USA
+:85D:DBB Bank
+5678 DBB Street
+DBBCity, DBBState 67890
+:85J:DBB Party Id 1
+DBB Party Id 2
+DBB Party Id 3
+DBB Party Id 4
+DBB Party Id 5
+:88A:IDHCODE43
+:88D:BI Bank
+5678 BI Street
+BICity, BIState 67890
+:88J:BI Party Id 1
+BI Party Id 2
+BI Party Id 3
+BI Party Id 4
+BI Party Id 5
+:71F:USA987,01
+:26H:C0987654321LKJHG
+:21G:B1234567890ASDFG
+:34C:ACCA/USD22,
+:34C:ACCA/USD33,
+:34C:ACCA/USD44,
+:34C:ACRU/NUSD34.54
+:72:/VENU1234/INFO 1
+//INFO 2
+//INFO 3
+//INFO 4
+//INFO 5
+//INFO 6
+:15I:
+:18A:2
+:30F:20181010
+:32H:USD100.25
+:30F:20181011
+:32H:USD200.45
+:53A:CODEID44
+:53D:AA Bank
+5678 AA Street
+AACity, AAState 67890
+:53J:AA Party Id 1
+AA Party Id 2
+AA Party Id 3
+AA Party Id 4
+AA Party Id 5
+:86A:CODEID45
+:86D:AA Bank
+5678 AA Street
+AACity, AAState 67890
+:86J:AA Party Id 1
+AA Party Id 2
+AA Party Id 3
+AA Party Id 4
+AA Party Id 5
+:56A:CODEID46
+:56D:AA Bank
+5678 AA Street
+AACity, AAState 67890
+:56J:AA Party Id 1
+AA Party Id 2
+AA Party Id 3
+AA Party Id 4
+AA Party Id 5
+:57A://CH123456
+CITIUS33
+:57D:AA Bank
+5678 AA Street
+AACity, AAState 67890
+:57J:AA Party Id 1
+AA Party Id 2
+AA Party Id 3
+AA Party Id 4
+AA Party Id 5
+-}{5:{CHK:D3DB5EE7DA90}{TNG:}}
