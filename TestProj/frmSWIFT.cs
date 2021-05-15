@@ -78,15 +78,17 @@ namespace TestProj
         private void getData(string fileName)
         {
             clearData();
-            BH.ParseFile(fileName);
-            parseBlock4(BH.Block_4, BH.MessageType);
-            
-            fillMessagePage();
-            fillBlock1Page();
-            fillBlock2Page();
-            fillBlock3Page();
-            fillBlock4Page(BH.MessageType);
-            fillBlock5Page();
+            if (BH.ParseFile(fileName) == true)
+            {
+                parseBlock4(BH.Block_4, BH.MessageType);
+
+                fillMessagePage();
+                fillBlock1Page();
+                fillBlock2Page();
+                fillBlock3Page();
+                fillBlock4Page(BH.MessageType);
+                fillBlock5Page();
+            }
             fillErrorsPage();
         }
         
@@ -100,6 +102,9 @@ namespace TestProj
         {
             switch(messageType)
             {
+                case "101":
+                    MsgContainer = new MT101(message);
+                    break;
                 case "105":
                     MsgContainer = new MT105(message);
                     break;
@@ -200,6 +205,9 @@ namespace TestProj
         {
             switch (messageType)
             {
+                case "101":
+                    display_101_Data();
+                    break;
                 case "105":
                     display_105_Data();
                     break;
@@ -247,6 +255,48 @@ namespace TestProj
             txtSYSMorLTId.Text = BH.SYSMorLTId;
             txtSYSMorSessNum.Text = BH.SYSMorSessionNum;
             txtSYSMorSeqNum.Text = BH.SYSMorSequenceNum;
+        }
+
+        private void display_101_Data()
+        {
+            int sections = ((MT101)MsgContainer).numOfSequences;
+            MT101 fields = ((MT101)MsgContainer);
+            List<TagData<string, string, string, string, int>> fieldData = new List<TagData<string, string, string, string, int>>();
+            DataTable dt = new DataTable();
+
+            dt.Columns.Add("Tag Name", typeof(string));
+            dt.Columns.Add("Tag ID", typeof(string));
+            dt.Columns.Add("Tag Value", typeof(string));
+            dt.Columns.Add("Madatory", typeof(string));
+            dt.Columns.Add("Present", typeof(int));
+
+            for (int s = 0; s < sections; s++)
+            {
+                fieldData = fields[s];
+                foreach (TagData<string, string, string, string, int> t in fieldData)
+                {
+                    dt.Rows.Add(new object[] { t.Name, t.Tag, t.Value, t.Mandatory, t.Present });
+                }
+            }
+            dgView.DataSource = dt;
+            foreach (DataGridViewRow row in dgView.Rows)
+            {
+                if (row.Cells["Present"].Value == null)
+                {
+                    continue;
+                }
+                if (row.Cells["Tag ID"].Value.ToString().Contains("15"))
+                {
+                    row.DefaultCellStyle.BackColor = Color.Yellow;
+                }
+                else if (row.Cells["Present"].Value.Equals(0))
+                {
+                    row.DefaultCellStyle.BackColor = Color.Gray;
+                }
+            }
+            dgView.Columns["Present"].Visible = DEBUG_ON;
+
+            txtScope.Text = ((MT101)MsgContainer).Scope;
         }
 
         private void display_105_Data()
@@ -469,6 +519,9 @@ namespace TestProj
          
             switch(BH.MessageType)
             {
+                case "101":
+                    mishaps = ((MT101)MsgContainer).Anomalies;
+                    break;
                 case "105":
                     mishaps = ((MT105)MsgContainer).Anomalies;
                     break;
@@ -487,10 +540,13 @@ namespace TestProj
                 default:
                     break;
             }
-            
-            foreach (string err in mishaps)
+
+            if (mishaps != null)
             {
-                txtErrors.Text += err + "\r\n";
+                foreach (string err in mishaps)
+                {
+                    txtErrors.Text += err + "\r\n";
+                }
             }
         }
         #endregion

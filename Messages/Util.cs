@@ -42,7 +42,7 @@ namespace Messages
             string strDate = obj.ToString();
             try
             {
-                string[] format = { "yyyyMMdd" };
+                string[] format = { "yyyyMMdd", "yymmdd" };
                 DateTime date;
 
                 if (DateTime.TryParseExact(strDate, format, System.Globalization.CultureInfo.InvariantCulture,

@@ -185,18 +185,21 @@ namespace Messages
             }
         }
     
-        public void ParseFile(string fileName)
+        public bool ParseFile(string fileName)
         {
             string msgFile = File.ReadAllText(fileName);
         
             errors.Clear();
             InitializeVariables();
             if (ValidMsgLength(msgFile) == false)
-                return;
+                return false;
         
             ParseBlocks(msgFile);
         
-            ValidateBlocks();
+            if(ValidateBlocks() == false)
+                return false;
+
+            return true;
         }
 
         #region Get_Set

@@ -242,6 +242,9 @@ namespace Messages
             {
                 ValidateTags();
 
+                Valid_VR_C1();
+                Valid_VR_C2();
+
                 if (Anomalies.Count > 0)
                     validMessage = false;
             }
@@ -386,6 +389,66 @@ namespace Messages
 
             return allTagsValid;
         }
+
+        #region Network Validated Rules
+        /// <summary>
+        /// Validation rule C1 
+        /// The repetitive sequence must not be present more than ten times (Error code(s): T10).
+        /// </summary>
+        /// <returns></returns>
+        private bool Valid_VR_C1()
+        {
+            bool valid = true;
+            int count21 = 0;
+
+            foreach (TagData<string, string, string, string, int> t in sequenceA)
+            {
+                if (t.Tag.Equals("21") == true)
+                    count21++;
+            }
+            
+            if (count21 > 10)
+            { 
+                    valid = false;
+                    Anomalies.Add("ERROR T10 : There are more than 10 repetitive sections in this message.");
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Validation Rule C2
+        /// The currency code in the amount field 32a must be the same for all occurrences of this field in the message (Error code(s): C02).
+        /// </summary>
+        /// <returns></returns>
+        private bool Valid_VR_C2()
+        {
+            bool valid = true;
+            List<string> currencies = new List<string>();
+            List<string> filteredCcys = new List<string>();
+
+            foreach (TagData<string, string, string, string, int> t in sequenceA)
+            {
+                if (t.Tag.Equals("32A") == true && t.Present == 1)
+                {
+                    currencies.Add(t.Value.Substring(6, 3));
+                }
+                else if (t.Tag.Equals("32B") == true && t.Present == 1)
+                {
+                    currencies.Add(t.Value.Substring(0, 3));
+                }
+            }
+
+            filteredCcys = currencies.Distinct().ToList();
+            if (filteredCcys.Count() > 1)
+            {
+                valid = false;
+                Anomalies.Add("ERROR C02 : There are multiple currencies in this message.");
+            }
+
+            return valid;
+        }
+        #endregion
 
         #region FIELD VALIDATIONS
         #region SEQUENCE A
@@ -1113,31 +1176,11 @@ namespace Messages
         /// <returns></returns>
         public string getT59_PayeeAccount(List<TagData<string, string, string, string, int>> seq)
         {
-            string rawStr = GetTagValue(seq, "59");
             List<string> retLst = new List<string>();
-            string[] stringSeparators = new string[] { "\r\n" };
 
             try
             {
-                if (rawStr != null && rawStr.Length >= 1 && isTagPresentInSequence(seq, "59") == true)
-                {
-                    if (rawStr[0].Equals("/"))
-                    {
-                        string[] lines = rawStr.Split(stringSeparators, StringSplitOptions.None);
-                        retLst.Add(lines[0].Substring(1));  // remoive the first '/'
-                        retLst.Add(lines[1]);
-                    }
-                    else
-                    {
-                        retLst.Add(null);
-                        retLst.Add(rawStr);
-                    }
-                }
-                else
-                {
-                    retLst.Add(null);
-                    retLst.Add(null);
-                }
+                retLst = parseAcctNameAddr(seq, "59");
             }
             catch (Exception ex)
             {
@@ -1156,31 +1199,11 @@ namespace Messages
         /// <returns></returns>
         public string getT59_PayeeNameAddr(List<TagData<string, string, string, string, int>> seq)
         {
-            string rawStr = GetTagValue(seq, "59");
             List<string> retLst = new List<string>();
-            string[] stringSeparators = new string[] { "\r\n" };
 
             try
             {
-                if (rawStr != null && rawStr.Length >= 1 && isTagPresentInSequence(seq, "59") == true)
-                {
-                    if (rawStr[0].Equals("/"))
-                    {
-                        string[] lines = rawStr.Split(stringSeparators, StringSplitOptions.None);
-                        retLst.Add(lines[0].Substring(1));  // remoive the first '/'
-                        retLst.Add(lines[1]);
-                    }
-                    else
-                    {
-                        retLst.Add(null);
-                        retLst.Add(rawStr);
-                    }
-                }
-                else
-                {
-                    retLst.Add(null);
-                    retLst.Add(null);
-                }
+                retLst = parseAcctNameAddr(seq, "59");
             }
             catch (Exception ex)
             {
@@ -1199,31 +1222,11 @@ namespace Messages
         /// <returns></returns>
         public string getT59F_PayeeAccount(List<TagData<string, string, string, string, int>> seq)
         {
-            string rawStr = GetTagValue(seq, "59F");
             List<string> retLst = new List<string>();
-            string[] stringSeparators = new string[] { "\r\n" };
 
             try
             {
-                if (rawStr != null && rawStr.Length >= 1 && isTagPresentInSequence(seq, "59F") == true)
-                {
-                    if (rawStr[0].Equals("/"))
-                    {
-                        string[] lines = rawStr.Split(stringSeparators, StringSplitOptions.None);
-                        retLst.Add(lines[0].Substring(1));  // remoive the first '/'
-                        retLst.Add(lines[1]);
-                    }
-                    else
-                    {
-                        retLst.Add(null);
-                        retLst.Add(rawStr);
-                    }
-                }
-                else
-                {
-                    retLst.Add(null);
-                    retLst.Add(null);
-                }
+                retLst = parseAcctNameAddr(seq, "59F");
             }
             catch (Exception ex)
             {
@@ -1242,31 +1245,11 @@ namespace Messages
         /// <returns></returns>
         public string getT59F_PayeeNameAddr(List<TagData<string, string, string, string, int>> seq)
         {
-            string rawStr = GetTagValue(seq, "59F");
             List<string> retLst = new List<string>();
-            string[] stringSeparators = new string[] { "\r\n" };
 
             try
             {
-                if (rawStr != null && rawStr.Length >= 1 && isTagPresentInSequence(seq, "59F") == true)
-                {
-                    if (rawStr[0].Equals("/"))
-                    {
-                        string[] lines = rawStr.Split(stringSeparators, StringSplitOptions.None);
-                        retLst.Add(lines[0].Substring(1));  // remoive the first '/'
-                        retLst.Add(lines[1]);
-                    }
-                    else
-                    {
-                        retLst.Add(null);
-                        retLst.Add(rawStr);
-                    }
-                }
-                else
-                {
-                    retLst.Add(null);
-                    retLst.Add(null);
-                }
+                retLst = parseAcctNameAddr(seq, "59F");
             }
             catch (Exception ex)
             {

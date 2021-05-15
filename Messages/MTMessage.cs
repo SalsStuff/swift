@@ -34,7 +34,7 @@ namespace Messages
         public bool AlwaysValidateTag { get; set; } = false;
         #endregion
 
-        protected string whichSequence(List<TagData<string, string, string, string, int>> sequence)
+        protected virtual string whichSequence(List<TagData<string, string, string, string, int>> sequence)
         {
             string seq = null;
 
@@ -284,6 +284,18 @@ namespace Messages
             return sequence;
         }
 
+        protected virtual List<TagData<string, string, string, string, int>> getSequence(string seqId, int idx)
+        {
+            List<TagData<string, string, string, string, int>> sequence = null;
+
+            switch (seqId)
+            {
+                default:
+                    break;
+            }
+            return sequence;
+        }
+
         /// <summary>
         /// Fill in the class variables with the SWIFT message data
         /// </summary>
@@ -468,6 +480,69 @@ namespace Messages
             }
 
             return retLst;
+        }
+
+        /// <summary>
+        /// parseAcctNameAddr
+        /// 
+        /// Returns the account, name and address of the party
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        protected List<string> parseAcctNameAddr(List<TagData<string, string, string, string, int>> seq, string option)
+        {
+            string rawStr = GetTagValue(seq, option);
+            List<string> retLst = new List<string>();
+            string[] stringSeparators = new string[] { "\r\n" };
+
+            try
+            {
+                if (rawStr != null && rawStr.Length >= 1 && isTagPresentInSequence(seq, option) == true)
+                {
+                    if (rawStr[0].Equals("/"))
+                    {
+                        string[] lines = rawStr.Split(stringSeparators, 2, StringSplitOptions.None);
+                        retLst.Add(lines[0].Substring(1));  // remoive the first '/'
+                        retLst.Add(lines[1]);
+                    }
+                    else
+                    {
+                        retLst.Add(null);
+                        retLst.Add(rawStr);
+                    }
+                }
+                else
+                {
+                    retLst.Add(null);
+                    retLst.Add(null);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return retLst;
+        }
+
+        /// <summary>
+        /// getDouble
+        /// 
+        /// Returns the value in tag 36
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public Nullable<double> getDouble(List<TagData<string, string, string, string, int>> seq, string option)
+        {
+            Nullable<double> number = null;
+            double num;
+
+            if (double.TryParse(GetTagValue(seq, option), out num) == true)
+                number = num;
+            else
+                number = null;
+
+            return number;
         }
 
         /// <summary>
@@ -717,26 +792,6 @@ namespace Messages
         public string getT30X(List<TagData<string, string, string, string, int>> seq)
         {
             return GetTagValue(seq, "30X");
-        }
-
-        /// <summary>
-        /// getDouble
-        /// 
-        /// Returns the value in tag 36
-        /// </summary>
-        /// <param name="seq"></param>
-        /// <returns></returns>
-        public Nullable<double> getDouble(List<TagData<string, string, string, string, int>> seq, string option)
-        {
-            Nullable<double> number = null;
-            double num;
-
-            if (double.TryParse(GetTagValue(seq, option), out num) == true)
-                number = num;
-            else
-                number = null;
-
-            return number;
         }
 
         /// <summary>
@@ -1492,6 +1547,56 @@ namespace Messages
         }
 
         /// <summary>
+        /// Is_T21F_Valid
+        /// 
+        /// Validate tag 21F
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        protected virtual bool Is_T21F_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("21F") == true)
+                {
+                    if (field.Present == 1)
+                    {
+                        field.Value = field.Value.Trim();
+                        if (field.Value.Length > 16)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 16 characters.");
+                        }
+                        if (field.Value.Substring(0, 1).Equals("/") == true)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR T26 - Tag " + field.Tag + "," + field.Name + ", starts with a '/'");
+                        }
+                        if (field.Value.Substring(field.Value.Length - 1, 1).Equals("/") == true)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR T26 - Tag " + field.Tag + "," + field.Name + ", ends with a '/'");
+                        }
+                        if (field.Value.Contains("//") == true)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR T26 - Tag " + field.Tag + "," + field.Name + ", contains a '//'");
+                        }
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T21F_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
         /// Is_T21G_Valid
         /// 
         /// Validate tag 21G
@@ -1572,6 +1677,57 @@ namespace Messages
                 {
                     valid = false;
                     Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T21N_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T21R_Valid
+        /// 
+        /// Validate tag 21R
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        protected virtual bool Is_T21R_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 21G is NOT a mandatory field.
+                if (field.Tag.Equals("21R") == true)
+                {
+                    if (field.Present == 1)
+                    {
+                        field.Value = field.Value.Trim();
+                        if (field.Value.Length > 16)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 16 characters.");
+                        }
+                        if (field.Value.Substring(0, 1).Equals("/") == true)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR T26 - Tag " + field.Tag + "," + field.Name + ", starts with a '/'");
+                        }
+                        if (field.Value.Substring(field.Value.Length - 1, 1).Equals("/") == true)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR T26 - Tag " + field.Tag + "," + field.Name + ", ends with a '/'");
+                        }
+                        if (field.Value.Contains("//") == true)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR T26 - Tag " + field.Tag + "," + field.Name + ", contains a '//'");
+                        }
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T21R_Valid");
                 }
             }
 
@@ -1749,6 +1905,61 @@ namespace Messages
         }
 
         /// <summary>
+        /// Is_T23E_Valid
+        /// 
+        /// Validate tag 23E
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        protected virtual bool Is_T23E_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            string code = null;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("23E") == true)
+                {
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length > 35)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 35 characters.");
+                    }
+
+                    code = field.Value.Substring(0, 4);
+                    switch(code)
+                    {
+                        case "CHQB":
+                        case "CMSW":
+                        case "CMTO":
+                        case "CMZB":
+                        case "CORT":
+                        case "EQUI":
+                        case "INTC":
+                        case "NETS":
+                        case "OTHR":
+                        case "PHON":
+                        case "REPA":
+                        case "RTGS":
+                        case "URGP":
+                            break;
+                        default:
+                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", invalid code : " + code);
+                            break;
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T23E_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
         /// Is_T24D_Valid
         /// 
         /// Validate tag 24D
@@ -1787,6 +1998,42 @@ namespace Messages
                     valid = false;
                     Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T24D_Valid");
                 }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T25_Valid
+        /// 
+        /// Validate tag 25
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        protected virtual bool Is_T25_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if ((field.Tag.Equals("25") == true && field.Present == 1) || (field.Tag.Equals("25A") == true && field.Present == 1))
+                {
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length > 35)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 35 characters.");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T25_Valid");
+                }
+            }
+            else if (field.Mandatory.Equals("M") == true)
+            {
+                Anomalies.Add("NOTICE: Mandatory Tag " + field.Tag + " was not present in message - not validated.");
             }
 
             return valid;
@@ -1878,6 +2125,67 @@ namespace Messages
                 {
                     valid = false;
                     Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T12_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T28D_Valid
+        /// 
+        /// Validate tag 28D
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        protected virtual bool Is_T28D_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            int val1 = 0;
+            int val2 = 0;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("28D") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                    }
+                    field.Value = field.Value.Trim();
+                    char[] separator = new char[] { '/' };
+                    string[] nums = field.Value.Split(separator, StringSplitOptions.None);
+
+                    if (nums.Length != 2)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect number of values - must be 2");
+                    }
+                    else
+                    {
+                        int.TryParse(nums[0], out val1);
+                        int.TryParse(nums[1], out val2);
+                        if (val1 < 1 || val1 > 99999)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect Message Index - must be between 1 and 99999");
+                        }
+                        if (val2 < 1 || val2 > 99999)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect Message Total - must be between 1 and 99999");
+                        }
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T28D_Valid");
                 }
             }
             else
@@ -2064,8 +2372,7 @@ namespace Messages
                         }
 
                         string date = strValue.Substring(0, 6);
-                        DateTime result;
-                        if (DateTime.TryParse(date, out result) == false)
+                        if (util.IsDate(date) == false)
                             Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect date format ");
 
                         strValue = strValue.Substring(6, strValue.Length - 6);
@@ -2077,7 +2384,7 @@ namespace Messages
                             Anomalies.Add("ERROR T52 - Tag " + field.Tag + " - Invalid currency : " + ccy);
                         }
 
-                        if(double.TryParse(strValue, out amt) == false)
+                        if(double.TryParse(strValue.Substring(3,strValue.Length-3), out amt) == false)
                         {
                             valid = false;
                             Anomalies.Add("ERROR T52 - Tag " + field.Tag + " - Invalid amount ");
@@ -2257,7 +2564,7 @@ namespace Messages
                     Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T33B_Valid");
                 }
             }
-            else
+            else if (field.Mandatory.Equals("M") == true)
             {
                 Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
             }
@@ -2451,7 +2758,7 @@ namespace Messages
                     Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T36_Valid");
                 }
             }
-            else
+            else if (field.Mandatory.Equals("M") == true)
             {
                 Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
             }
@@ -2635,7 +2942,7 @@ namespace Messages
         /// <summary>
         /// Is_T50_Valid
         /// 
-        /// Validate tag 50
+        /// Validate tags 50A, 50C, 50F, 50G, 50H, 50K and 50L
         /// </summary>
         /// <param name="field"></param>
         /// <returns></returns>
@@ -2645,9 +2952,8 @@ namespace Messages
 
             if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
             {
-                // 52A / 52B / 52D is an optional field.
                 field.Value = field.Value.Trim();
-                if ((field.Tag.Equals("5A") == true) && (field.Present == 1) || (field.Tag.Equals("50F") == true) && (field.Present == 1) || (field.Tag.Equals("50K") == true) && (field.Present == 1))
+                if ((field.Tag.Equals("50A") == true) && (field.Present == 1))
                 {
                     if (field.Value.Length > 48)
                     {
@@ -2655,26 +2961,82 @@ namespace Messages
                         Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 48 characters.");
                     }
                 }
-                else if ((field.Tag.Equals("52B") == true) && (field.Present == 1))
+                else if ((field.Tag.Equals("50C") == true) && (field.Present == 1))
                 {
-                    if (field.Value.Length > 72)
+                    if (field.Value.Length > 11)
                     {
                         valid = false;
-                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 72 characters.");
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 11 characters.");
                     }
                 }
-                else if ((field.Tag.Equals("52D") == true) && (field.Present == 1))
+                else if ((field.Tag.Equals("50F") == true) && (field.Present == 1))
                 {
-                    if (field.Value.Length > 177)
+                    if (field.Value.Length > 179)
                     {
                         valid = false;
-                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 177 characters.");
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 179 characters.");
+                    }
+                }
+                else if ((field.Tag.Equals("50G") == true) && (field.Present == 1))
+                {
+                    if (field.Value.Length > 46)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 46 characters.");
+                    }
+                }
+                else if ((field.Tag.Equals("50H") == true) && (field.Present == 1) || (field.Tag.Equals("50K") == true) && (field.Present == 1))
+                {
+                    if (field.Value.Length > 183)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 183 characters.");
+                    }
+                }
+                else if ((field.Tag.Equals("50L") == true) && (field.Present == 1))
+                {
+                    if (field.Value.Length > 35)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 35 characters.");
                     }
                 }
                 else
                 {
                     valid = false;
-                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T52_Valid");
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T50_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T51A_Valid
+        /// 
+        /// Validate tags 51A
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        protected virtual bool Is_T51A_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                field.Value = field.Value.Trim();
+                if ((field.Tag.Equals("51A") == true) && (field.Present == 1))
+                {
+                    if (field.Value.Length > 50)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 50 characters.");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T51A_Valid");
                 }
             }
 
@@ -2684,7 +3046,7 @@ namespace Messages
         /// <summary>
         /// Is_T52_Valid
         /// 
-        /// Validate tags 52A, 52B and 52D
+        /// Validate tags 52A, 52B, 52C and 52D
         /// </summary>
         /// <param name="field"></param>
         /// <returns></returns>
@@ -2707,6 +3069,14 @@ namespace Messages
                 else if ((field.Tag.Equals("52B") == true) && (field.Present == 1))
                 {
                     if (field.Value.Length > 72)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 72 characters.");
+                    }
+                }
+                else if ((field.Tag.Equals("52C") == true) && (field.Present == 1))
+                {
+                    if (field.Value.Length > 35)
                     {
                         valid = false;
                         Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 72 characters.");
@@ -2743,14 +3113,38 @@ namespace Messages
 
             if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
             {
-                // 53A / 53D / 53J is an optional field.
-                if ((field.Tag.Equals("53A") == true) || (field.Tag.Equals("53D") == true) || (field.Tag.Equals("53J") == true))
+                field.Value = field.Value.Trim();
+                if ((field.Tag.Equals("53A") == true) && (field.Present == 1))
                 {
-                    if (field.Present == 1)
+                    if (field.Value.Length > 48)
                     {
-                        // Add checks
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 48 characters.");
                     }
-                    field.Value = field.Value.Trim();
+                }
+                else if ((field.Tag.Equals("53B") == true) && (field.Present == 1))
+                {
+                    if (field.Value.Length > 72)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 72 characters.");
+                    }
+                }
+                else if ((field.Tag.Equals("53D") == true) && (field.Present == 1))
+                {
+                    if (field.Value.Length > 183)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 183 characters.");
+                    }
+                }
+                else if ((field.Tag.Equals("53J") == true) && (field.Present == 1))
+                {
+                    if (field.Value.Length > 177)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 177 characters.");
+                    }
                 }
                 else
                 {
@@ -2825,13 +3219,38 @@ namespace Messages
             if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
             {
                 // 56A / 56D / 56J is an optional field.
-                if ((field.Tag.Equals("56A") == true) || (field.Tag.Equals("56D") == true) || (field.Tag.Equals("56J") == true))
+                field.Value = field.Value.Trim();
+                if ((field.Tag.Equals("56A") == true) && (field.Present == 1))
                 {
-                    if (field.Present == 1)
+                    if (field.Value.Length > 50)
                     {
-                        // Add checks
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 50 characters.");
                     }
-                    field.Value = field.Value.Trim();
+                }
+                else if ((field.Tag.Equals("56C") == true) && (field.Present == 1))
+                {
+                    if (field.Value.Length > 35)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 35 characters.");
+                    }
+                }
+                else if ((field.Tag.Equals("56D") == true) && (field.Present == 1))
+                {
+                    if (field.Value.Length > 186)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 186 characters.");
+                    }
+                }
+                else if ((field.Tag.Equals("56J") == true) && (field.Present == 1))
+                {
+                    if (field.Value.Length > 210)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 210 characters.");
+                    }
                 }
                 else
                 {
@@ -2857,13 +3276,38 @@ namespace Messages
             if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
             {
                 // 57A / 57D / 57J is an optional field.
-                if ((field.Tag.Equals("57A") == true) || (field.Tag.Equals("57D") == true) || (field.Tag.Equals("57J") == true))
+                field.Value = field.Value.Trim();
+                if ((field.Tag.Equals("57A") == true) && (field.Present == 1))
                 {
-                    if (field.Present == 1)
+                    if (field.Value.Length > 50)
                     {
-                        // Add checks
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 50 characters.");
                     }
-                    field.Value = field.Value.Trim();
+                }
+                else if ((field.Tag.Equals("57C") == true) && (field.Present == 1))
+                {
+                    if (field.Value.Length > 35)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 35 characters.");
+                    }
+                }
+                else if ((field.Tag.Equals("57D") == true) && (field.Present == 1))
+                {
+                    if (field.Value.Length > 186)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 186 characters.");
+                    }
+                }
+                else if ((field.Tag.Equals("57J") == true) && (field.Present == 1))
+                {
+                    if (field.Value.Length > 210)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 210 characters.");
+                    }
                 }
                 else
                 {
@@ -2921,22 +3365,114 @@ namespace Messages
             if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
             {
                 // 21 is NOT a mandatory field.
-                if (field.Tag.Equals("59") == true)
+                if ((field.Tag.Equals("59") == true) && (field.Present == 1))
                 {
-                    if (field.Present == 1)
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length > 174)
                     {
-                        field.Value = field.Value.Trim();
-                        if (field.Value.Length > 174)
-                        {
-                            valid = false;
-                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 174 characters.");
-                        }
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 174 characters.");
+                    }
+                }
+                else if ((field.Tag.Equals("59A") == true) && (field.Present == 1))
+                {
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length > 48)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 48 characters.");
+                    }
+                }
+                else if ((field.Tag.Equals("59F") == true) && (field.Present == 1))
+                {
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length > 181)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 181 characters.");
                     }
                 }
                 else
                 {
                     valid = false;
                     Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T59_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T70_Valid
+        /// 
+        /// Validate tag 70
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        protected virtual bool Is_T70_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 21 is NOT a mandatory field.
+                if ((field.Tag.Equals("70") == true) && (field.Present == 1))
+                {
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length > 148)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 148 characters.");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T70_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T71A_Valid
+        /// 
+        /// Validate tag 71A
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        protected virtual bool Is_T71A_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if ((field.Tag.Equals("71A") == true && field.Present == 1))
+                {
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length > 3)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 3 characters.");
+                    }
+
+                    switch(field.Value)
+                    {
+                        case "BEN":
+                        case "OUR":
+                        case "SHA":
+                            break;
+                        default:
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + " , " + field.Value + ", is not a valid code.");
+                            break;
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T71A_Valid");
                 }
             }
 
@@ -3099,35 +3635,40 @@ namespace Messages
         }
 
         /// <summary>
-        /// Is_T77D_Valid
+        /// Is_T77_Valid
         /// 
-        /// Validate tag 77D
+        /// Validate tag 77B and 77D
         /// </summary>
         /// <param name="field"></param>
         /// <returns></returns>
-        protected virtual bool Is_T77D_Valid(TagData<string, string, string, string, int> field)
+        protected virtual bool Is_T77_Valid(TagData<string, string, string, string, int> field)
         {
             bool valid = true;
 
             if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
             {
-                // 77D is NOT a mandatory field.
-                if (field.Tag.Equals("77D") == true)
+                if (field.Tag.Equals("77B") == true && field.Present == 1)
                 {
-                    if (field.Present == 1)
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length > 111)
                     {
-                        field.Value = field.Value.Trim();
-                        if (field.Value.Length > 210)
-                        {
-                            valid = false;
-                            Anomalies.Add("ERROR - Tag " + field.Tag + " value to long");
-                        }
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " value to long");
+                    }
+                }
+                else if (field.Tag.Equals("77D") == true && field.Present == 1)
+                {
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length > 210)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " value to long");
                     }
                 }
                 else
                 {
                     valid = false;
-                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T77D_Valid");
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T77_Valid");
                 }
             }
 

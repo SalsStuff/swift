@@ -553,7 +553,7 @@ namespace Messages
                                 validTag = false;
                             break;
                         case "77D":
-                            if (Is_T77D_Valid(field) == false)
+                            if (Is_T77_Valid(field) == false)
                                 validTag = false;
                             break;
                         case "82A":
