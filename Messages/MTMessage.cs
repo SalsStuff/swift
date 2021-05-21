@@ -324,6 +324,31 @@ namespace Messages
         }
 
         /// <summary>
+        /// Parse a pipe delimited SWIFT message
+        /// </summary>
+        /// <param name="message"></param>
+        protected virtual void ParsePipeMsg(string message)
+        {
+
+        }
+
+        protected virtual string GeDetailtXML()
+        {
+            using (var sw = new StringWriter())
+            {
+                using (var xw = XmlWriter.Create(sw))
+                {
+                    // Build Xml with xw.
+
+
+                }
+
+                return sw.ToString();
+            }
+        }
+
+        #region Parser General Methods
+        /// <summary>
         /// parseCcyAmt
         /// 
         /// Parses Tags 32B, 32H and 34E
@@ -546,30 +571,80 @@ namespace Messages
         }
 
         /// <summary>
-        /// Parse a pipe delimited SWIFT message
+        /// getInt
+        /// 
+        /// Returns the value in tag 18A
         /// </summary>
-        /// <param name="message"></param>
-        protected virtual void ParsePipeMsg(string message)
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public Nullable<int> getInt(List<TagData<string, string, string, string, int>> seq, string option)
         {
+            Nullable<int> number = null;
+            int num;
 
+            if (int.TryParse(GetTagValue(seq, option), out num) == true)
+                number = num;
+            else
+                number = null;
+
+            return number;
         }
-
-        protected virtual string GeDetailtXML()
-        {
-            using (var sw = new StringWriter())
-            {
-                using (var xw = XmlWriter.Create(sw))
-                {
-                    // Build Xml with xw.
-
-
-                }
-
-                return sw.ToString();
-            }
-        }
+        #endregion
 
         #region GET TAG FUNCTIONS
+        /// <summary>
+        /// getT11A
+        /// 
+        /// Returns the values of tag 11A
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT11A(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = new List<string>();
+            string value = GetTagValue(seq, "13C");
+            string[] separator = new string[] { "//" };
+            string[] input = value.Split(separator, StringSplitOptions.None);
+
+            data.Add(input[0]);
+            data.Add(input[1]);
+
+            return data;
+        }
+
+        /// <summary>
+        /// getT12
+        /// 
+        /// Returns the value in tag 12
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT12(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "12");
+        }
+
+        /// <summary>
+        /// getT13C
+        /// 
+        /// Returns the values of tag 13C
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT13C(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = new List<string>();
+            string value = GetTagValue(seq, "13C");
+            char[] separator = new char[] { '/' };
+            string[] input = value.Split(separator, StringSplitOptions.None);
+
+            data.Add(input[1]);
+            data.Add(input[2].Substring(0, 4));
+            data.Add(input[2].Substring(4, 5));
+
+            return data;
+        }
+
         /// <summary>
         /// getT14D
         /// 
@@ -595,23 +670,15 @@ namespace Messages
         }
 
         /// <summary>
-        /// getInt
+        /// getT18A
         /// 
         /// Returns the value in tag 18A
         /// </summary>
         /// <param name="seq"></param>
         /// <returns></returns>
-        public Nullable<int> getInt(List<TagData<string, string, string, string, int>> seq, string option)
+        public Nullable<int> getT18A(List<TagData<string, string, string, string, int>> seq)
         {
-            Nullable<int> number = null;
-            int num;
-
-            if (int.TryParse(GetTagValue(seq, option), out num) == true)
-                number = num;
-            else
-                number = null;
-
-            return number;
+            return getInt(seq, "18A");
         }
 
         /// <summary>
@@ -639,6 +706,18 @@ namespace Messages
         }
 
         /// <summary>
+        /// getT21F
+        /// 
+        /// Returns the value in tag 21F.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT21F(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "21F");
+        }
+
+        /// <summary>
         /// getT21G
         /// 
         /// Returns the value in tag 21G.
@@ -660,6 +739,18 @@ namespace Messages
         public string getT21N(List<TagData<string, string, string, string, int>> seq)
         {
             return GetTagValue(seq, "21N");
+        }
+
+        /// <summary>
+        /// getT21R
+        /// 
+        /// Returns the value in tag 21R.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT21R(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "21R");
         }
 
         /// <summary>
@@ -699,6 +790,74 @@ namespace Messages
         }
 
         /// <summary>
+        /// getT23E
+        /// 
+        /// Returns a list containing the instructions to be used between the ordering customer and the account servicer.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT23E(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> instructions = new List<string>();
+            string value = GetTagValue(seq, "23E");
+            char[] separator = new char[] { '/' };
+            string[] input = value.Split(separator, StringSplitOptions.None);
+            int i = 0;
+
+            for (i = 0; i < input.Length; i++)
+                instructions.Add(input[i]);
+
+            return instructions;
+        }
+
+        /// <summary>
+        /// getT24D
+        /// 
+        /// Returns the Value of tag 24D
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT24D(List<TagData<string, string, string, string, int>> seq)
+        {
+            string method = null;
+
+            method = GetTagValue(seq, "24D");
+
+            if (method.Length >= 5)
+                method = method.Substring(5, method.Length - 5);
+            else
+                method = null;
+
+            return method;
+        }
+
+        /// <summary>
+        /// getT25
+        /// 
+        /// Returns the value 0f tag 25.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT25(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "25");
+        }
+
+        /// <summary>
+        /// getT25A
+        /// 
+        /// Returns the value 0f tag 25A.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT25A(List<TagData<string, string, string, string, int>> seq)
+        {
+            string value = GetTagValue(seq, "25A");
+
+            return value.Substring(1, value.Length);
+        }
+
+        /// <summary>
         /// getT26H
         /// 
         /// Returns the value of tag 26H
@@ -708,6 +867,52 @@ namespace Messages
         public string getT26H(List<TagData<string, string, string, string, int>> seq)
         {
             return GetTagValue(seq, "26H");
+        }
+
+        /// <summary>
+        /// getT27
+        /// 
+        /// Returns a list of values from tag 27
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<int> getT27(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<int> values = new List<int>();
+            int messageNum = 0, sequenceNum = 0;
+            string val = GetTagValue(seq, "27");
+
+            int.TryParse(val.Substring(0, 1), out messageNum);
+            int.TryParse(val.Substring(1, 2), out sequenceNum);
+            values.Add(messageNum);
+            values.Add(sequenceNum);
+
+            return values;
+        }
+
+        /// <summary>
+        /// getT28D
+        /// 
+        /// Returns the value 0f tag 28D.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<int> getT28D(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<int> idxTot = new List<int>();
+            string value = GetTagValue(seq, "23E");
+            char[] separator = new char[] { '/' };
+            string[] input = value.Split(separator, StringSplitOptions.None);
+            int i = 0;
+            int num = 0;
+
+            for (i = 0; i < input.Length; i++)
+            {
+                int.TryParse(input[i], out num);
+                idxTot.Add(num);
+            }
+
+            return idxTot;
         }
 
         /// <summary>
@@ -795,6 +1000,445 @@ namespace Messages
         }
 
         /// <summary>
+        /// getT32A
+        /// 
+        /// Returns a list of values from tag 32A
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT32A(List<TagData<string, string, string, string, int>> seq)
+        {
+            string date = null;
+            string ccy = null;
+            Nullable<double> amount = null;
+            List<string> data = new List<string>();
+
+            try
+            {
+                parseDateCcyAmt(seq, "32A", out date, out ccy, out amount);
+                data.Add(date);
+                data.Add(ccy);
+                data.Add(amount.ToString());
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return data;
+        }
+
+        /// <summary>
+        /// getT32B
+        /// 
+        /// Returns a list of values for tag 32B
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT32B(List<TagData<string, string, string, string, int>> seq)
+        {
+            string ccy = null;
+            Nullable<double> amount = null;
+            List<string> data = new List<string>();
+
+            try
+            {
+                parseCcyAmt(seq, "32B", out ccy, out amount);
+                data.Add(ccy);
+                data.Add(amount.ToString());
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return data;
+        }
+
+        /// <summary>
+        /// getT33B
+        /// 
+        /// Returns a list of values for tag 33B
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT33B(List<TagData<string, string, string, string, int>> seq)
+        {
+            string ccy = null;
+            Nullable<double> amount = null;
+            List<string> data = new List<string>();
+
+            try
+            {
+                parseCcyAmt(seq, "33B", out ccy, out amount);
+                data.Add(ccy);
+                data.Add(amount.ToString());
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return data;
+        }
+
+        public Nullable<double> getT36(List<TagData<string, string, string, string, int>> seq)
+        {
+            string rate = GetTagValue(seq, "36");
+            Nullable<double> exchangeRate = null;
+
+            if (!rate.Equals(""))
+                exchangeRate = Convert.ToDouble(rate);
+
+            return exchangeRate;
+        }
+
+        /// <summary>
+        /// getT50A
+        /// 
+        /// Returns a List of values for tag 50A
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT50A(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "50A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
+        /// getT50C
+        /// 
+        /// Returns the value of tag 50C
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT50C(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "50C");
+        }
+
+        /// <summary>
+        /// getT50L
+        /// 
+        /// Returns the value of tag 50L
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT50L(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "50L");
+        }
+
+        /// <summary>
+        /// getT50F
+        /// 
+        /// Returns a list of values from tag 50F
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT50F(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "50F");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
+        /// getT50K
+        /// 
+        /// Returns a list of values from tag 50K
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT50K(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "50K");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
+        /// getT52A
+        /// 
+        /// Returns a list of values from tag 52A
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT52A(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "52A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
+        /// getT52B
+        /// 
+        /// Return a list of values from tag 52B
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT52B(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "52B");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
+        /// getT52D
+        /// 
+        /// Returns a list of values for tag 52D
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT52D(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "52D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
+        /// getT53A
+        /// 
+        /// Returns a list of values for tag 53A
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT53A(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+            try
+            {
+                lst = parsePartyAgent(seq, "53A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
+        /// getT53B
+        /// 
+        /// Returns a list of values for tag 53B
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT53B(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "53B");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
+        /// getT53D
+        /// 
+        /// Returns a list of values for tag 53D
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT53D(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "53D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
+        /// getT54A
+        /// 
+        /// Returns a list of values for tag 54A
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT54A(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+            try
+            {
+                lst = parsePartyAgent(seq, "54A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
+        /// getT54B
+        /// 
+        /// Returns a list of values for tag 54B
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT54B(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "54B");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
+        /// getT54D
+        /// 
+        /// Returns a list of values for tag 54D
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT54D(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "54D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
+        /// getT59
+        /// 
+        /// Returns a list of values for tag 59
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT59(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> retLst = new List<string>();
+
+            try
+            {
+                retLst = parseAcctNameAddr(seq, "59");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return retLst;
+        }
+
+        /// <summary>
+        /// getT59F
+        /// 
+        /// Returns a list of values for tag 59F
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT59F(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> retLst = new List<string>();
+
+            try
+            {
+                retLst = parseAcctNameAddr(seq, "59F");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return retLst;
+        }
+
+        /// <summary>
         /// getT72
         /// 
         /// Returns the value in tag 72
@@ -840,6 +1484,18 @@ namespace Messages
         public string getT77D(List<TagData<string, string, string, string, int>> seq)
         {
             return GetTagValue(seq, "77D");
+        }
+
+        /// <summary>
+        /// getT77F
+        /// 
+        /// Returns the value of tag 77F
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT77F(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "77F");
         }
 
         /// <summary>
@@ -900,6 +1556,70 @@ namespace Messages
                 }
             }
             else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T13C_Valid
+        /// 
+        /// Validate tag 13C
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        protected virtual bool Is_T13C_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("13C") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                    }
+                    field.Value = field.Value.Trim();
+                    char[] separator = new char[] { '/' };
+                    string[] nums = field.Value.Split(separator, StringSplitOptions.None);
+
+                    if (nums.Length == 2)
+                    {
+                        switch(nums[0])
+                        {
+                            case "CLSTIME":
+                            case "RNCTIME":
+                            case "SNDTIME":
+                                break;
+                            default:
+                                valid = false;
+                                Anomalies.Add("ERROR - Incorrect code " + nums[0] + " in " + field.Tag + "," + field.Name);
+                                break;
+                        }
+
+                        if(nums[1].Length != 9)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Incorrect Time field in " + field.Tag + "," + field.Name + "must be 9 characters");
+                        }
+                    }
+                    else
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + " - Incorrect Message format");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T13C_Valid");
+                }
+            }
+            else if (field.Mandatory.Equals("M") == true)
             {
                 Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
             }
@@ -1432,6 +2152,53 @@ namespace Messages
         }
 
         /// <summary>
+        /// Is_T19_Valid
+        /// 
+        /// Validate tag 19
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        protected virtual bool Is_T19_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            double num = 0.0;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("19") == true)
+                {
+                    field.Value = field.Value.Trim();
+                    if (field.Value.Length > 17 || field.Value.Length < 2)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T40 - Tag " + field.Tag + "," + field.Name + ", this field must contain at least 1 digit and a decomal point or comma and no more than 12 characters.");
+                    }
+                    if (field.Value.Contains(".") == false && field.Value.Contains(",") == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR T43 - Tag " + field.Tag + "," + field.Name + ", this field must contain a decomal point or comma.");
+                    }
+                    if (double.TryParse(field.Value, out num) == false)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ",this is not a valid numeric value.");
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T19_Valid");
+                }
+            }
+            else if (field.Mandatory.Equals("M") == true)
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+
+        /// <summary>
         /// Is_T20_Valid
         /// 
         /// Validate tag 20
@@ -1905,6 +2672,72 @@ namespace Messages
         }
 
         /// <summary>
+        /// Is_T23_Valid
+        /// 
+        /// Validate tag 23
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        protected virtual bool Is_T23_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("23") == true)
+                {
+                    if (field.Present == 0)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
+                    }
+                    else
+                    {
+                        field.Value = field.Value.Trim();
+                        if (field.Value.Length > 16)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 16 characters.");
+                        }
+
+                        if (field.Value.Contains("CHQB") == true)
+                        {
+                            valid = true;
+                        }
+                        else if (field.Value.Contains("CREDIT") == true)
+                        {
+                            valid = true;
+                        }
+                        else if (field.Value.Contains("CRTST") == true)
+                        {
+                            valid = true;
+                        }
+                        else if (field.Value.Contains("SPAY") == true)
+                        {
+                            valid = true;
+                        }
+                        else
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR T26 - Tag " + field.Tag + "," + field.Name + ", contains an invalid code");
+                        }
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T23_Valid");
+                }
+            }
+            else
+            {
+                Anomalies.Add("NOTICE: Tag " + field.Tag + " was not present in message - not validated.");
+            }
+
+            return valid;
+        }
+
+        /// <summary>
         /// Is_T23E_Valid
         /// 
         /// Validate tag 23E
@@ -2069,6 +2902,42 @@ namespace Messages
                 {
                     valid = false;
                     Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T26H_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
+        /// Is_T26T_Valid
+        /// 
+        /// Validate tag 26T
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        protected virtual bool Is_T26T_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                // 21G is NOT a mandatory field.
+                if (field.Tag.Equals("26T") == true)
+                {
+                    if (field.Present == 1)
+                    {
+                        field.Value = field.Value.Trim();
+                        if (field.Value.Length != 3)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", field must be 3 characters.");
+                        }
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T26T_Valid");
                 }
             }
 
@@ -2727,14 +3596,8 @@ namespace Messages
 
             if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
             {
-                // 20 is a mandatory field in a mandatory block. It must be present
                 if (field.Tag.Equals("36") == true)
                 {
-                    if (field.Present == 0)
-                    {
-                        valid = false;
-                        Anomalies.Add("ERROR - MANDATORY Tag " + field.Tag + "," + field.Name + ", is not present in message");
-                    }
                     field.Value = field.Value.Trim();
                     if (field.Value.Length > 12 || field.Value.Length < 2)
                     {
@@ -3060,7 +3923,7 @@ namespace Messages
                 field.Value = field.Value.Trim();
                 if ((field.Tag.Equals("52A") == true) && (field.Present == 1))
                 {
-                    if (field.Value.Length > 48)
+                    if (field.Value.Length > 50)
                     {
                         valid = false;
                         Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 48 characters.");
@@ -3130,6 +3993,14 @@ namespace Messages
                         Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 72 characters.");
                     }
                 }
+                else if ((field.Tag.Equals("53C") == true) && (field.Present == 1))
+                {
+                    if (field.Value.Length > 35)
+                    {
+                        valid = false;
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 35 characters.");
+                    }
+                }
                 else if ((field.Tag.Equals("53D") == true) && (field.Present == 1))
                 {
                     if (field.Value.Length > 183)
@@ -3173,10 +4044,10 @@ namespace Messages
                 field.Value = field.Value.Trim();
                 if ((field.Tag.Equals("54A") == true) && (field.Present == 1))
                 {
-                    if (field.Value.Length > 48)
+                    if (field.Value.Length > 50)
                     {
                         valid = false;
-                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 48 characters.");
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 50 characters.");
                     }
                 }
                 else if ((field.Tag.Equals("54B") == true) && (field.Present == 1))
@@ -3451,10 +4322,10 @@ namespace Messages
                 if ((field.Tag.Equals("71A") == true && field.Present == 1))
                 {
                     field.Value = field.Value.Trim();
-                    if (field.Value.Length > 3)
+                    if (field.Value.Length != 3)
                     {
                         valid = false;
-                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 3 characters.");
+                        Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", must be 3 characters.");
                     }
 
                     switch(field.Value)
@@ -3532,6 +4403,57 @@ namespace Messages
         }
 
         /// <summary>
+        /// Is_T71G_Valid
+        /// 
+        /// Validate tag 71G
+        /// </summary>
+        /// <param name="field"></param>
+        /// <returns></returns>
+        protected virtual bool Is_T71G_Valid(TagData<string, string, string, string, int> field)
+        {
+            bool valid = true;
+            string ccy = null;
+            Util u = new Util();
+            double num = 0.0;
+
+            if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
+            {
+                if (field.Tag.Equals("71G") == true)
+                {
+                    if (field.Present == 1)
+                    {
+                        field.Value = field.Value.Trim();
+                        if (field.Value.Length > 18)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 18 characters.");
+                        }
+
+                        ccy = field.Value.Substring(0, 3);
+                        if ((u.IsValidCcy(ccy) == false))
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", field must contain a valid ISO currency.");
+                        }
+
+                        if (Double.TryParse(field.Value.Substring(3, field.Value.Length - 3), out num) == false)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + " - amount is not a double. ");
+                        }
+                    }
+                }
+                else
+                {
+                    valid = false;
+                    Anomalies.Add("ERROR - Tag " + field.Tag + " was passed to Is_T71G_Valid");
+                }
+            }
+
+            return valid;
+        }
+
+        /// <summary>
         /// Is_T72_Valid
         /// 
         /// Validate tag 72
@@ -3545,12 +4467,16 @@ namespace Messages
 
             if (field.Mandatory.Equals("M") || (field.Mandatory.Equals("O") && field.Present == 1) || (AlwaysValidateTag == true))
             {
-                // 72 is NOT a mandatory field.
                 if (field.Tag.Equals("72") == true)
                 {
                     if (field.Present == 1)
                     {
-                        // validation code
+                        field.Value = field.Value.Trim();
+                        if (field.Value.Length > 222)
+                        {
+                            valid = false;
+                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 222 characters.");
+                        }
                     }
                 }
                 else
@@ -3581,10 +4507,10 @@ namespace Messages
                     if (field.Present == 1)
                     {
                         field.Value = field.Value.Trim();
-                        if (field.Value.Length > 210)
+                        if (field.Value.Length > 222)
                         {
                             valid = false;
-                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 210 characters.");
+                            Anomalies.Add("ERROR - Tag " + field.Tag + "," + field.Name + ", is greater than 222 characters.");
                         }
                     }
                 }

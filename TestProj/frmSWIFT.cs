@@ -591,9 +591,35 @@ namespace TestProj
 
         private void btnTest_Click(object sender, EventArgs e)
         {
+            string mtype = BH.MessageType;
 
-            ((MT320)MsgContainer).testFunctions();
-            
+            try
+            {
+                switch (mtype)
+                {
+                    case "105":
+                        ((MT105)MsgContainer).testFunctions();
+                        break;
+                    case "110":
+                        ((MT110)MsgContainer).testFunctions();
+                        break;
+                    case "111":
+                        ((MT111)MsgContainer).testFunctions();
+                        break;
+                    case "112":
+                        ((MT112)MsgContainer).testFunctions();
+                        break;
+                    case "320":
+                        ((MT320)MsgContainer).testFunctions();
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }
     }
 }

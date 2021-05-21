@@ -7,7 +7,7 @@ using Database;
 
 namespace Messages
 {
-    class SequenceA
+    class MT101SequenceA
     {
         // Sequence A - Mandatory
         // Sequence A General Information contains general information about the fixed loan/deposit as well as about the confirmation itself.
@@ -30,7 +30,7 @@ namespace Messages
         };
     }
 
-    class SequenceB
+    class MT101SequenceB
     {
         // Sequence B - Mandatory
         // Sequence B Transaction Details contains information about the transaction.
@@ -73,9 +73,8 @@ namespace Messages
         DBUtils dbu = new DBUtils();
 
         #region SEQUENCE_VARIABLES
-        SequenceA sequenceA = new SequenceA();
-        //SequenceB sequenceB = new SequenceB();
-        List<SequenceB> BLst = new List<SequenceB>();
+        MT101SequenceA sequenceA = new MT101SequenceA();
+        List<MT101SequenceB> BLst = new List<MT101SequenceB>();
         #endregion
 
         #region MESSAGE SETUP
@@ -212,7 +211,7 @@ namespace Messages
                 if (keyPair[0].Equals("21") == true)
                 {
                     Bidx++;
-                    BLst.Add(new SequenceB());
+                    BLst.Add(new MT101SequenceB());
                     useSequence = BLst[Bidx].seq;
 
                     numOfSequences = Bidx + 2;
@@ -507,7 +506,7 @@ namespace Messages
                     }
                 }
  
-                if ((sid.Equals("A") == true) && (T59present == 2))
+                if ((sid.Equals("B") == true) && (T59present == 3))
                     Anomalies.Add("ERROR: Mandatory Tag 59 is not present in any variantion");
             }
 
@@ -515,5 +514,258 @@ namespace Messages
         }
         #endregion
 
+        #region TAG PARSING
+        /// <summary>
+        /// getT20_SendersReference
+        /// 
+        /// Returns the reference assigned by the Sender to unambiguously identify the message.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT20_SendersReference(List<TagData<string, string, string, string, int>> seq)
+        {
+            return getT20(seq);
+        }
+
+        /// <summary>
+        /// getT21_TransactionReference
+        /// 
+        /// Returns the unique reference for the individual transaction contained in a particular occurrence of sequence B.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT21_TransactionReference(List<TagData<string, string, string, string, int>> seq)
+        {
+            return getT21(seq);
+        }
+
+        /// <summary>
+        /// getT21F_FXDealReference
+        /// 
+        /// Returns the foreign exchange contract reference between the ordering customer and the account servicing financial institution.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT21F_FXDealReference(List<TagData<string, string, string, string, int>> seq)
+        {
+            return getT21F(seq);
+        }
+
+        /// <summary>
+        /// getT21R_CustomerSpecifiedReference
+        /// 
+        /// Returns the reference to the entire message assigned by either the, instructing party, when present or ordering customer, when the instructing party is not present.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT21R_CustomerSpecifiedReference(List<TagData<string, string, string, string, int>> seq)
+        {
+            return getT21R(seq);
+        }
+
+        /// <summary>
+        /// getT23E_InstructionCode
+        /// 
+        /// Returns the specified instruction code
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT23E_InstructionCode(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> values = getT23E(seq);
+
+            return values[0];
+        }
+
+        /// <summary>
+        /// getT23E_Information
+        /// 
+        /// Returns the additional information associated with the specified instruction code
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT23E_Information(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> values = getT23E(seq);
+
+            return values[1];
+        }
+
+        /// <summary>
+        /// getT25_Authorisation
+        /// 
+        /// Returns the additional security provisions, for example, a digital signature, 
+        /// between the ordering customer/instructing party and the account servicing financial institution.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT25_Authorisation(List<TagData<string, string, string, string, int>> seq)
+        {
+            return getT25(seq);
+        }
+
+        /// <summary>
+        /// getT25A_ChargesAccount
+        /// 
+        /// Returns the ordering customer's account number to which applicable transaction charges should be separately applied.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT25A_ChargesAccount(List<TagData<string, string, string, string, int>> seq)
+        {
+            return getT25A(seq);
+        }
+
+        /// <summary>
+        /// getT28D_MessageIndex
+        /// 
+        /// Returns the sequence number of the chained messages
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public int getT28D_MessageIndex(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<int> values = getT28D(seq);
+
+            return (values[0]);
+        }
+
+        /// <summary>
+        /// getT28D_TotalMessage
+        /// 
+        /// Returns the total number of chained messages
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public int getT28D_TotalMessage(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<int> values = getT28D(seq);
+
+            return (values[1]);
+        }
+
+        /// <summary>
+        /// getT30_RequestedExecutionDate
+        /// 
+        /// Returns the date on which the cheque was drawn.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT30_RequestedExecutionDate(List<TagData<string, string, string, string, int>> seq)
+        {
+            return getT30(seq);
+        }
+
+        /// <summary>
+        /// getT32B_Currency
+        /// 
+        /// Returns the currency of the subsequent transfer to be executed by the Receiver.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT32B_Currency(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string > data = getT32B(seq);
+
+            return data[0];
+        }
+
+        /// <summary>
+        /// getT32B_Amount
+        /// 
+        /// Returns the amount of the subsequent transfer to be executed by the Receiver.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public Nullable<double> getT32B_Amount(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT32B(seq);
+            Nullable<double> amount = null;
+
+            if (data[1] != null)
+                amount = Convert.ToDouble(data[1]);
+
+            return amount;
+        }
+
+        /// <summary>
+        /// getT33B_Currency
+        /// 
+        /// Returns the original currency as specified by the ordering customer.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT33B_Currency(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT33B(seq);
+
+            return data[0];
+        }
+
+        /// <summary>
+        /// getT33B_Amount
+        /// 
+        /// Returns the amount as specified by the ordering customer.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public Nullable<double> getT33B_Amount(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT33B(seq);
+            Nullable<double> amount = null;
+
+            if (data[1] != null)
+                amount = Convert.ToDouble(data[1]);
+
+            return amount;
+        }
+
+        /// <summary>
+        /// getT36_ExchangeRate
+        /// 
+        /// 
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public Nullable<double>  getT36_ExchangeRate(List<TagData<string, string, string, string, int>> seq)
+        {
+            return getT36(seq);
+        }
+
+        /// <summary>
+        /// getT50C_IdentifierCode
+        /// 
+        /// 
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT50C_IdentifierCode(List<TagData<string, string, string, string, int>> seq)
+        {
+            return getT50C(seq);
+        }
+
+        /// <summary>
+        /// getT50L_PartyIdentifier
+        /// 
+        /// 
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT50L_PartyIdentifier(List<TagData<string, string, string, string, int>> seq)
+        {
+            return getT50L(seq);
+        }
+        #endregion
+
+        public void testFunctions()
+        {
+            List<string> ls = new List<string>();
+            List<int> li = new List<int>();
+            string ss = null;
+
+            ls = getT23E(BLst[0].seq);
+            ss = getT25A(BLst[0].seq);
+            li = getT28D(BLst[0].seq);
+        }
     }
 }

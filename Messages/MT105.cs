@@ -247,7 +247,7 @@ namespace Messages
         /// <returns></returns>
         public string getT12_SubMessageType(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "12");
+            return getT12(seq);
         }
 
         /// <summary>
@@ -283,12 +283,9 @@ namespace Messages
         /// <returns></returns>
         public int getT27_MessageNumber(List<TagData<string, string, string, string, int>> seq)
         {
-            int num = 0;
-            string val = GetTagValue(seq, "27");
+            List<int> data = getT27(seq);
 
-            int.TryParse(val.Substring(0, 1), out num);
-
-            return num;
+            return data[0];
         }
 
         /// <summary>
@@ -300,12 +297,9 @@ namespace Messages
         /// <returns></returns>
         public int getT27_SequenceNumber(List<TagData<string, string, string, string, int>> seq)
         {
-            int num = 0;
-            string val = GetTagValue(seq, "27");
+            List<int> data = getT27(seq);
 
-            int.TryParse(val.Substring(2, 1), out num);
-
-            return num;
+            return data[1];
         }
 
         /// <summary>
@@ -317,7 +311,7 @@ namespace Messages
         /// <returns></returns>
         public string getT77F_EDIFACTMessage(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "77F");
+            return getT77F(seq);
         }
         #endregion
 
@@ -331,7 +325,7 @@ namespace Messages
             {
                 try
                 {
-                    sqlCmd = "Select max(reference_id) from dbo.MT111_Block1";
+                    sqlCmd = "Select max(reference_id) from dbo.MT105_Block1";
                     ref_id = dbu.getNewReferenceId(sqlCmd, -1);
 
                     dbu.DBBegin(ref_id.ToString());
@@ -359,7 +353,7 @@ namespace Messages
 
             try
             {
-                sqlCmd = "INSERT INTO dbo.MT111_Block1 (reference_id, application_id, service_id, lt_address, bic_code, logical_terminal_code, bic_branch_code, session_number, sequence_number) ";
+                sqlCmd = "INSERT INTO dbo.MT105_Block1 (reference_id, application_id, service_id, lt_address, bic_code, logical_terminal_code, bic_branch_code, session_number, sequence_number) ";
                 sqlCmd += "VALUES('" + refid + "', '" + hdr.ApplicationID + "', '" + hdr.ServiceID + "', '" + hdr.LTAddress + "', '" + hdr.BICCode + "', '" + hdr.LogicalTerminalCode + "', '" + hdr.BICBranchCode + "', '" + hdr.SessionNumber + "', '" + hdr.SequenceNumber + "')";
 
                 dbu.saveMTRecord(sqlCmd);
@@ -379,7 +373,7 @@ namespace Messages
 
             try
             {
-                sqlCmd = "INSERT INTO dbo.MT111_Block2 (reference_id, input_output_id, message_type, destination_address, priority, delivery_monitoring, ";
+                sqlCmd = "INSERT INTO dbo.MT105_Block2 (reference_id, input_output_id, message_type, destination_address, priority, delivery_monitoring, ";
                 sqlCmd += "obsolescence_period, input_time, mir, mir_sender_date, mir_lt_address, mir_bic_code,  mir_lt_code, mir_bic_branch_code, ";
                 sqlCmd += "mir_session_number, mir_sequence_number, output_date, output_time) ";
                 sqlCmd += "VALUES('" + refid + "', '" + hdr.InputOutputID + "', '" + hdr.MessageType + "', '" + hdr.DestinationAddress + "', '";
@@ -404,7 +398,7 @@ namespace Messages
 
             try
             {
-                sqlCmd = "INSERT INTO dbo.MT111_Block3 (reference_id, tag103_service_id, tag113_banking_priority, tag108_mur, tag119_validation_flag, ";
+                sqlCmd = "INSERT INTO dbo.MT105_Block3 (reference_id, tag103_service_id, tag113_banking_priority, tag108_mur, tag119_validation_flag, ";
                 sqlCmd += "tag423_balance_check_point, tag106_mir, tag424_related_reference, tag111_service_type_id, tag121_unique_tran_reference, ";
                 sqlCmd += "tag115_addressee_info, tag165_payment_rir, tag433_sanctions_sir, tag434_payment_cir) ";
                 sqlCmd += "VALUES('" + refid + "', '" + hdr.TAG103_ServiceID + "', '" + hdr.TAG113_BankingPriority + "', '" + hdr.TAG108_MUR + "', '";
@@ -426,7 +420,7 @@ namespace Messages
 
             try
             {
-                sqlCmd = "INSERT INTO dbo.MT111_SequenceA (reference_id, message_number_27, sequence_number_27, transaction_reference_number_20, related_reference_21, ";
+                sqlCmd = "INSERT INTO dbo.MT105_SequenceA (reference_id, message_number_27, sequence_number_27, transaction_reference_number_20, related_reference_21, ";
                 sqlCmd += "sub_message_type_12, edifact_message_77f)";
                 sqlCmd += "VALUES ('" + refid + "', '" +
                                     getT27_MessageNumber(sequenceA) + "', '" +
@@ -453,7 +447,7 @@ namespace Messages
 
             try
             {
-                sqlCmd = "INSERT INTO dbo.MT111_Block5 (reference_id, checksum, tng_message, pde, pde_time, pde_mir, pde_mir_date, pde_mir_lt_id, ";
+                sqlCmd = "INSERT INTO dbo.MT105_Block5 (reference_id, checksum, tng_message, pde, pde_time, pde_mir, pde_mir_date, pde_mir_lt_id, ";
                 sqlCmd += "pde_mir_session_number, pde_mir_sequence_number, dlm, mrf, mrf_date, mrf_time, mrf_mir, pdm, pdm_time,  pdm_mor, ";
                 sqlCmd += "pdm_mor_date, pdm_mor_lt_id, pdm_mor_session_number, pdm_mor_sequence_number, sys, sys_time, sys_mor, sys_mor_date, ";
                 sqlCmd += "sys_mor_lt_id, sys_mor_session_number, sys_mor_sequence_number)";
@@ -475,7 +469,9 @@ namespace Messages
 
         public void testFunctions()
         {
+            List<string> data;
 
+            data = getT13C(sequenceA);
 
         }
     }

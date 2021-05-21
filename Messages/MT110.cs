@@ -503,20 +503,9 @@ namespace Messages
         /// <returns></returns>
         public string getT32A_Date(List<TagData<string, string, string, string, int>> seq)
         {
-            string date = null;
-            string ccy = null;
-            Nullable<double> amount = null;
+            List<string> data = getT32A(seq);
 
-            try
-            {
-                parseDateCcyAmt(seq, "32A", out date, out ccy, out amount);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return date;
+            return data[0];
         }
 
         /// <summary>
@@ -528,20 +517,9 @@ namespace Messages
         /// <returns></returns>
         public string getT32A_Currency(List<TagData<string, string, string, string, int>> seq)
         {
-            string date = null;
-            string ccy = null;
-            Nullable<double> amount = null;
+            List<string> data = getT32A(seq);
 
-            try
-            {
-                parseDateCcyAmt(seq, "32A", out date, out ccy, out amount);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return ccy;
+            return data[1];
         }
 
         /// <summary>
@@ -553,18 +531,11 @@ namespace Messages
         /// <returns></returns>
         public Nullable<double> getT32A_Amount(List<TagData<string, string, string, string, int>> seq)
         {
-            string date = null;
-            string ccy = null;
+            List<string> data = getT32A(seq);
             Nullable<double> amount = null;
 
-            try
-            {
-                parseDateCcyAmt(seq, "32A", out date, out ccy, out amount);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            if (data[2] != null)
+                amount = Convert.ToDouble(data[2]);
 
             return amount;
         }
@@ -578,19 +549,9 @@ namespace Messages
         /// <returns></returns>
         public string getT32B_Currency(List<TagData<string, string, string, string, int>> seq)
         {
-            string ccy = null;
-            Nullable<double> amount = null;
+            List<string> data = getT32B(seq);
 
-            try
-            {
-                parseCcyAmt(seq, "32B", out ccy, out amount);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return ccy;
+            return data[0];
         }
 
         /// <summary>
@@ -602,17 +563,11 @@ namespace Messages
         /// <returns></returns>
         public Nullable<double> getT32B_Amount(List<TagData<string, string, string, string, int>> seq)
         {
-            string ccy = null;
+            List<string> data = getT32B(seq);
             Nullable<double> amount = null;
 
-            try
-            {
-                parseCcyAmt(seq, "32B", out ccy, out amount);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            if (data[2] != null)
+                amount = Convert.ToDouble(data[2]);
 
             return amount;
         }
@@ -626,16 +581,7 @@ namespace Messages
         /// <returns></returns>
         public string getT50A_Account(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "50A");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT50A(seq);
 
             return lst[0];
         }
@@ -649,16 +595,7 @@ namespace Messages
         /// <returns></returns>
         public string getT50A_Code(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "50A");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT50A(seq);
 
             return lst[1];
         }
@@ -672,16 +609,7 @@ namespace Messages
         /// <returns></returns>
         public string getT50F_Id(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "50F");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT50F(seq);
 
             return lst[0];
         }
@@ -695,16 +623,7 @@ namespace Messages
         /// <returns></returns>
         public string getT50F_NameAddr(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "50F");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT50F(seq);
 
             return lst[1];
         }
@@ -718,16 +637,7 @@ namespace Messages
         /// <returns></returns>
         public string getT50K_Account(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "50K");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT50K(seq);
 
             return lst[0];
         }
@@ -741,16 +651,7 @@ namespace Messages
         /// <returns></returns>
         public string getT50K_NameAddr(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "50K");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT50K(seq);
 
             return lst[1];
         }
@@ -764,16 +665,7 @@ namespace Messages
         /// <returns></returns>
         public string getT52A_ID(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "52A");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT52A(seq);
 
             return lst[0];
         }
@@ -787,16 +679,7 @@ namespace Messages
         /// <returns></returns>
         public string getT52A_Code(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "52A");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT52A(seq);
 
             return lst[1];
         }
@@ -810,16 +693,7 @@ namespace Messages
         /// <returns></returns>
         public string getT52B_ID(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "52B");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT52B(seq);
 
             return lst[0];
         }
@@ -833,16 +707,7 @@ namespace Messages
         /// <returns></returns>
         public string getT52B_Location(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "52B");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT52B(seq);
 
             return lst[1];
         }
@@ -856,16 +721,7 @@ namespace Messages
         /// <returns></returns>
         public string getT52D_ID(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "52D");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT52D(seq);
 
             return lst[0];
         }
@@ -879,16 +735,7 @@ namespace Messages
         /// <returns></returns>
         public string getT52D_NameAddr(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "52D");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT52D(seq);
 
             return lst[1];
         }
@@ -902,16 +749,8 @@ namespace Messages
         /// <returns></returns>
         public string getT53A_ID(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-            try
-            {
-                lst = parsePartyAgent(seq, "53A");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
+            List<string> lst = getT53A(seq);
+            
             return lst[0];
         }
 
@@ -924,16 +763,7 @@ namespace Messages
         /// <returns></returns>
         public string getT53A_Code(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "53A");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT53A(seq);
 
             return lst[1];
         }
@@ -947,16 +777,7 @@ namespace Messages
         /// <returns></returns>
         public string getT53B_ID(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "53B");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT53B(seq);
 
             return lst[0];
         }
@@ -970,16 +791,7 @@ namespace Messages
         /// <returns></returns>
         public string getT53B_Location(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "53B");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT53B(seq);
 
             return lst[1];
         }
@@ -993,16 +805,7 @@ namespace Messages
         /// <returns></returns>
         public string getT53D_ID(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "53D");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT53D(seq);
 
             return lst[0];
         }
@@ -1016,16 +819,7 @@ namespace Messages
         /// <returns></returns>
         public string getT53D_NameAddr(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "53D");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT53D(seq);
 
             return lst[1];
         }
@@ -1039,15 +833,7 @@ namespace Messages
         /// <returns></returns>
         public string getT54A_ID(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-            try
-            {
-                lst = parsePartyAgent(seq, "54A");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT54A(seq);
 
             return lst[0];
         }
@@ -1061,16 +847,7 @@ namespace Messages
         /// <returns></returns>
         public string getT54A_Code(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "54A");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT54A(seq);
 
             return lst[1];
         }
@@ -1084,16 +861,7 @@ namespace Messages
         /// <returns></returns>
         public string getT54B_ID(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "54B");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT54B(seq);
 
             return lst[0];
         }
@@ -1107,16 +875,7 @@ namespace Messages
         /// <returns></returns>
         public string getT54B_Location(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "54B");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT54B(seq);
 
             return lst[1];
         }
@@ -1130,16 +889,7 @@ namespace Messages
         /// <returns></returns>
         public string getT54D_ID(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "54D");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT54D(seq);
 
             return lst[0];
         }
@@ -1153,16 +903,7 @@ namespace Messages
         /// <returns></returns>
         public string getT54D_NameAddr(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "54D");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT54D(seq);
 
             return lst[1];
         }
@@ -1176,16 +917,7 @@ namespace Messages
         /// <returns></returns>
         public string getT59_PayeeAccount(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> retLst = new List<string>();
-
-            try
-            {
-                retLst = parseAcctNameAddr(seq, "59");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> retLst = getT59(seq);
 
             return retLst[0];
         }
@@ -1199,16 +931,7 @@ namespace Messages
         /// <returns></returns>
         public string getT59_PayeeNameAddr(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> retLst = new List<string>();
-
-            try
-            {
-                retLst = parseAcctNameAddr(seq, "59");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> retLst = getT59(seq);
 
             return retLst[1];
         }
@@ -1222,16 +945,7 @@ namespace Messages
         /// <returns></returns>
         public string getT59F_PayeeAccount(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> retLst = new List<string>();
-
-            try
-            {
-                retLst = parseAcctNameAddr(seq, "59F");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> retLst = getT59F(seq);
 
             return retLst[0];
         }
@@ -1245,16 +959,7 @@ namespace Messages
         /// <returns></returns>
         public string getT59F_PayeeNameAddr(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> retLst = new List<string>();
-
-            try
-            {
-                retLst = parseAcctNameAddr(seq, "59F");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> retLst = getT59F(seq);
 
             return retLst[1];
         }
@@ -1497,8 +1202,12 @@ namespace Messages
 
         public void testFunctions()
         {
+            string ss = null;
+            Nullable<double> dd = null;
 
-
+            ss = getT32A_Date(sequenceA);
+            ss = getT32A_Currency(sequenceA);
+            dd = getT32A_Amount(sequenceA);
         }
     }
 }

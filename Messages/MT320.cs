@@ -1847,7 +1847,7 @@ namespace Messages
         /// <returns></returns>
         public Nullable<int> getT18A_repetitions(List<TagData<string, string, string, string, int>> seq)
         {
-            return getInt(seq, "18A");
+            return getT18A(seq);
         }
 
         /// <summary>
@@ -1978,16 +1978,7 @@ namespace Messages
         /// <returns></returns>
         public string getT24D_DealingMethodInfo(List<TagData<string, string, string, string, int>> seq)
         {
-            string method = null;
-
-            method = GetTagValue(seq, "24D");
-
-            if (method.Length >= 5)
-                method = method.Substring(5, method.Length - 5);
-            else
-                method = null;
-                
-            return method;
+            return getT24D(seq);
         }
 
         /// <summary>

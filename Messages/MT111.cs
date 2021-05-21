@@ -325,20 +325,9 @@ namespace Messages
         /// <returns></returns>
         public string getT32A_Date(List<TagData<string, string, string, string, int>> seq)
         {
-            string date = null;
-            string ccy = null;
-            Nullable<double> amount = null;
+            List<string> data = getT32A(seq);
 
-            try
-            {
-                parseDateCcyAmt(seq, "32A", out date, out ccy, out amount);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return date;
+            return data[0];
         }
 
         /// <summary>
@@ -350,20 +339,9 @@ namespace Messages
         /// <returns></returns>
         public string getT32A_Currency(List<TagData<string, string, string, string, int>> seq)
         {
-            string date = null;
-            string ccy = null;
-            Nullable<double> amount = null;
+            List<string> data = getT32A(seq);
 
-            try
-            {
-                parseDateCcyAmt(seq, "32A", out date, out ccy, out amount);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return ccy;
+            return data[1];
         }
 
         /// <summary>
@@ -375,18 +353,11 @@ namespace Messages
         /// <returns></returns>
         public Nullable<double> getT32A_Amount(List<TagData<string, string, string, string, int>> seq)
         {
-            string date = null;
-            string ccy = null;
+            List<string> data = getT32A(seq);
             Nullable<double> amount = null;
 
-            try
-            {
-                parseDateCcyAmt(seq, "32A", out date, out ccy, out amount);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            if (data[2] != null)
+                amount = Convert.ToDouble(data[2]);
 
             return amount;
         }
@@ -400,19 +371,9 @@ namespace Messages
         /// <returns></returns>
         public string getT32B_Currency(List<TagData<string, string, string, string, int>> seq)
         {
-            string ccy = null;
-            Nullable<double> amount = null;
+            List<string> data = getT32B(seq);
 
-            try
-            {
-                parseCcyAmt(seq, "32B", out ccy, out amount);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-
-            return ccy;
+            return data[0];
         }
 
         /// <summary>
@@ -424,17 +385,11 @@ namespace Messages
         /// <returns></returns>
         public Nullable<double> getT32B_Amount(List<TagData<string, string, string, string, int>> seq)
         {
-            string ccy = null;
+            List<string> data = getT32B(seq);
             Nullable<double> amount = null;
 
-            try
-            {
-                parseCcyAmt(seq, "32B", out ccy, out amount);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            if (data[1] != null)
+                amount = Convert.ToDouble(data[1]);
 
             return amount;
         }
@@ -448,16 +403,7 @@ namespace Messages
         /// <returns></returns>
         public string getT52A_ID(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "52A");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT52A(seq);
 
             return lst[0];
         }
@@ -471,16 +417,7 @@ namespace Messages
         /// <returns></returns>
         public string getT52A_Code(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "52A");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT52A(seq);
 
             return lst[1];
         }
@@ -494,16 +431,7 @@ namespace Messages
         /// <returns></returns>
         public string getT52B_ID(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "52B");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT52B(seq);
 
             return lst[0];
         }
@@ -517,16 +445,7 @@ namespace Messages
         /// <returns></returns>
         public string getT52B_Location(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "52B");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT52B(seq);
 
             return lst[1];
         }
@@ -540,16 +459,7 @@ namespace Messages
         /// <returns></returns>
         public string getT52D_ID(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "52D");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT52D(seq);
 
             return lst[0];
         }
@@ -563,16 +473,7 @@ namespace Messages
         /// <returns></returns>
         public string getT52D_NameAddr(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> lst = new List<string>();
-
-            try
-            {
-                lst = parsePartyAgent(seq, "52D");
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> lst = getT52D(seq);
 
             return lst[1];
         }
@@ -586,36 +487,7 @@ namespace Messages
         /// <returns></returns>
         public string getT59_PayeeAccount(List<TagData<string, string, string, string, int>> seq)
         {
-            string rawStr = GetTagValue(seq, "59");
-            List<string> retLst = new List<string>();
-            string[] stringSeparators = new string[] { "\r\n" };
-
-            try
-            {
-                if (rawStr != null && rawStr.Length >= 1 && isTagPresentInSequence(seq, "59") == true)
-                {
-                    if (rawStr[0].Equals("/"))
-                    {
-                        string[] lines = rawStr.Split(stringSeparators, StringSplitOptions.None);
-                        retLst.Add(lines[0].Substring(1));  // remoive the first '/'
-                        retLst.Add(lines[1]);
-                    }
-                    else
-                    {
-                        retLst.Add(null);
-                        retLst.Add(rawStr);
-                    }
-                }
-                else
-                {
-                    retLst.Add(null);
-                    retLst.Add(null);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> retLst = getT59(seq); ;
 
             return retLst[0];
         }
@@ -629,36 +501,7 @@ namespace Messages
         /// <returns></returns>
         public string getT59_PayeeNameAddr(List<TagData<string, string, string, string, int>> seq)
         {
-            string rawStr = GetTagValue(seq, "59");
-            List<string> retLst = new List<string>();
-            string[] stringSeparators = new string[] { "\r\n" };
-
-            try
-            {
-                if (rawStr != null && rawStr.Length >= 1 && isTagPresentInSequence(seq, "59") == true)
-                {
-                    if (rawStr[0].Equals("/"))
-                    {
-                        string[] lines = rawStr.Split(stringSeparators, StringSplitOptions.None);
-                        retLst.Add(lines[0].Substring(1));  // remoive the first '/'
-                        retLst.Add(lines[1]);
-                    }
-                    else
-                    {
-                        retLst.Add(null);
-                        retLst.Add(rawStr);
-                    }
-                }
-                else
-                {
-                    retLst.Add(null);
-                    retLst.Add(null);
-                }
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
+            List<string> retLst = getT59(seq);
 
             return retLst[1];
         }
