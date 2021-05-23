@@ -671,13 +671,13 @@ namespace Messages
         }
 
         /// <summary>
-        /// getT32B_Amount
+        /// getT32B_TransactionAmount
         /// 
         /// Returns the amount of the subsequent transfer to be executed by the Receiver.
         /// </summary>
         /// <param name="seq"></param>
         /// <returns></returns>
-        public Nullable<double> getT32B_Amount(List<TagData<string, string, string, string, int>> seq)
+        public Nullable<double> getT32B_TransactionAmount(List<TagData<string, string, string, string, int>> seq)
         {
             List<string> data = getT32B(seq);
             Nullable<double> amount = null;
@@ -703,13 +703,13 @@ namespace Messages
         }
 
         /// <summary>
-        /// getT33B_Amount
+        /// getT33B_OrderedAmount
         /// 
         /// Returns the amount as specified by the ordering customer.
         /// </summary>
         /// <param name="seq"></param>
         /// <returns></returns>
-        public Nullable<double> getT33B_Amount(List<TagData<string, string, string, string, int>> seq)
+        public Nullable<double> getT33B_OrderedAmount(List<TagData<string, string, string, string, int>> seq)
         {
             List<string> data = getT33B(seq);
             Nullable<double> amount = null;
@@ -723,38 +723,456 @@ namespace Messages
         /// <summary>
         /// getT36_ExchangeRate
         /// 
-        /// 
+        /// Returns the exchange rate applied by the ordering customer/instructing party 
+        /// when converting the original ordered amount to the transaction amount.
         /// </summary>
         /// <param name="seq"></param>
         /// <returns></returns>
-        public Nullable<double>  getT36_ExchangeRate(List<TagData<string, string, string, string, int>> seq)
+        public Nullable<double> getT36_ExchangeRate(List<TagData<string, string, string, string, int>> seq)
         {
             return getT36(seq);
         }
 
         /// <summary>
-        /// getT50C_IdentifierCode
+        /// getT50C_InstructingPartyIdentifierCode
         /// 
-        /// 
+        /// Returns the BIC code of the customer which is authorised by the 
+        /// account owner/account servicing institution to order all the transactions in the message.
         /// </summary>
         /// <param name="seq"></param>
         /// <returns></returns>
-        public string getT50C_IdentifierCode(List<TagData<string, string, string, string, int>> seq)
+        public string getT50C_InstructingPartyIdentifierCode(List<TagData<string, string, string, string, int>> seq)
         {
             return getT50C(seq);
         }
 
         /// <summary>
-        /// getT50L_PartyIdentifier
+        /// getT50F_OrderingCustomerPartyIdentifier
         /// 
-        /// 
+        /// Returns the account owner whose account is to be debited with all transactions in sequence B.
         /// </summary>
         /// <param name="seq"></param>
         /// <returns></returns>
-        public string getT50L_PartyIdentifier(List<TagData<string, string, string, string, int>> seq)
+        public string getT50F_OrderingCustomerPartyIdentifier(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data =  getT50F(seq);
+
+            return data[0];
+        }
+
+        /// <summary>
+        /// getT50F_OrderingCustomerNameAddress
+        /// 
+        /// Returns the account owner whose account is to be debited with all transactions in sequence B.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT50F_OrderingCustomerNameAddress(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT50F(seq);
+
+            return data[1];
+        }
+
+        /// <summary>
+        /// getT50G_OrderingCustomerAccount
+        /// 
+        /// Returns the account owner whose account is to be debited with all transactions in sequence B.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT50G_OrderingCustomerAccount(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT50G(seq);
+
+            return data[0];
+        }
+
+        /// <summary>
+        /// getT50G_OrderingCustomerIdentifierCode
+        /// 
+        /// Returns the account owner whose account is to be debited with all transactions in sequence B.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT50G_OrderingCustomerIdentifierCode(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT50G(seq);
+
+            return data[1];
+        }
+
+        /// <summary>
+        /// getT50H_OrderingCustomerAccount
+        /// 
+        /// Returns the account owner whose account is to be debited with all transactions in sequence B.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT50H_OrderingCustomerAccount(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT50H(seq);
+
+            return data[0];
+        }
+
+        /// <summary>
+        /// getT50H_OrderingCustomerNameAddress
+        /// 
+        /// Returns the account owner whose account is to be debited with all transactions in sequence B.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT50H_OrderingCustomerNameAddress(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT50H(seq);
+
+            return data[1];
+        }
+
+        /// <summary>
+        /// getT50L_InstructingPartyPartyIdentifier
+        /// 
+        /// Returns the party identifier of the customer which is 
+        /// authorised by the account owner/account servicing institution 
+        /// to order all the transactions in the message.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT50L_InstructingPartyPartyIdentifier(List<TagData<string, string, string, string, int>> seq)
         {
             return getT50L(seq);
         }
+
+        /// <summary>
+        /// getT51A_SendingInstitutionPartyIdentifier
+        /// 
+        /// Returns the identity of the Sender of the message.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT51A_SendingInstitutionPartyIdentifier(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT51A(seq);
+
+            return data[0];
+        }
+
+        /// <summary>
+        /// getT51A_SendingInstitutionIdentifierCode
+        /// 
+        /// Returns the account servicing institution - when other than the Receiver - 
+        /// which services the account of the account owner to be debited.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT51A_SendingInstitutionIdentifierCode(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT51A(seq);
+
+            return data[1];
+        }
+
+        /// <summary>
+        /// getT52A_AcctServiceInstPartyIdentifier
+        /// 
+        /// Returns the account servicing institution - when other than the Receiver - 
+        /// which services the account of the account owner to be debited.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT52A_AcctServiceInstPartyIdentifier(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT52A(seq);
+
+            return data[0];
+        }
+
+        /// <summary>
+        /// getT52A_AcctServiceInstIdentifierCode
+        /// 
+        /// Returns the account servicing institution - when other than the Receiver - 
+        /// which services the account of the account owner to be debited.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT52A_AcctServiceInstIdentifierCode(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT52A(seq);
+
+            return data[1];
+        }
+
+        /// <summary>
+        /// getT52A_AcctServiceInstPartyIdentifier
+        /// 
+        /// Returns the account servicing institution - when other than the Receiver - 
+        /// which services the account of the account owner to be debited.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT52C_AcctServiceInstPartyIdentifier(List<TagData<string, string, string, string, int>> seq)
+        {
+            return getT52C(seq);
+        }
+
+        /// <summary>
+        /// getT56A_IntermediaryPartyIdentifier
+        /// 
+        /// Returns the financial institution through which the transaction must pass to reach the account with institution.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT56A_IntermediaryPartyIdentifier(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT56A(seq);
+
+            return data[0];
+        }
+
+        /// <summary>
+        /// getT56A_IntermediaryIdentifierCode
+        /// 
+        /// Returns the financial institution through which the transaction must pass to reach the account with institution.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT56A_IntermediaryIdentifierCode(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT56A(seq);
+
+            return data[1];
+        }
+
+        /// <summary>
+        /// getT56C_IntermediaryPartyIdentifier
+        /// 
+        /// Returns the financial institution through which the transaction must pass to reach the account with institution.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT56C_IntermediaryPartyIdentifier(List<TagData<string, string, string, string, int>> seq)
+        {
+            return getT56C(seq);
+        }
+
+        /// <summary>
+        /// getT56D_PartyIdentifier
+        /// 
+        /// Returns the financial institution through which the transaction must pass to reach the account with institution.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT56D_PartyIdentifier(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT56D(seq);
+
+            return data[0];
+        }
+
+        /// <summary>
+        /// getT56D_IntermediaryNameAddress
+        /// 
+        /// Returns the financial institution through which the transaction must pass to reach the account with institution.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT56D_IntermediaryNameAddress(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT56D(seq);
+
+            return data[1];
+        }
+
+        /// <summary>
+        /// getT57A_AccountWithPartyIdentifier
+        /// 
+        /// Returns the financial institution which services the account for the beneficiary customer.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT57A_AccountWithPartyIdentifier(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT57A(seq);
+
+            return data[0];
+        }
+
+        /// <summary>
+        /// getT57A_AccountWithIdentifierCode
+        /// 
+        /// Returns the financial institution which services the account for the beneficiary customer.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT57A_AccountWithIdentifierCode(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT57A(seq);
+
+            return data[1];
+        }
+
+        /// <summary>
+        /// getT57C_AccountWithPartyIdentifier
+        /// 
+        /// Returns the financial institution which services the account for the beneficiary customer.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT57C_AccountWithPartyIdentifier(List<TagData<string, string, string, string, int>> seq)
+        {
+            return getT56C(seq);
+        }
+
+        /// <summary>
+        /// getT57D_PartyIdentifier
+        /// 
+        /// Returns the financial institution which services the account for the beneficiary customer.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT57D_PartyIdentifier(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT56D(seq);
+
+            return data[0];
+        }
+
+        /// <summary>
+        /// getT57D_AccountWithNameAddress
+        /// 
+        /// Returns the financial institution which services the account for the beneficiary customer.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT57D_AccountWithNameAddress(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT56D(seq);
+
+            return data[1];
+        }
+
+        /// <summary>
+        /// getT59_BeneficiaryAccount
+        /// 
+        /// Returns the beneficiary of the subsequent operation from the particular occurrence of sequence B.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT59_BeneficiaryAccount(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT59(seq);
+
+            return data[0];
+        }
+
+        /// <summary>
+        /// getT59_BeneficiaryNameAddress
+        /// 
+        /// Returns the beneficiary of the subsequent operation from the particular occurrence of sequence B.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT59_BeneficiaryNameAddress(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT59(seq);
+
+            return data[1];
+        }
+
+        /// <summary>
+        /// getT59A_BeneficiaryAccount
+        /// 
+        /// Returns the beneficiary of the subsequent operation from the particular occurrence of sequence B.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT59A_BeneficiaryAccount(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT59A(seq);
+
+            return data[0];
+        }
+
+        /// <summary>
+        /// getT59A_BeneficiaryIdentifierCode
+        /// 
+        /// Returns the beneficiary of the subsequent operation from the particular occurrence of sequence B.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT59A_BeneficiaryIdentifierCode(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT59A(seq);
+
+            return data[1];
+        }
+
+        /// <summary>
+        /// getT59F_BeneficiaryAccount
+        /// 
+        /// Returns the beneficiary of the subsequent operation from the particular occurrence of sequence B.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT59F_BeneficiaryAccount(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT59F(seq);
+
+            return data[0];
+        }
+
+        /// <summary>
+        /// getT59F_BeneficiaryNameAddress
+        /// 
+        /// Returns the beneficiary of the subsequent operation from the particular occurrence of sequence B.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT59F_BeneficiaryNameAddress(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> data = getT59F(seq);
+
+            return data[1];
+        }
+
+        /// <summary>
+        /// getT70_RemittanceInformation
+        /// 
+        /// Returns the details of the individual transactions which are to be transmitted to the beneficiary customer.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT70_RemittanceInformation(List<TagData<string, string, string, string, int>> seq)
+        {
+            return getT70(seq);
+        }
+
+        /// <summary>
+        /// getT71A_DetailsOfCharges
+        /// 
+        /// Returns which party will bear the applicable charges for the subsequent transfer of funds.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT71A_DetailsOfCharges(List<TagData<string, string, string, string, int>> seq)
+        {
+            return getT71A(seq);
+        }
+
+        /// <summary>
+        /// getT77B_RegulatoryReporting
+        /// 
+        /// Returns the codes for the statutory and/or regulatory information required 
+        /// by the authorities in the country of the Receiver or the Sender/originating customer.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT77B_RegulatoryReporting(List<TagData<string, string, string, string, int>> seq)
+        {
+            return getT77B(seq);
+        }
+
         #endregion
 
         public void testFunctions()

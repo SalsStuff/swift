@@ -790,6 +790,18 @@ namespace Messages
         }
 
         /// <summary>
+        /// getT23
+        /// 
+        /// Returns the value in tag 23.
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT23(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "23");
+        }
+
+        /// <summary>
         /// getT23E
         /// 
         /// Returns a list containing the instructions to be used between the ordering customer and the account servicer.
@@ -1083,6 +1095,13 @@ namespace Messages
             return data;
         }
 
+        /// <summary>
+        /// getT36
+        /// 
+        /// Returns the value of tag 36
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
         public Nullable<double> getT36(List<TagData<string, string, string, string, int>> seq)
         {
             string rate = GetTagValue(seq, "36");
@@ -1130,18 +1149,6 @@ namespace Messages
         }
 
         /// <summary>
-        /// getT50L
-        /// 
-        /// Returns the value of tag 50L
-        /// </summary>
-        /// <param name="seq"></param>
-        /// <returns></returns>
-        public string getT50L(List<TagData<string, string, string, string, int>> seq)
-        {
-            return GetTagValue(seq, "50L");
-        }
-
-        /// <summary>
         /// getT50F
         /// 
         /// Returns a list of values from tag 50F
@@ -1165,6 +1172,52 @@ namespace Messages
         }
 
         /// <summary>
+        /// getT50G
+        /// 
+        /// Returns a list of values from tag 50G
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT50G(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "50G");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
+        /// getT50H
+        /// 
+        /// Returns a list of values from tag 50H
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT50H(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "50H");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
         /// getT50K
         /// 
         /// Returns a list of values from tag 50K
@@ -1178,6 +1231,41 @@ namespace Messages
             try
             {
                 lst = parsePartyAgent(seq, "50K");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
+        /// getT50L
+        /// 
+        /// Returns the value of tag 50L
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT50L(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "50L");
+        }
+
+        /// <summary>
+        /// getT51A
+        /// 
+        /// Returns a list of values from tag 51A
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT51A(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "51A");
             }
             catch (Exception ex)
             {
@@ -1231,6 +1319,20 @@ namespace Messages
             }
 
             return lst;
+        }
+
+        /// <summary>
+        /// getT52C
+        /// 
+        /// Returns the value of tag 52C
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT52C(List<TagData<string, string, string, string, int>> seq)
+        {
+            string value = GetTagValue(seq, "52C");
+
+            return value.Substring(1, value.Length - 1);
         }
 
         /// <summary>
@@ -1393,6 +1495,149 @@ namespace Messages
         }
 
         /// <summary>
+        /// getT56A
+        /// 
+        /// Returns a list of values for tag 56A
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT56A(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "56A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
+        /// getT56C
+        /// 
+        /// Returns the value of tag 56C
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT56C(List<TagData<string, string, string, string, int>> seq)
+        {
+            string value = GetTagValue(seq, "56C");
+
+            return value.Substring(1, value.Length - 1);
+        }
+
+        /// <summary>
+        /// getT56D
+        /// 
+        /// Returns a list of values for tag 56D
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT56D(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "56D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
+        /// getT57A
+        /// 
+        /// Returns a list of values for tag 57A
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT57A(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "57A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
+        /// getT57C
+        /// 
+        /// Returns the value of tag 57C
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT57C(List<TagData<string, string, string, string, int>> seq)
+        {
+            string value = GetTagValue(seq, "57C");
+
+            return value.Substring(1, value.Length - 1);
+        }
+
+        /// <summary>
+        /// getT57D
+        /// 
+        /// Returns a list of values for tag 57D
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT57D(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "57D");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
+        /// getT58A
+        /// 
+        /// Returns a list of values for tag 58A
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT58A(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "58A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
+        }
+
+        /// <summary>
         /// getT59
         /// 
         /// Returns a list of values for tag 59
@@ -1413,6 +1658,29 @@ namespace Messages
             }
 
             return retLst;
+        }
+
+        /// <summary>
+        /// getT59A
+        /// 
+        /// Returns a list of values for tag 59A
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT59A(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> lst = new List<string>();
+
+            try
+            {
+                lst = parsePartyAgent(seq, "59A");
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return lst;
         }
 
         /// <summary>
@@ -1439,6 +1707,30 @@ namespace Messages
         }
 
         /// <summary>
+        /// getT70
+        /// 
+        /// Returns the value of tag 70
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT70(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "70");
+        }
+
+        /// <summary>
+        /// getT71A
+        /// 
+        /// Returns the value of tag 71A
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT71A(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "71A");
+        }
+
+        /// <summary>
         /// getT72
         /// 
         /// Returns the value in tag 72
@@ -1448,6 +1740,18 @@ namespace Messages
         public string getT72(List<TagData<string, string, string, string, int>> seq)
         {
             return GetTagValue(seq, "72");
+        }
+
+        /// <summary>
+        /// getT75
+        /// 
+        /// Returns the value of tag 75
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public string getT75(List<TagData<string, string, string, string, int>> seq)
+        {
+            return GetTagValue(seq, "75");
         }
 
         /// <summary>
@@ -1463,15 +1767,15 @@ namespace Messages
         }
 
         /// <summary>
-        /// getT75
+        /// getT77B
         /// 
-        /// Returns the value of tag 75
+        /// Returns the value of tag 77B
         /// </summary>
         /// <param name="seq"></param>
         /// <returns></returns>
-        public string getT75(List<TagData<string, string, string, string, int>> seq)
+        public string getT77B(List<TagData<string, string, string, string, int>> seq)
         {
-            return GetTagValue(seq, "75");
+            return GetTagValue(seq, "77B");
         }
 
         /// <summary>
