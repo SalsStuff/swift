@@ -34,6 +34,7 @@ namespace Messages
         public bool AlwaysValidateTag { get; set; } = false;
         #endregion
 
+        #region MEMBER METHODS
         protected virtual string whichSequence(List<TagData<string, string, string, string, int>> sequence)
         {
             string seq = null;
@@ -346,6 +347,7 @@ namespace Messages
                 return sw.ToString();
             }
         }
+        #endregion
 
         #region Parser General Methods
         /// <summary>
@@ -548,6 +550,189 @@ namespace Messages
             }
 
             return retLst;
+        }
+
+        /// <summary>
+        /// parseCommissionAndFees
+        /// 
+        /// Parses repetitive field 34C in sequence H and returns :
+        ///     Commission/Fee Type
+        ///     Commission/Fee Currency
+        ///     Commission/Fee Amount
+        /// each in their own list
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <param name="option"></param>
+        /// <param name="type"></param>
+        /// <param name="ccy"></param>
+        /// <param name="amount"></param>
+        public void parseCommissionAndFees(List<TagData<string, string, string, string, int>> seq, string option, out List<string> type, out List<string> ccy, out List<Nullable<double>> amount)
+        {
+            string rawStr = null;
+            double multiplier = 1.0;
+            string amtStr = null;
+
+            type = new List<string>();
+            ccy = new List<string>();
+            amount = new List<Nullable<double>>();
+
+            try
+            {
+                foreach (TagData<string, string, string, string, int> t in seq)
+                {
+                    if (t.Tag.Equals("34C") == true)
+                    {
+                        rawStr = t.Value;
+                        if (rawStr != null && rawStr.Length >= 8 && isTagPresentInSequence(seq, option) == true)
+                        {
+                            type.Add(rawStr.Substring(0, 4));
+                            rawStr = rawStr.Substring(5, rawStr.Length - 5);   // remove the type and '/' character
+                            if (rawStr.Substring(0, 1).Equals("N") && (Char.IsLetter(rawStr[1]) == true && Char.IsLetter(rawStr[2]) == true && Char.IsLetter(rawStr[3]) == true))
+                            {
+                                multiplier = -1.0;
+                                ccy.Add(rawStr.Substring(1, 3));
+                                amtStr = rawStr.Substring(4, rawStr.Length - 4);
+                                amtStr = amtStr.Replace(",", ".");
+                                amount.Add(Convert.ToDouble(amtStr) * multiplier);
+                            }
+                            else
+                            {
+                                multiplier = 1.0;
+                                ccy.Add(rawStr.Substring(0, 3));
+                                amtStr = rawStr.Substring(3, rawStr.Length - 3);
+                                amtStr = amtStr.Replace(",", ".");
+                                amount.Add(Convert.ToDouble(amtStr) * multiplier);
+                            }
+                        }
+                        else
+                        {
+                            type = null;
+                            ccy = null;
+                            amount = null;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Invalid Tag Data: Tag " + option + ".\n" + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// parseAdditionalAmounts
+        /// 
+        /// Parses repetitive fields 30F and 32H in sequence I and returns :
+        ///     Payment Date
+        ///     Payment Currency
+        ///     Payment Amount
+        /// each in their own list
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <param name="option"></param>
+        /// <param name="type"></param>
+        /// <param name="ccy"></param>
+        /// <param name="amount"></param>
+        public void parseAdditionalAmounts(List<TagData<string, string, string, string, int>> seq, out List<string> date, out List<string> ccy, out List<Nullable<double>> amount)
+        {
+            string rawStr = null;
+            double multiplier = 1.0;
+            string amtStr = null;
+
+            date = new List<string>();
+            ccy = new List<string>();
+            amount = new List<Nullable<double>>();
+
+            try
+            {
+                foreach (TagData<string, string, string, string, int> t in seq)
+                {
+                    if (t.Tag.Equals("30F") == true && isTagPresentInSequence(seq, "30F") == true)
+                    {
+                        date.Add(t.Value);
+                    }
+
+                    if (t.Tag.Equals("32H") == true)
+                    {
+                        rawStr = t.Value;
+                        if (rawStr != null && rawStr.Length >= 8 && isTagPresentInSequence(seq, "32H") == true)
+                        {
+                            if (rawStr.Substring(0, 1).Equals("N") && (Char.IsLetter(rawStr[1]) == true && Char.IsLetter(rawStr[2]) == true && Char.IsLetter(rawStr[3]) == true))
+                            {
+                                multiplier = -1.0;
+                                ccy.Add(rawStr.Substring(1, 3));
+                                amtStr = rawStr.Substring(4, rawStr.Length - 4);
+                                amtStr = amtStr.Replace(",", ".");
+                                amount.Add(Convert.ToDouble(amtStr) * multiplier);
+                            }
+                            else
+                            {
+                                multiplier = 1.0;
+                                ccy.Add(rawStr.Substring(0, 3));
+                                amtStr = rawStr.Substring(3, rawStr.Length - 3);
+                                amtStr = amtStr.Replace(",", ".");
+                                amount.Add(Convert.ToDouble(amtStr) * multiplier);
+                            }
+                        }
+                        else
+                        {
+                            date = null;
+                            ccy = null;
+                            amount = null;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Invalid Tag Data - Aditional Amounts .\n" + ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// parseRate
+        /// 
+        /// Returns the rate for Tags 36, 37G and 37L
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public Nullable<double> parseRate(List<TagData<string, string, string, string, int>> seq, string option)
+        {
+            string rawStr = GetTagValue(seq, option);
+            string rateStr = null;
+            Nullable<double> rate = 0.0;
+            double multiplier = 1.0;
+
+            try
+            {
+                if (rawStr != null && rawStr.Length >= 1 && isTagPresentInSequence(seq, option) == true)
+                {
+                    if (rawStr.Substring(0, 1).Equals("N"))
+                    {
+                        multiplier = -1.0;
+                        rateStr = rawStr.Substring(1, rawStr.Length - 1);
+                        rateStr = rateStr.Replace(",", ".");
+                        rate = Convert.ToDouble(rateStr) * multiplier;
+                    }
+                    else
+                    {
+                        multiplier = 1.0;
+                        rateStr = rawStr.Substring(0, rawStr.Length);
+                        rateStr = rateStr.Replace(",", ".");
+                        rate = Convert.ToDouble(rateStr) * multiplier;
+                    }
+                }
+                else
+                {
+                    rate = 0.0;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Invalid Tag Data: Tag " + option + ".\n" + ex.Message);
+            }
+
+            return rate;
         }
 
         /// <summary>
@@ -829,18 +1014,18 @@ namespace Messages
         /// </summary>
         /// <param name="seq"></param>
         /// <returns></returns>
-        public string getT24D(List<TagData<string, string, string, string, int>> seq)
+        public List<string> getT24D(List<TagData<string, string, string, string, int>> seq)
         {
-            string method = null;
+            List<string> data = new List<string>();
+            string value = GetTagValue(seq, "24D");
+            char[] separator = new char[] { '/' };
+            string[] input = value.Split(separator, StringSplitOptions.None);
+            int i = 0;
 
-            method = GetTagValue(seq, "24D");
+            for (i = 0; i < input.Length; i++)
+                data.Add(input[i]);
 
-            if (method.Length >= 5)
-                method = method.Substring(5, method.Length - 5);
-            else
-                method = null;
-
-            return method;
+            return data;
         }
 
         /// <summary>
@@ -1068,6 +1253,33 @@ namespace Messages
         }
 
         /// <summary>
+        /// getT32H
+        /// 
+        /// Returns a list of values for tag 32H
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT32H(List<TagData<string, string, string, string, int>> seq)
+        {
+            string ccy = null;
+            Nullable<double> amount = null;
+            List<string> data = new List<string>();
+
+            try
+            {
+                parseCcyAmt(seq, "32H", out ccy, out amount);
+                data.Add(ccy);
+                data.Add(amount.ToString());
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return data;
+        }
+
+        /// <summary>
         /// getT33B
         /// 
         /// Returns a list of values for tag 33B
@@ -1083,6 +1295,34 @@ namespace Messages
             try
             {
                 parseCcyAmt(seq, "33B", out ccy, out amount);
+                data.Add(ccy);
+                data.Add(amount.ToString());
+
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return data;
+        }
+
+        /// <summary>
+        /// getT33E
+        /// 
+        /// Returns a list of values for tag 33E
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<string> getT33E(List<TagData<string, string, string, string, int>> seq)
+        {
+            string ccy = null;
+            Nullable<double> amount = null;
+            List<string> data = new List<string>();
+
+            try
+            {
+                parseCcyAmt(seq, "33E", out ccy, out amount);
                 data.Add(ccy);
                 data.Add(amount.ToString());
 
