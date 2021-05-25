@@ -2024,7 +2024,7 @@ namespace Messages
         /// <returns></returns>
         public Nullable<double> getT33E_Amount(List<TagData<string, string, string, string, int>> seq)
         {
-            List<string> data = getT33B(seq);
+            List<string> data = getT33E(seq);
             Nullable<double> amount = null;
 
             if (data[1].Equals(null) == false)

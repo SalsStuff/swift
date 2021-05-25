@@ -1336,6 +1336,43 @@ namespace Messages
         }
 
         /// <summary>
+        /// getT34C
+        /// 
+        /// Returns a list of list with the data from tag 34
+        /// </summary>
+        /// <param name="seq"></param>
+        /// <returns></returns>
+        public List<List<string>> getT34C(List<TagData<string, string, string, string, int>> seq)
+        {
+            List<string> type = new List<string>();
+            List<string> ccy = new List<string>();
+            List<Nullable<double>> amount = new List<Nullable<double>>();
+            List<string> strAmt = new List<string>();
+            List<List<string>> data = new List<List<string>>();
+            try
+            {
+                parseCommissionAndFees(seq, "34C", out type, out ccy, out amount);
+                data.Add(type);
+                data.Add(ccy);
+
+                foreach (Nullable<double> amt in amount)
+                {
+                    if (amt != null)
+                        strAmt.Add(amt.ToString());
+                    else
+                        strAmt.Add(null);
+                }
+                data.Add(strAmt);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+
+            return data;
+        }
+
+        /// <summary>
         /// getT36
         /// 
         /// Returns the value of tag 36
